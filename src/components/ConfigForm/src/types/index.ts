@@ -18,7 +18,7 @@ import type {
   RowProps,
 } from 'element-plus'
 import type { AsyncComponentOptions, DefineComponent } from 'vue'
-
+import type { RemoveReadonly } from '@/components/_types'
 export interface ComponentsType {
   [key: string]: AsyncComponentOptions
 }
@@ -56,7 +56,7 @@ export interface FormItemConfig extends FormItemProps {
    * element-plus组件的名字,例如select
    */
   type?: string
-  colConfig?: ColProps
+  colConfig?: RemoveReadonly<ColProps>
   renderSlot?: string
   tooltipConfig?: ElTooltipProps
   popoverConfig?: PopoverProps

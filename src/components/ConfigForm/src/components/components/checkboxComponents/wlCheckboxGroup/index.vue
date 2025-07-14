@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { configType, FormModelProps } from '@/components/ConfigForm/src/types'
 import { computed, ref, watch } from 'vue'
-import { isType } from '@/components/ConfigForm/src/utils'
+import { isType } from '@/components/_utils'
 
 interface CheckboxItem {
   label: string

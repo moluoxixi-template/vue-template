@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
-import { isType } from '@/components/ConfigForm/src/utils'
+import { isType } from '@/components/_utils'
 
 const props = defineProps<{
   width?: number

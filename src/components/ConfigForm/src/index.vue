@@ -1,7 +1,7 @@
 <script lang="tsx">
 import type { ColProps } from 'element-plus'
 import type { PropType } from 'vue'
-import type {
+import {
   ComponentPropsType,
   ComponentType,
   ConfigFormProps,
@@ -10,12 +10,13 @@ import type {
   FormModelProps,
   formOptionsConfig,
   FormRuleProps,
-  rowConfig,
+  rowConfig
 } from './types'
 import { defineAsyncComponent, defineComponent, reactive } from 'vue'
 import wlComponent from '@/components/ConfigForm/src/components/components.ts'
 import wlPopComponent from '@/components/ConfigForm/src/components/popComponents.ts'
-import { deepClone, getType } from '@/components/ConfigForm/src/utils'
+import {  getType } from '@/components/_utils'
+import { cloneDeep} from 'lodash'
 
 export default defineComponent({
   name: 'WlConfigForm',
@@ -64,7 +65,7 @@ export default defineComponent({
 
     setDefaultRules(props)
 
-    const refs = reactive({})
+    const refs = reactive<any>({})
 
     function setRefs(el: Element, key: string) {
       refs[key] = el
@@ -75,7 +76,7 @@ export default defineComponent({
       value: configType[keyof configType] | configType,
       defaultKeyOrKey: boolean | string = true,
     ) => {
-      const rows = deepClone(props.rows)
+      const rows = cloneDeep(props.rows)
       rows?.forEach((row: rowConfig) => {
         const formItem = row.formItems?.find((item: FormItemConfig) => item.prop === prop)
         if (formItem?.config) {
@@ -96,15 +97,15 @@ export default defineComponent({
 
     const setColConfigByProp = (
       prop: string,
-      value: ColProps[keyof ColProps] | ColProps,
-      key: string | null = null,
+      value:  ColProps[keyof ColProps] |ColProps,
+      key: keyof ColProps | null = null,
     ) => {
-      const rows = deepClone(props.rows)
+      const rows = cloneDeep(props.rows)
       rows?.forEach((row: rowConfig) => {
         const formItem = row.formItems?.find((item: FormItemConfig) => item.prop === prop)
         if (formItem?.colConfig) {
           if (key) {
-            formItem.colConfig[key] = value
+            (formItem.colConfig as any)[key] = value
           } else {
             formItem.colConfig = value as ColProps
           }
@@ -118,7 +119,7 @@ export default defineComponent({
       value: FormItemConfig[keyof FormItemConfig] | FormItemConfig,
       key: string | null = null,
     ) => {
-      const rows = deepClone(props.rows)
+      const rows = cloneDeep(props.rows)
       rows?.forEach((row: rowConfig) => {
         const index = row.formItems?.findIndex((item: FormItemConfig) => item.prop === prop)
         if (index && index > -1) {

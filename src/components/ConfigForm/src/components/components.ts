@@ -49,7 +49,7 @@ const components: ComponentsType = Object.keys(componentFiles).reduce(
     if (value && name) modules[name] = value
     return modules
   },
-  {},
+  {} as any,
 )
 //#endregion
 

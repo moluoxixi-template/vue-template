@@ -33,6 +33,15 @@ export function getType(obj: any, type?: string) {
   }
 }
 
+/**
+ * 判断str是否是type类型
+ * @param str
+ * @param type 只支持小写,例如boolean
+ * @return
+ */
+export function isType(str: string, type: string) {
+  return Object.prototype.toString.call(str).slice(8, -1).toLowerCase() == type
+}
 type types
   = | 'string'
     | 'number'
