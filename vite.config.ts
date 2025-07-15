@@ -8,8 +8,8 @@ export default viteConfig({
   rootPath: path.resolve(),
   mode: {
     base: {
-      VITE_GLOB_APP_TITLE: '住院医生站本地',
-      VITE_GLOB_APP_CODE: 'residentDoctor',
+      VITE_GLOB_APP_TITLE: 'test',
+      VITE_GLOB_APP_CODE: 'test',
       VITE_DEVTOOLS: false,
       VITE_PURE_CONSOLE_AND_DEBUGGER: false,
       VITE_PORT: 3300,
