@@ -39,7 +39,7 @@
 <script setup lang="ts">
 import { ElMessage } from 'element-plus'
 import { ref } from 'vue'
-import EnterNextContainer from './index.vue'
+import EnterNextContainer from './index.ts'
 
 // 示例表单数据
 const form2 = ref({

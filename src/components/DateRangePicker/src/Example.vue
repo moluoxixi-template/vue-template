@@ -174,7 +174,7 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import moment from 'moment'
 import { ref } from 'vue'
 import DateRangePicker from './index.ts'

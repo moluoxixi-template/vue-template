@@ -25,5 +25,5 @@ $--colors: (
 
 @use 'element-plus/theme-chalk/src/index.scss' as *;
 
-@use 'custom';
+@use 'custom.scss';
 @use 'fixQiankun.scss';

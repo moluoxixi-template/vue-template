@@ -74,10 +74,10 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { ElMessage } from 'element-plus'
 import { onMounted, ref, useTemplateRef } from 'vue'
-import DraggableTable from './index.vue'
+import DraggableTable from './index.ts'
 
 // 表格加载状态
 const loading = ref(false)

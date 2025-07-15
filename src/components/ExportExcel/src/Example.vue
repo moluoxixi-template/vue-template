@@ -65,9 +65,9 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { ref } from 'vue'
-import ExportExcel from './index.vue'
+import ExportExcel from './index.ts'
 
 // 基本数据
 const tableData = ref([

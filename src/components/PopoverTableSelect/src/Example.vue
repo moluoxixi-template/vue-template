@@ -38,7 +38,7 @@
 <script lang="ts" setup>
 import { ElInput } from 'element-plus'
 import { ref } from 'vue'
-import PopoverTableSelect from './index.vue'
+import PopoverTableSelect from './index.ts'
 
 const inputValue = ref('')
 const showPopover = ref(false)

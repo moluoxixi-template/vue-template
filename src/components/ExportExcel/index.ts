@@ -1,4 +1,4 @@
-import ExportExcel from './src/index.vue'
+import ExportExcel from './src/index.ts'
 import type { App } from 'vue'
 
 // 导出组件

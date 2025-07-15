@@ -197,7 +197,7 @@
 
 <script setup>
 import { computed, reactive, ref } from 'vue'
-import ExportExcel from '../../ExportExcel/src/index.vue'
+import ExportExcel from '@/components/ExportExcel'
 
 const props = defineProps({
   // 表格标题

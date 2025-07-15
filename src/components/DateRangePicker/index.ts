@@ -1,4 +1,4 @@
-import DateRangePicker from './src/index.vue'
+import DateRangePicker from './src/index.ts'
 import type { App } from 'vue'
 
 // 导出组件

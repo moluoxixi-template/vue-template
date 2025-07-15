@@ -1,4 +1,4 @@
-import EnterNextContainer from './src/index.vue'
+import EnterNextContainer from './src/index.ts'
 import type { App } from 'vue'
 
 // 导出组件

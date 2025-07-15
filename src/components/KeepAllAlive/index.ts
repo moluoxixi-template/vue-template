@@ -1,4 +1,4 @@
-import KeepAllAlive from './src/index.vue'
+import KeepAllAlive from './src/index.ts'
 import type { App } from 'vue'
 
 // 导出组件

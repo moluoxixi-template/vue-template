@@ -34,7 +34,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import DateRangePicker from '@/components/DateRangePicker/index.vue'
+import DateRangePicker from '@/components/DateRangePicker'
 
 // 日期范围数据
 const dateRange = ref([])

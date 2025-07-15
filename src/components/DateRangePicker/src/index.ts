@@ -1,1 +1,3 @@
-export { default } from '@moluoxixi/daterangepicker'
+import DateRangePicker from '@moluoxixi/daterangepicker'
+
+export default DateRangePicker

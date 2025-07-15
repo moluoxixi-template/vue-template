@@ -2,14 +2,14 @@
   --el-border-radius-base: 8px;
   --el-table-border-color: #dcdfe6;
   --el-text-color-primary: #fff;
-  --el-menu-bg-color: var(--el-color-primary);
-  --el-menu-bg-hover-color: var(--el-text-color-primary);
-  --el-menu-text-color: var(--el-text-color-primary);
-  --el-menu-text-hover-color: var(--el-menu-bg-color);
-  --el-menu-popup-bg-color: var(--el-menu-bg-hover-color);
-  --el-menu-popup-text-color: var(--el-menu-bg-color);
-  --el-menu-popup-bg-hover-color: var(--el-menu-bg-color);
-  --el-menu-popup-text-hover-color: var(--el-menu-bg-hover-color);
+  --el-menu-bg-color: var(--el-color-primary) !important;
+  --el-menu-bg-hover-color: var(--el-text-color-primary) !important;
+  --el-menu-text-color: var(--el-text-color-primary) !important;
+  --el-menu-text-hover-color: var(--el-color-primary) !important;
+  --el-menu-popup-bg-color: var(--el-text-color-primary) !important;
+  --el-menu-popup-text-color: var(--el-color-primary) !important;
+  --el-menu-popup-bg-hover-color: var(--el-color-primary) !important;
+  --el-menu-popup-text-hover-color: var(--el-text-color-primary) !important;
 }
 
 //#region 布局类
@@ -77,7 +77,7 @@
 
     .el-sub-menu,
     .el-menu-item {
-      background-color: var(--el-menu-popup-bg-color);
+      background-color: var(--el-menu-popup-bg-color) !important;
       color: var(--el-menu-bg-color) !important;
 
       .el-sub-menu__title {

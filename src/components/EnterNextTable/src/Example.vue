@@ -95,7 +95,7 @@
 import type { noNextInputParams } from '@/components/EnterNextTable/src/_types'
 import { ElMessage } from 'element-plus'
 import { ref } from 'vue'
-import TableEnterNext from './index.vue'
+import TableEnterNext from './index.ts'
 
 // 定义表格数据类型
 interface TableRowData {

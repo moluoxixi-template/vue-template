@@ -46,7 +46,7 @@
 import type { ColumnType } from '@/components/DraggableTable/src/_types'
 import { ElButton, ElCheckbox, ElMessage } from 'element-plus'
 import { ref } from 'vue'
-import EnterNextDragTable from './index.vue'
+import EnterNextDragTable from './index.ts'
 
 // 定义表格数据类型
 interface TableRowData {

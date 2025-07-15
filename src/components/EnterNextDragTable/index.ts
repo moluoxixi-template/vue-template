@@ -1,4 +1,4 @@
-import EnterNextDragTable from './src/index.vue'
+import EnterNextDragTable from './src/index.ts'
 import type { App } from 'vue'
 
 // 导出组件
