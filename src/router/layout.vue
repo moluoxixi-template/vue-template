@@ -2,10 +2,10 @@
   <component :is="layout" />
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { computed } from 'vue'
-import layouts from '@/layout/index.js'
-import { useSystemStore } from '@/stores/modules/system.js'
+import layouts from '@/layout/index.ts'
+import { useSystemStore } from '@/stores/modules/system.ts'
 
 const systemInfo = useSystemStore()
 const layoutType = computed(() => systemInfo.layout)
