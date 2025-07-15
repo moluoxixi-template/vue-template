@@ -1,4 +1,4 @@
-import type { Component, Plugin } from 'vue'
+import type { Component } from 'vue'
 
 const layoutFiles = import.meta.glob('./*.vue', { eager: true, import: 'default' })
 const layouts = Object.keys(layoutFiles).reduce((modules, modulePath) => {
@@ -12,7 +12,7 @@ const layouts = Object.keys(layoutFiles).reduce((modules, modulePath) => {
     modules[name as string] = layout as Component
   }
   return modules
-}, {} as Plugin)
+}, {} as any)
 layouts.install = function (app: any) {
   const layoutNames = Object.keys(layouts)
   layoutNames.forEach((name) => {
