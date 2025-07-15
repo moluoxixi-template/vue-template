@@ -8,6 +8,7 @@ export default viteConfig({
   rootPath: path.resolve(),
   mode: {
     base: {
+      VITE_AUTO_ROUTES: true,
       VITE_GLOB_APP_TITLE: 'test',
       VITE_GLOB_APP_CODE: 'test',
       VITE_DEVTOOLS: false,

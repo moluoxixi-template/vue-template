@@ -1,9 +1,11 @@
 import { cloneDeep } from 'lodash'
 import { assign, isEmpty } from 'radash'
-import { routes as autoRoutes, findDefaultRoute } from 'virtual:auto-routes'
+import * as autoRoutess from 'virtual:auto-routes'
 import { qiankunWindow } from 'vite-plugin-qiankun/dist/helper'
 import { createRouter, createWebHistory } from 'vue-router'
 
+const { autoRoutes } = autoRoutess
+console.log('aaa', autoRoutess)
 // 自动生成的路由
 const routesChildrens = autoRoutes
 const Routes = [
@@ -11,7 +13,7 @@ const Routes = [
     path: '/',
     name: 'layout',
     component: () => import('./layout.vue' as string),
-    redirect: findDefaultRoute(routesChildrens),
+    redirect: '',
     children: routesChildrens,
   },
   {
