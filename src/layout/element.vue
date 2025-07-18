@@ -24,8 +24,8 @@
           </div>
         </el-header>
         <el-main>
-          <el-container class="h-full w-full bg-white">
-            <el-main>
+          <el-container class="h-full w-full">
+            <el-main style="background-color: #fff">
               <transition name="fade">
                 <RouterView v-slot="{ Component, route }">
                   <keep-alive>
