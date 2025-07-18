@@ -1,7 +1,7 @@
 :root {
   --el-border-radius-base: 8px;
   --el-table-border-color: #dcdfe6;
-  --el-text-color-primary: #fff;
+  --el-text-color-primary: #fff !important;
   --el-menu-bg-color: var(--el-color-primary) !important;
   --el-menu-bg-hover-color: var(--el-text-color-primary) !important;
   --el-menu-text-color: var(--el-text-color-primary) !important;
