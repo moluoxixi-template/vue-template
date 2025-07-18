@@ -24,8 +24,8 @@
           </div>
         </el-header>
         <el-main>
-          <el-container class="h-full w-full bg-white">
-            <el-main>
+          <el-container class="h-full w-full">
+            <el-main style="background-color: #fff">
               <transition name="fade">
                 <RouterView v-slot="{ Component, route }">
                   <keep-alive>
@@ -42,7 +42,7 @@
   </el-config-provider>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 import { qiankunWindow } from 'vite-plugin-qiankun/dist/helper'
 import { computed, reactive } from 'vue'
@@ -60,4 +60,70 @@ const systemCode = computed(() => {
 const defaultTab = computed(() => router.currentRoute.value.path)
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.bg-primary {
+  background-color: var(--el-color-primary);
+}
+
+:deep(.el-menu) {
+  background-color: var(--el-color-primary);
+
+  .el-menu-item,
+  .el-sub-menu {
+    background-color: var(--el-color-primary);
+    color: #fff !important;
+
+    .el-sub-menu__title {
+      background-color: var(--el-color-primary);
+      color: #fff !important;
+    }
+
+    &.is-active,
+    &:hover {
+      background-color: #fff;
+      color: var(--el-color-primary) !important;
+
+      .el-sub-menu__title,
+      .el-sub-menu__title:hover {
+        background-color: #fff;
+        color: var(--el-color-primary) !important;
+      }
+    }
+  }
+
+  &.el-menu--popup {
+    background-color: #fff;
+
+    .el-sub-menu,
+    .el-menu-item {
+      background-color: #fff !important;
+      color: var(--el-color-primary) !important;
+
+      .el-sub-menu__title {
+        background-color: #fff;
+        color: var(--el-color-primary) !important;
+      }
+
+      &.is-active,
+      &:hover {
+        background-color: var(--el-color-primary) !important;
+        color: #fff !important;
+
+        .el-sub-menu__title,
+        .el-sub-menu__title:hover {
+          background-color: var(--el-color-primary) !important;
+          color: #fff !important;
+        }
+      }
+    }
+  }
+}
+
+:deep(.el-main) {
+  --el-main-padding: 12px;
+}
+
+:deep(.el-header) {
+  --el-header-padding: 0 !important;
+}
+</style>

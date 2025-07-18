@@ -3,6 +3,8 @@ import path from 'node:path'
 import process from 'node:process'
 import type { UserConfig } from 'vite'
 import { loadEnv } from 'vite'
+// sentry
+import { sentryVitePlugin } from '@sentry/vite-plugin'
 
 export default viteConfig({
   rootPath: path.resolve(),
@@ -28,18 +30,28 @@ export default viteConfig({
     const env = loadEnv(mode!, process.cwd())
     const viteEnv = wrapperEnv(env)
     return {
+      plugins: [
+        viteEnv.VITE_SENTRY
+        && sentryVitePlugin({
+          authToken: process.env.SENTRY_AUTH_TOKEN,
+          org: 'f1f562b9b82f',
+          project: 'javascript-vue',
+        }),
+      ],
       server: {
-        '/ts-bs-his-base': {
-          target: `${viteEnv.VITE_PROXY_URL}`,
-          secure: false,
-          changeOrigin: true,
-          configure: (proxy: any) => {
-            const encryptedList = ['appId', 'randomStr', 'timestamp', 'version', 'sign']
-            proxy.on('proxyReq', (proxyReq: any, req: any) => {
-              encryptedList.forEach((item) => {
-                proxyReq.setHeader(item, req.headers[item.toLocaleLowerCase()] || req.headers[item])
+        proxy: {
+          '/ts-bs-his-base': {
+            target: `${viteEnv.VITE_PROXY_URL}`,
+            secure: false,
+            changeOrigin: true,
+            configure: (proxy: any) => {
+              const encryptedList = ['appId', 'randomStr', 'timestamp', 'version', 'sign']
+              proxy.on('proxyReq', (proxyReq: any, req: any) => {
+                encryptedList.forEach((item) => {
+                  proxyReq.setHeader(item, req.headers[item.toLocaleLowerCase()] || req.headers[item])
+                })
               })
-            })
+            },
           },
         },
       },

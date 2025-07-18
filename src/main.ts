@@ -1,6 +1,6 @@
 import type { QiankunProps } from 'vite-plugin-qiankun/dist/helper'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
-import { browserTracingIntegration, init, vueIntegration } from '@sentry/vue'
+import { browserTracingIntegration, init, replayCanvasIntegration, replayIntegration, vueIntegration } from '@sentry/vue'
 import { ElDialog, ElDrawer } from 'element-plus'
 
 import moment from 'moment'
@@ -43,6 +43,21 @@ function proxy(container: HTMLElement) {
     document.body.appendChild = revocable.proxy
   }
   ;(document.body.appendChild as any).__isProxy__ = true
+
+  const removecable = Proxy.revocable(document.body.removeChild, {
+    apply(target, thisArg, [node]) {
+      if (container) {
+        container.removeChild(node)
+      }
+      else {
+        target.call(thisArg, node)
+      }
+    },
+  })
+  if (removecable.proxy) {
+    document.body.removeChild = removecable.proxy
+  }
+  ;(document.body.removeChild as any).__isProxy__ = true
 }
 
 function themeManager(props: QiankunProps) {
@@ -95,6 +110,8 @@ async function render(props: QiankunProps) {
       dsn: 'https://e9b3c65caeec301093d764fdf7bff8e5@o4509455371337728.ingest.us.sentry.io/4509455378022400',
       normalizeDepth: 10,
       sendDefaultPii: true,
+      replaysSessionSampleRate: 0.1,
+      replaysOnErrorSampleRate: 1.0,
       integrations: [
       // 跟踪vue
         vueIntegration({
@@ -107,6 +124,10 @@ async function render(props: QiankunProps) {
         }),
         // 跟踪路由
         browserTracingIntegration({ router }),
+        // 录制页面中的错误
+        replayIntegration(),
+        // 录制canvas中的错误
+        replayCanvasIntegration(),
       ],
     })
   //#endregion

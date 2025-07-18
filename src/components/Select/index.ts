@@ -1,4 +1,4 @@
-import Select from './src/index.vue'
+import Select from '@moluoxixi/select'
 import type { App } from 'vue'
 
 // 导出组件

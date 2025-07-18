@@ -15,7 +15,7 @@ EnterNextContainer 是一个用于管理表单输入流程的容器组件，它�
 ## 安装与导入
 
 ```js
-import EnterNextContainer from '@/components/EnterNextContainer/index.vue'
+import EnterNextContainer from '@/components/EnterNextContainer'
 ```
 
 ## 基本用法
@@ -35,7 +35,7 @@ import EnterNextContainer from '@/components/EnterNextContainer/index.vue'
 
 <script setup>
 import { ref } from 'vue'
-import EnterNextContainer from '@/components/EnterNextContainer/index.vue'
+import EnterNextContainer from '@/components/EnterNextContainer'
 
 const form = ref({
   field1: '',
