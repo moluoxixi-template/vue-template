@@ -29,18 +29,21 @@ export default viteConfig({
     const viteEnv = wrapperEnv(env)
     return {
       server: {
-        '/ts-bs-his-base': {
-          target: `${viteEnv.VITE_PROXY_URL}`,
-          secure: false,
-          changeOrigin: true,
-          configure: (proxy: any) => {
-            const encryptedList = ['appId', 'randomStr', 'timestamp', 'version', 'sign']
-            proxy.on('proxyReq', (proxyReq: any, req: any) => {
-              encryptedList.forEach((item) => {
-                proxyReq.setHeader(item, req.headers[item.toLocaleLowerCase()] || req.headers[item])
+        proxy: {
+          '/ts-bs-his-base': {
+            target: `${viteEnv.VITE_PROXY_URL}`,
+            secure: false,
+            changeOrigin: true,
+            configure: (proxy: any) => {
+              const encryptedList = ['appId', 'randomStr', 'timestamp', 'version', 'sign']
+              proxy.on('proxyReq', (proxyReq: any, req: any) => {
+                encryptedList.forEach((item) => {
+                  proxyReq.setHeader(item, req.headers[item.toLocaleLowerCase()] || req.headers[item])
+                })
               })
-            })
+            },
           },
+
         },
       },
     }
