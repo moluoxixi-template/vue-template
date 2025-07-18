@@ -25,6 +25,7 @@ let app: any
 /**
  * @param container 主应用下发的props中的container,也就是子应用的根节点
  * 将子应用appendBody的元素,挂载到子应用根元素身上
+
  */
 function proxy(container: HTMLElement) {
   if ((document.body.appendChild as any).__isProxy__)
@@ -43,6 +44,21 @@ function proxy(container: HTMLElement) {
     document.body.appendChild = revocable.proxy
   }
   ;(document.body.appendChild as any).__isProxy__ = true
+
+  const removecable = Proxy.revocable(document.body.removeChild, {
+    apply(target, thisArg, [node]) {
+      if (container) {
+        container.removeChild(node)
+      }
+      else {
+        target.call(thisArg, node)
+      }
+    },
+  })
+  if (removecable.proxy) {
+    document.body.removeChild = removecable.proxy
+  }
+  ;(document.body.removeChild as any).__isProxy__ = true
 }
 
 function themeManager(props: QiankunProps) {
