@@ -1,14 +1,15 @@
 <template>
   <div class="example-container">
     <h2>EnterNextDragTable 示例</h2>
-    <ElCheckbox v-model="allowSelectNextInEmpty" style="display: none">
-      允许在空select下也能跳转
-    </ElCheckbox>
+    <ElButton type="primary" @click="changeMode">
+      切换模式（当前为 {{ mode }} 模式）
+    </ElButton>
     <div class="table-container">
       <EnterNextDragTable
         ref="tableRef"
         v-model="tableData"
         :columns="columns"
+        :container-type="mode"
         editable
         filterable
         sortable
@@ -44,9 +45,9 @@
 
 <script setup lang="ts">
 import type { ColumnType } from '@/components/DraggableTable/src/_types'
-import { ElButton, ElCheckbox, ElMessage } from 'element-plus'
+import { ElButton, ElMessage } from 'element-plus'
 import { ref } from 'vue'
-import EnterNextDragTable from './index.ts'
+import EnterNextDragTable from './index.vue'
 
 // 定义表格数据类型
 interface TableRowData {
@@ -106,7 +107,16 @@ const columns: ColumnType[] = [
     fixed: 'right',
   },
 ]
+const mode = ref<'row' | 'table'>('row')
 
+function changeMode() {
+  if (mode.value === 'row') {
+    mode.value = 'table'
+  }
+  else {
+    mode.value = 'row'
+  }
+}
 // 处理在最后一个输入框按下Enter的情况
 function handleNoNextInput({ row, rowIndex }: { row: TableRowData, rowIndex: number }) {
   ElMessage.info(`在最后一个输入框按下了Enter，当前行：${rowIndex + 1}，姓名：${row.name}`)

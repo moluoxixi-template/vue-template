@@ -6,6 +6,9 @@
     <el-card class="example-card">
       <div class="header-actions">
         <div class="action-buttons">
+          <el-button type="primary" @click="changeMode">
+            切换模式（当前为 {{ mode }} 模式）
+          </el-button>
           <el-button type="primary" @click="addRow">
             添加行
           </el-button>
@@ -19,6 +22,7 @@
       <TableEnterNext
         ref="tableEnterNextRef"
         :data="tableData"
+        :container-type="mode"
         :allow-select-next-in-empty="allowSelectNextInEmpty"
         border
         @no-next-input="handleNoNextInput"
@@ -95,7 +99,8 @@
 import type { noNextInputParams } from '@/components/EnterNextTable/src/_types'
 import { ElMessage } from 'element-plus'
 import { ref } from 'vue'
-import TableEnterNext from './index.ts'
+import TableEnterNext from './index.vue'
+import PopoverTableSelect from '@/components/PopoverTableSelect'
 
 // 定义表格数据类型
 interface TableRowData {
@@ -117,6 +122,16 @@ const allowSelectNextInEmpty = ref(true)
 
 // 表格组件引用，使用类型断言确保能访问refreshRows方法
 const tableEnterNextRef = ref<InstanceType<typeof TableEnterNext> | null>(null)
+
+const mode = ref<'row' | 'table'>('row')
+function changeMode() {
+  if (mode.value === 'row') {
+    mode.value = 'table'
+  }
+  else {
+    mode.value = 'row'
+  }
+}
 
 // 添加行
 function addRow() {
@@ -150,7 +165,7 @@ function removeLastRow() {
 }
 
 // 处理删除指定行
-function handleDelete(row: TableRowData, index: number) {
+function handleDelete(_: TableRowData, index: number) {
   tableData.value.splice(index, 1)
   ElMessage.success(`已删除第${index + 1}行数据`)
 
