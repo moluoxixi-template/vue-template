@@ -1,4 +1,4 @@
-import DraggableTable from './src/index.vue'
+import DraggableTable from './src/index.ts'
 import type { App } from 'vue'
 
 // 导出组件
