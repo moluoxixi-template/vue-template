@@ -14,8 +14,8 @@ export default viteConfig(
       mode: {
         base: {
           VITE_AUTO_ROUTES: true,
-          VITE_GLOB_APP_TITLE: 'test',
-          VITE_GLOB_APP_CODE: 'test',
+          VITE_GLOB_APP_TITLE: viteEnv.VITE_GLOB_APP_TITLE,
+          VITE_GLOB_APP_CODE: viteEnv.VITE_GLOB_APP_CODE,
           VITE_DEVTOOLS: false,
           VITE_PURE_CONSOLE_AND_DEBUGGER: false,
           VITE_PORT: 3300,
