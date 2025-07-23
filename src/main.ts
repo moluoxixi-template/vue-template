@@ -16,6 +16,8 @@ import { useSystemStore } from './stores/modules/system.ts'
 
 import '@/assets/styles/main.css'
 
+import '@/assets/fonts/index.css'
+
 import 'moment/dist/locale/zh-cn' // 中文化
 
 moment.locale('zh-cn')
@@ -25,7 +27,6 @@ let app: any
 /**
  * @param container 主应用下发的props中的container,也就是子应用的根节点
  * 将子应用appendBody的元素,挂载到子应用根元素身上
-
  */
 function proxy(container: HTMLElement) {
   if ((document.body.appendChild as any).__isProxy__)

@@ -57,7 +57,7 @@ body {
     color 0.5s,
     background-color 0.5s;
   font-size: 14px;
-  font-family: PingFangSC-Regular, serif;
+  font-family: SourceHanSans-Regular, serif;
 }
 
 #app {
@@ -70,17 +70,17 @@ body {
 }
 
 .text-bold {
-  font-family: PingFangSC-Semibold, serif;
+  font-family: SourceHanSans-Semibold, serif;
 }
 
 .text-medium {
-  font-family: PingFangSC-Medium, serif;
+  font-family: SourceHanSans-Medium, serif;
 }
 
 .text-regular {
-  font-family: PingFangSC-Regular, serif;
+  font-family: SourceHanSans-Regular, serif;
 }
 
 .text-light {
-  font-family: PingFangSC-Light,serif;
+  font-family: SourceHanSans-Light,serif;
 }
