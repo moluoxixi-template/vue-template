@@ -14,12 +14,12 @@ const envObj = Object.fromEntries(
 )
 
 const appCode = envObj.VITE_GLOB_APP_CODE.replace(/["']/g, '')
-
 const ciPath = path.resolve(__dirname, '../.gitlab-ci.yml')
 if (fs.existsSync(ciPath)) {
   const ciText = fs.readFileSync(ciPath, 'utf-8')
-  const oldCiText = ciText.match(/variables:\s+systemCode: '(.*)'/)
+  const oldCiText = ciText.match(/variables:\s+systemCode: (.*)/)
   const oldAppCode = oldCiText && oldCiText[1]
+  console.log('oldAppCode', oldAppCode, ciText)
   // 处理.gitlab-ci.yml文件
   if (oldAppCode === appCode) {
     console.log(
@@ -28,8 +28,8 @@ if (fs.existsSync(ciPath)) {
   }
   else {
     const newCiText = ciText.replace(
-      /variables:\s+systemCode: '.*'/,
-      `variables:\r  systemCode: '${appCode}'`,
+      /variables:\s+systemCode:(.*)/,
+      `variables:\r  systemCode: ${appCode}`,
     )
 
     fs.writeFileSync(ciPath, newCiText)
