@@ -23,7 +23,7 @@
             </el-menu>
           </div>
         </el-header>
-        <el-main>
+        <el-main class="overflow-hidden">
           <el-container class="h-full w-full">
             <el-main style="background-color: #fff">
               <transition name="fade">

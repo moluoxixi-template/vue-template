@@ -1,4 +1,5 @@
 @import 'tailwind.scss';
 @import 'element/index.scss';
 @import 'base.css';
+@import "custom.css";
 @import 'vxe-table/lib/style.css';

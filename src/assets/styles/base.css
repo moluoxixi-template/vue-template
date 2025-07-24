@@ -38,7 +38,6 @@
 *::after {
   box-sizing: border-box;
   margin: 0;
-  font-weight: normal;
 }
 
 ::-webkit-scrollbar {
@@ -67,20 +66,4 @@ body {
   background: #f1f2f4;
   height: 100%;
   overflow-y: auto;
-}
-
-.text-bold {
-  font-family: SourceHanSans-Semibold, serif;
-}
-
-.text-medium {
-  font-family: SourceHanSans-Medium, serif;
-}
-
-.text-regular {
-  font-family: SourceHanSans-Regular, serif;
-}
-
-.text-light {
-  font-family: SourceHanSans-Light,serif;
 }
