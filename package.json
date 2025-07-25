@@ -52,7 +52,7 @@
     "@moluoxixi/enternexttable": "1.3.10",
     "@moluoxixi/exportexcel": "1.3.10",
     "@moluoxixi/keepallalive": "latest",
-    "@moluoxixi/popovertableselect": "1.3.17",
+    "@moluoxixi/popovertableselect": "1.3.18",
     "@moluoxixi/select": "latest",
     "@sentry/vite-plugin": "^3.5.0",
     "@sentry/vue": "^9.27.0",
