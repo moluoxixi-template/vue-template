@@ -16,7 +16,7 @@ import { useSystemStore } from './stores/modules/system.ts'
 
 import '@/assets/styles/main.css'
 // 放入main.css中qiankun会使用cssSheet解析，部分css变量会丢失
-import 'element/index.scss'
+import '@/assets/styles/element/index.scss'
 import 'vxe-table/lib/style.css'
 import '@/assets/fonts/index.css'
 
