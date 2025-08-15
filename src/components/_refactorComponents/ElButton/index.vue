@@ -28,7 +28,7 @@ async function handleClick(params: any) {
   emit('click', params)
 }
 
-const throttleClick = _throttle(handleClick, props.throttle)
+const throttleClick = _throttle(handleClick, props.throttle, { leading: true, trailing: false })
 </script>
 
 <style scoped lang="scss"></style>

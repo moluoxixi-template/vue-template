@@ -15,6 +15,10 @@ import getRouter from './router'
 import { useSystemStore } from './stores/modules/system.ts'
 
 import '@/assets/styles/main.css'
+// 放入main.css中qiankun会使用cssSheet解析，部分css变量会丢失
+import '@/assets/styles/element/index.scss'
+import 'vxe-table/lib/style.css'
+import '@/assets/fonts/index.css'
 
 import 'moment/dist/locale/zh-cn' // 中文化
 
