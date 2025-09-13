@@ -13,6 +13,7 @@ import { modifyComponents } from '@/utils'
 import App from './App.vue'
 import getRouter from './router'
 import { useSystemStore } from './stores/modules/system.ts'
+import { useUserStore } from './stores/modules/user.ts'
 
 import '@/assets/styles/main.css'
 // 放入main.css中qiankun会使用cssSheet解析，部分css变量会丢失
@@ -85,7 +86,7 @@ function themeManager(props: QiankunProps) {
 }
 
 async function render(props: QiankunProps) {
-  const { container } = props
+  const { container, data } = props
   proxy(container as HTMLElement)
   app = createApp(App)
   // 注册指令
@@ -105,9 +106,17 @@ async function render(props: QiankunProps) {
     app.component(key, component)
   }
 
+  const userStore = useUserStore()
+  try {
+    await userStore.userLogin(data?.userInfo)
+  }
+  catch (e) {
+    console.log(e)
+  }
+
   const router = getRouter(props)
 
-  //#region 初始化sentry
+  //#region 初始化sentry 如果需要监视错误，自己配自己的dsn,不要用我的
   import.meta.env.VITE_SENTRY
     && init({
       app,
