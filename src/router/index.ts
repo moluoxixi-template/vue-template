@@ -5,6 +5,11 @@ import { qiankunWindow } from 'vite-plugin-qiankun/dist/helper'
 import { createRouter, createWebHistory } from 'vue-router'
 
 // 自动生成的路由
+autoRoutes.push({
+  name: '组件文档',
+  path: 'view',
+  href: 'http://192.168.209.103:9099/vueComponents/index.html',
+})
 const routesChildrens = autoRoutes
 const Routes = [
   {
