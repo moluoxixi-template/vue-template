@@ -1,12 +1,22 @@
 <template>
   <template v-for="(route, index) in routes" :key="index">
     <el-menu-item v-if="!route.children?.length" :index="route.path">
-      {{ route.meta?.title || route.name }}
+      <a v-if="route.href" target="_blank" :href="route.href">
+        {{ route.meta?.title || route.name }}
+      </a>
+      <template v-else>
+        {{ route.meta?.title || route.name }}
+      </template>
     </el-menu-item>
     <template v-else>
       <el-sub-menu :index="route.path">
         <template #title>
-          {{ route.meta?.title || route.name }}
+          <a v-if="route.href" target="_blank" :href="route.href">
+            {{ route.meta?.title || route.name }}
+          </a>
+          <template v-else>
+            {{ route.meta?.title || route.name }}
+          </template>
         </template>
         <sub-menu :routes="route.children" />
       </el-sub-menu>
