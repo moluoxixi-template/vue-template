@@ -3,7 +3,6 @@ import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import { browserTracingIntegration, init, replayCanvasIntegration, replayIntegration, vueIntegration } from '@sentry/vue'
 import { ElDialog, ElDrawer } from 'element-plus'
 
-import moment from 'moment'
 import { qiankunWindow, renderWithQiankun } from 'vite-plugin-qiankun/dist/helper'
 import { createApp } from 'vue'
 import directives from '@/directives'
@@ -15,15 +14,11 @@ import getRouter from './router'
 import { useSystemStore } from './stores/modules/system.ts'
 import { useUserStore } from './stores/modules/user.ts'
 
-import '@/assets/styles/main.css'
+import '@/assets/styles/main.scss'
 // 放入main.css中qiankun会使用cssSheet解析，部分css变量会丢失
 import '@/assets/styles/element/index.scss'
 import 'vxe-table/lib/style.css'
 import '@/assets/fonts/index.css'
-
-import 'moment/dist/locale/zh-cn' // 中文化
-
-moment.locale('zh-cn')
 
 let app: any
 

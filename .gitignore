@@ -1,13 +1,8 @@
 # user
 test
 test.zip
-src/typings
-stats.html
-docs
-moluoxixi
-version.json
+typings
 
-pnpm-lock.yaml
 # Logs
 logs
 *.log
@@ -17,13 +12,16 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+
+# project files
 node_modules
 .DS_Store
 dist
 dist-ssr
 coverage
 *.local
-
+stats.html
+pnpm-lock.yaml
 /cypress/videos/
 /cypress/screenshots/
 

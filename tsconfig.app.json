@@ -7,16 +7,13 @@
       "ESNext"
     ],
     "baseUrl": ".",
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
     "paths": {
       "@/*": [
         "src/*"
-      ],
-      "~/*": [
-        "src/*"
       ]
     },
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
     "resolveJsonModule": true,
     "types": [
       "vite/client"
@@ -42,12 +39,6 @@
   },
   "exclude": [
     "dist",
-    "node_modules",
-    "cypress",
-    "vite.config.ts",
-    ".storybook/**/*",
-    ".storybook/**/*.tsx",
-    ".docs/.vitepress/config.ts",
-    "src/components/ViteConfig/**/*"
-  ],
+    "node_modules"
+  ]
 }

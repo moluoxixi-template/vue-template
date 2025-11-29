@@ -14,22 +14,6 @@
 const tableData = ref([
   { name: '123' },
   { name: '123' },
-  { name: '123' },
-  { name: '123' },
-  { name: '123' },
-  { name: '123' },
-  { name: '123' },
-  { name: '123' },
-  { name: '123' },
-  { name: '123' },
-  { name: '123' },
-  { name: '123' },
-  { name: '123' },
-  { name: '123' },
-  { name: '123' },
-  { name: '123' },
-  { name: '123' },
-  { name: '123' },
 ])
 </script>
 

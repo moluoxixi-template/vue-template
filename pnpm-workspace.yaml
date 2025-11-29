@@ -1,0 +1,67 @@
+gitChecks: false
+registry: https://registry.npmjs.org/
+
+# 该分类仅包含多pack共用依赖
+catalogs:
+  build:
+    '@element-plus/icons-vue': ^2.3.1
+    '@moluoxixi/classnames': latest
+    '@moluoxixi/ajaxpackage': 0.0.9
+    '@sentry/vite-plugin': ^3.5.0
+    '@sentry/vue': ^9.27.0
+    axios: 1.12.0
+    # utils
+    classnames: latest
+    crypto-js: ^4.2.0
+    # element-plus
+    element-plus: 2.11.3
+    lodash-es: 4.17.21
+    pinia: 2.3.0
+    pinia-plugin-persistedstate: ^4.2.0
+    radash: ^12.1.0
+    rxjs: ^7.8.1
+    uuid: ^11.1.0
+    vite-plugin-qiankun: ^1.0.15
+    # vue官方包
+    vue: ^3.5.13
+    vue-i18n: 11.1.1
+    vue-router: 4.5.0
+    vxe-table: 4.13.39
+    xlsx: ^0.18.5
+  dev:
+    vite: 7.1.11
+    tailwindcss: npm:tailwindcss@4
+    # 组件/工具包的npm化
+    '@commitlint/cli': ^19.8.0
+    '@commitlint/config-conventional': ^19.8.0
+    '@moluoxixi/eslintconfig': 0.0.9-beta.2
+    '@moluoxixi/viteconfig': 0.0.24-beta.1
+    '@moluoxixi/autoroutesplugin': 0.0.3-beta.1
+    '@moluoxixi/ajaxpackage': 0.0.2-beta.1
+    '@moluoxixi/cssmoduleglobalrootplugin': 0.0.4
+    '@vue-macros/volar': ^3.0.0-beta.15
+    commitizen: ^4.3.1
+    compressing: ^1.10.1
+    cz-customizable: ^7.4.0
+    dotenv: ^16.5.0
+    # eslint
+    eslint: ^9.22.0
+    eslint-plugin-format: ^1.0.1
+    husky: ^9.1.7
+    jiti: ^2.4.2
+    lint-staged: ^15.5.1
+    npm-run-all2: ^7.0.2
+    oxlint: ^0.16.0
+    postcss: ^8.5.3
+    # regin 样式
+    sass: ^1.87.0
+    sass-embedded: ^1.87.0
+    sass-loader: ^16.0.5
+    tsx: ^4.20.5
+    typescript: ~5.8.0
+    vue-tsc: ^2.2.8
+  type:
+    '@types/crypto-js': ^4.2.2
+    '@types/lodash': ^4.17.17
+    '@types/node': ^22.14.0
+    '@types/uuid': ^10.0.0

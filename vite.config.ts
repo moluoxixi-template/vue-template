@@ -1,34 +1,26 @@
-import viteConfig, { wrapperEnv } from '@moluoxixi/viteconfig'
+// 配置文件
 import path from 'node:path'
 import process from 'node:process'
-import { loadEnv } from 'vite'
-// sentry
+import cssModuleGlobalRootPlugin from '@moluoxixi/cssmoduleglobalrootplugin'
+import { ViteConfig, wrapperEnv } from '@moluoxixi/viteconfig'
 import { sentryVitePlugin } from '@sentry/vite-plugin'
+import { loadEnv } from 'vite'
 
-export default viteConfig(
+export default ViteConfig(
   ({ mode }) => {
     const env = loadEnv(mode!, process.cwd())
     const viteEnv = wrapperEnv(env)
+    const rootPath = path.resolve()
+    const appCode = viteEnv.VITE_APP_CODE
+    const appTitle = viteEnv.VITE_APP_TITLE
+    const port = viteEnv.VITE_APP_PORT
     return {
-      rootPath: path.resolve(),
-      mode: {
-        base: {
-          VITE_AUTO_ROUTES: true,
-          VITE_GLOB_APP_TITLE: viteEnv.VITE_GLOB_APP_TITLE,
-          VITE_GLOB_APP_CODE: viteEnv.VITE_GLOB_APP_CODE,
-          VITE_DEVTOOLS: false,
-          VITE_PURE_CONSOLE_AND_DEBUGGER: false,
-          VITE_PORT: 3300,
-          VITE_OPEN: true,
-          VITE_USE_QIANKUN: true,
-          VITE_QIANKUN_DEV: false,
-          VITE_COMPRESS: true,
-          VITE_IMAGEMIN: true,
-          VITE_BUILD_GZIP: true,
-        },
-        development: {},
-        production: {},
-      },
+      rootPath,
+      appTitle,
+      appCode,
+      port,
+      autoComponent: true,
+      autoRoutes: true,
       viteConfig: {
         plugins: [
           viteEnv.VITE_SENTRY
@@ -41,16 +33,29 @@ export default viteConfig(
         server: {
           proxy: {
             '/ts-bs-his-base': {
-              target: `${viteEnv.VITE_PROXY_URL}`,
-              secure: false,
               changeOrigin: true,
-              configure: (proxy: any) => {
-                const encryptedList = ['appId', 'randomStr', 'timestamp', 'version', 'sign']
-                proxy.on('proxyReq', (proxyReq: any, req: any) => {
-                  encryptedList.forEach((item) => {
-                    proxyReq.setHeader(item, req.headers[item.toLocaleLowerCase()] || req.headers[item])
-                  })
-                })
+              target: 'http://192.168.208.26:9099',
+            },
+          },
+        },
+        css: {
+          postcss: {
+            plugins: [
+              cssModuleGlobalRootPlugin(),
+            ],
+          },
+          preprocessorOptions: {
+            scss: {
+              silenceDeprecations: ['legacy-js-api'],
+              api: 'modern-compiler',
+              additionalData: (source: string, filename: string) => {
+                if (filename.includes('assets/styles/element/index.scss')) {
+                  return `$namespace : 'el';
+                ${source}`
+                }
+                else {
+                  return source
+                }
               },
             },
           },

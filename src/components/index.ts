@@ -1,8 +1,12 @@
 import type { App, Component } from 'vue'
 
-export {}
+import * as Components from './components'
 
-const components: Component[] = []
+export * from './_hooks'
+
+export * from './components'
+
+const components: Component[] = Object.keys(Components)
 
 export default {
   install(app: App) {
