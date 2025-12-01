@@ -1,4 +1,4 @@
-export * from './modules/modifyComponent.tsx'
+export * from './modules/modifyComponent'
 
 export function getType(obj: any, type?: string) {
   if (type) {

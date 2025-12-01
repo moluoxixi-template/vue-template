@@ -43,7 +43,7 @@ import { qiankunWindow } from 'vite-plugin-qiankun/dist/helper'
 import { computed, reactive } from 'vue'
 import { RouterView, useRouter } from 'vue-router'
 import SubMenu from '@/components/SubMenu'
-import { useSystemStore } from '@/stores/modules/system.ts'
+import { useSystemStore } from '@/stores/modules/system'
 
 const router = useRouter()
 const routes = reactive(router.options.routes[0].children!)
