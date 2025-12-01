@@ -9,14 +9,14 @@
   "packageManager": "pnpm@10.8.0",
   "scripts": {
     "dev": "vite",
-    "CICD": "node ./scripts/CICD.mjs",
-    "build": "vite build --mode production & node ./scripts/build.mjs",
+    "CICD": "tsx ./scripts/CICD.mts",
+    "build": "vite build --mode production & tsx ./scripts/build.mts",
     "preview": "vite preview",
     "type-check": "vue-tsc --noEmit",
     "lint:eslint": "eslint . --fix",
     "prepare": "node .husky/install.mjs",
     "lint-staged": "lint-staged",
-    "commit": "git-cz"
+    "commit": "git add . &&  git-cz"
   },
   "postcss": {
     "plugins": {
