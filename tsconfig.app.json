@@ -1,24 +1,16 @@
 {
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "composite": true,
-    "target": "ESNext",
-    "jsx": "preserve",
     "lib": [
       "DOM",
       "ESNext"
     ],
-    "baseUrl": ".",
     "module": "ESNext",
     "moduleResolution": "Bundler",
-    "paths": {
-      "@/*": [
-        "src/*"
-      ]
-    },
     "types": [
       "vite/client"
-    ]
+    ],
+    "composite": true
   },
   "vueCompilerOptions": {
     "plugins": [
@@ -28,11 +20,6 @@
       "@vue-macros/volar/define-emits"
     ]
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue"
-  ],
   "exclude": [
     "dist",
     "node_modules",

@@ -1,5 +1,4 @@
 import type { QiankunProps } from 'vite-plugin-qiankun/dist/helper'
-import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import { browserTracingIntegration, init, replayCanvasIntegration, replayIntegration, vueIntegration } from '@sentry/vue'
 import { ElDialog, ElDrawer } from 'element-plus'
 
@@ -95,11 +94,6 @@ async function render(props: QiankunProps) {
       appendTo: appendToBody ? container || '#app' : 'body',
     }
   })
-
-  // 注册图标组件
-  for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
-    app.component(key, component)
-  }
 
   const userStore = useUserStore()
   try {

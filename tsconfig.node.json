@@ -1,17 +1,14 @@
 {
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "composite": true,
-    "target": "ESNext",
-    "jsx": "preserve",
     "lib": [
       "ESNext"
     ],
-    "baseUrl": ".",
     "module": "NodeNext",
     "moduleResolution": "nodenext",
+    "noEmit": true,
     "allowImportingTsExtensions": true,
-    "emitDeclarationOnly": true
+    "composite": true
   },
   "include": [
     "vite.config.ts"
