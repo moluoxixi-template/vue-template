@@ -16,7 +16,7 @@
     "lint:eslint": "eslint . --fix",
     "prepare": "node .husky/install.mjs",
     "lint-staged": "lint-staged",
-    "commit": "git add . &&  git-cz"
+    "commit": "git add . &&  git-cz && git push"
   },
   "postcss": {
     "plugins": {
