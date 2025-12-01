@@ -4,7 +4,7 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import layouts from '@/layout/index.ts'
+import layouts from '@/layouts'
 import { useSystemStore } from '@/stores/modules/system.ts'
 
 const systemInfo = useSystemStore()

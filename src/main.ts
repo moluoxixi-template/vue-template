@@ -8,11 +8,11 @@ import { createApp } from 'vue'
 import directives from '@/directives'
 import i18n from '@/locales'
 import { store } from '@/stores'
+import { useSystemStore } from '@/stores/modules/system'
+import { useUserStore } from '@/stores/modules/user'
 import { modifyComponents } from '@/utils'
 import App from './App.vue'
 import getRouter from './router'
-import { useSystemStore } from './stores/modules/system.ts'
-import { useUserStore } from './stores/modules/user.ts'
 
 import '@/assets/styles/main.scss'
 // 放入main.css中qiankun会使用cssSheet解析，部分css变量会丢失

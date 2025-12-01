@@ -1,5 +1,7 @@
 {
+  "extends": "./tsconfig.base.json",
   "compilerOptions": {
+    "composite": true,
     "target": "ESNext",
     "jsx": "preserve",
     "lib": [
@@ -7,27 +9,16 @@
       "ESNext"
     ],
     "baseUrl": ".",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
     "paths": {
       "@/*": [
         "src/*"
       ]
     },
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "resolveJsonModule": true,
     "types": [
       "vite/client"
-    ],
-    "allowJs": true,
-    "strict": true,
-    "strictNullChecks": true,
-    "noUnusedLocals": true,
-    "noEmit": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "isolatedModules": true,
-    "skipLibCheck": true,
-    "allowImportingTsExtensions": true
+    ]
   },
   "vueCompilerOptions": {
     "plugins": [
@@ -37,8 +28,15 @@
       "@vue-macros/volar/define-emits"
     ]
   },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue"
+  ],
   "exclude": [
     "dist",
-    "node_modules"
+    "node_modules",
+    "cypress",
+    "vite.config.ts"
   ]
 }
