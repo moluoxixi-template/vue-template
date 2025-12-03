@@ -1,5 +1,4 @@
 import type { QiankunProps } from 'vite-plugin-qiankun/dist/helper'
-import { browserTracingIntegration, init, replayCanvasIntegration, replayIntegration, vueIntegration } from '@sentry/vue'
 import { ElDialog, ElDrawer } from 'element-plus'
 
 import { qiankunWindow, renderWithQiankun } from 'vite-plugin-qiankun/dist/helper'
@@ -10,6 +9,7 @@ import { store } from '@/stores'
 import { useSystemStore } from '@/stores/modules/system'
 import { useUserStore } from '@/stores/modules/user'
 import { modifyComponents } from '@/utils'
+import { initSentry } from '@/utils/sentry'
 import App from './App.vue'
 import getRouter from './router'
 
@@ -80,7 +80,7 @@ function themeManager(props: QiankunProps) {
 }
 
 async function render(props: QiankunProps) {
-  const { container, data } = props
+  const { container } = props
   proxy(container as HTMLElement)
   app = createApp(App)
   // 注册指令
@@ -97,7 +97,7 @@ async function render(props: QiankunProps) {
 
   const userStore = useUserStore()
   try {
-    await userStore.userLogin(data?.userInfo)
+    await userStore.userLogin()
   }
   catch (e) {
     console.log(e)
@@ -105,34 +105,8 @@ async function render(props: QiankunProps) {
 
   const router = getRouter(props)
 
-  //#region 初始化sentry 如果需要监视错误，自己配自己的dsn,不要用我的
-  import.meta.env.VITE_SENTRY
-    && init({
-      app,
-      dsn: 'https://e9b3c65caeec301093d764fdf7bff8e5@o4509455371337728.ingest.us.sentry.io/4509455378022400',
-      normalizeDepth: 10,
-      sendDefaultPii: true,
-      replaysSessionSampleRate: 0.1,
-      replaysOnErrorSampleRate: 1.0,
-      integrations: [
-      // 跟踪vue
-        vueIntegration({
-          tracingOptions: {
-          // 跟踪vue组件
-            trackComponents: true,
-            // 需要跟踪的hooks,destroy用于vue2
-            hooks: ['activate', 'create', 'unmount', 'destroy', 'mount', 'update'],
-          },
-        }),
-        // 跟踪路由
-        browserTracingIntegration({ router }),
-        // 录制页面中的错误
-        replayIntegration(),
-        // 录制canvas中的错误
-        replayCanvasIntegration(),
-      ],
-    })
-  //#endregion
+  // 初始化 Sentry（生产环境标准配置）
+  initSentry(app, router)
 
   app.use(store)
   app.use(i18n)

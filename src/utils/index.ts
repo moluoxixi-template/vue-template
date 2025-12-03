@@ -1,4 +1,5 @@
 export * from './modules/modifyComponent'
+export * from './sentry'
 
 export function getType(obj: any, type?: string) {
   if (type) {

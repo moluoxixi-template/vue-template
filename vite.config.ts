@@ -23,18 +23,29 @@ export default ViteConfig(
       autoRoutes: true,
       viteConfig: {
         plugins: [
+          // Sentry Source Map 上传插件（仅在生产环境且配置了 VITE_SENTRY 时启用）
           viteEnv.VITE_SENTRY
+          && mode === 'production'
           && sentryVitePlugin({
             authToken: process.env.SENTRY_AUTH_TOKEN,
             org: 'f1f562b9b82f',
             project: 'javascript-vue',
+            // 仅上传 source map，不上传源码
+            sourcemaps: {
+              assets: './dist/**',
+              ignore: ['node_modules'],
+            },
+            // 设置发布版本
+            release: {
+              name: viteEnv.VITE_APP_VERSION || 'unknown',
+            },
           }),
         ],
         server: {
           proxy: {
             '/ts-bs-his-base': {
               changeOrigin: true,
-              target: 'http://192.168.208.26:9099',
+              target: 'http://192.168.209.103:9099',
             },
           },
         },
