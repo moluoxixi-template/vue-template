@@ -1,8 +1,8 @@
 // 配置文件
 import path from 'node:path'
 import process from 'node:process'
-import cssModuleGlobalRootPlugin from '@moluoxixi/cssmoduleglobalrootplugin'
-import { ViteConfig, wrapperEnv } from '@moluoxixi/viteconfig'
+import cssModuleGlobalRootPlugin from '@moluoxixi/css-module-global-root-plugin'
+import { ViteConfig, wrapperEnv } from '@moluoxixi/vite-config'
 import { sentryVitePlugin } from '@sentry/vite-plugin'
 import { loadEnv } from 'vite'
 
@@ -46,6 +46,10 @@ export default ViteConfig(
             '/ts-bs-his-base': {
               changeOrigin: true,
               target: 'http://192.168.209.103:9099',
+            },
+            '/ts-system': {
+              changeOrigin: true,
+              target: 'http://192.168.209.103:9099/ts-system',
             },
           },
         },

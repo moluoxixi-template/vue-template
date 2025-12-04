@@ -12,11 +12,7 @@
           style="padding: 0"
           height="60"
         >
-          <div class="w-full h-full bg-primary flex justify-center">
-            <ElMenu :default-active="defaultTab" :ellipsis="false" mode="horizontal" router>
-              <SubMenu menu-height="60" :routes="routes" />
-            </ElMenu>
-          </div>
+          <div class="w-full h-full bg-primary flex justify-center" />
         </ElHeader>
         <ElMain>
           <ElContainer class="h-full w-full">
@@ -38,21 +34,17 @@
 </template>
 
 <script lang="ts" setup>
-import { ElConfigProvider, ElContainer, ElHeader, ElMain, ElMenu } from 'element-plus'
+import { ElConfigProvider, ElContainer, ElHeader, ElMain } from 'element-plus'
 import { qiankunWindow } from 'vite-plugin-qiankun/dist/helper'
-import { computed, reactive } from 'vue'
-import { RouterView, useRouter } from 'vue-router'
-import SubMenu from '@/components/SubMenu'
+import { computed } from 'vue'
+import { RouterView } from 'vue-router'
 import { useSystemStore } from '@/stores/modules/system'
 
-const router = useRouter()
-const routes = reactive(router.options.routes[0].children!)
 const systemStore = useSystemStore()
 const themeColor = computed(() => systemStore.themeColor)
 const systemCode = computed(() => {
   return systemStore.systemCode
 })
-const defaultTab = computed(() => router.currentRoute.value.path)
 </script>
 
 <style lang="scss" scoped>

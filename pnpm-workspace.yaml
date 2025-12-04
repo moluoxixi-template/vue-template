@@ -5,8 +5,8 @@ registry: https://registry.npmjs.org/
 catalogs:
   build:
     '@element-plus/icons-vue': ^2.3.1
-    '@moluoxixi/ajaxpackage': 0.0.9
-    '@moluoxixi/classnames': latest
+    '@moluoxixi/ajax-package': 0.0.11-beta.2
+    '@moluoxixi/class-names': 0.0.3-beta.1
     '@sentry/vite-plugin': ^3.5.0
     '@sentry/vue': ^9.27.0
     axios: 1.12.0
@@ -28,11 +28,11 @@ catalogs:
   dev:
     '@commitlint/cli': ^19.8.0
     '@commitlint/config-conventional': ^19.8.0
-    '@moluoxixi/ajaxpackage': 0.0.2-beta.1
-    '@moluoxixi/autoroutesplugin': 0.0.3-beta.1
-    '@moluoxixi/cssmoduleglobalrootplugin': 0.0.4
-    '@moluoxixi/eslintconfig': 0.0.9-beta.2
-    '@moluoxixi/viteconfig': 0.0.24-beta.1
+    '@moluoxixi/ajax-package': 0.0.11-beta.2
+    '@moluoxixi/auto-routes-plugin': 0.0.4
+    '@moluoxixi/css-module-global-root-plugin': 0.0.5
+    '@moluoxixi/eslint-config': 0.0.10
+    '@moluoxixi/vite-config': 0.0.27
     '@vue-macros/volar': ^3.0.0-beta.15
     commitizen: ^4.3.1
     compressing: ^1.10.1

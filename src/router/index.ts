@@ -1,9 +1,10 @@
 import { cloneDeep } from 'lodash-es'
 import { assign, isEmpty } from 'radash'
-import { routes as autoRoutes, findDefaultRoute } from 'virtual:auto-routes'
+import { routes as autoRoutes } from 'virtual:auto-routes'
 import { qiankunWindow } from 'vite-plugin-qiankun/dist/helper'
 import { createRouter, createWebHistory } from 'vue-router'
 
+console.log('autoRoutes', autoRoutes)
 // 自动生成的路由
 autoRoutes.push({
   name: '组件文档',
@@ -16,7 +17,7 @@ const Routes = [
     path: '/',
     name: 'layout',
     component: () => import('./layout.vue' as string),
-    redirect: findDefaultRoute(routesChildrens),
+    redirect: '/src/views/demo2/aaa',
     children: routesChildrens,
   },
   {
@@ -28,6 +29,7 @@ const Routes = [
 function getRouter(props: any) {
   let base: string
   const routes = cloneDeep(Routes)
+  console.log('routes', routes)
   if (qiankunWindow.__POWERED_BY_QIANKUN__) {
     const { activeRule } = props.data
     // const layout = routes.find((item) => item.name == 'layout')

@@ -1,6 +1,8 @@
-import { BaseApi } from '@moluoxixi/ajaxpackage'
+import { BaseApi } from '@moluoxixi/ajax-package'
 
-const roleService = new BaseApi('/ts-system')
+const roleService = new BaseApi({
+  baseURL: '/ts-system',
+})
 console.log('roleService', roleService)
 const roleRequest = roleService.instance
 export function verityApp() {
