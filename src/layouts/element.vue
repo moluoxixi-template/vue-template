@@ -12,19 +12,23 @@
           style="padding: 0"
           height="60"
         >
-          <div class="w-full h-full bg-primary flex justify-center" />
+          <div class="w-full h-full bg-primary flex justify-center">
+            <ElMenu :default-active="defaultTab" :ellipsis="false" mode="horizontal" router>
+              <SubMenu menu-height="60" :routes="routes" />
+            </ElMenu>
+          </div>
         </ElHeader>
         <ElMain>
           <ElContainer class="h-full w-full">
             <ElMain style="background-color: #fff">
-              <transition name="fade">
-                <RouterView v-slot="{ Component, route }">
-                  <keep-alive>
-                    <component :is="Component" v-if="route.meta.keep" :key="route.path" />
-                  </keep-alive>
-                  <component :is="Component" v-if="!route.meta.keep" :key="route.path" />
-                </RouterView>
-              </transition>
+              <RouterView v-slot="{ Component, route }">
+                <Transition name="fade">
+                  <KeepAlive v-if="route.meta.keep">
+                    <Component :is="Component" :key="route.path" />
+                  </KeepAlive>
+                  <component :is="Component" v-else :key="route.path" />
+                </Transition>
+              </RouterView>
             </ElMain>
           </ElContainer>
         </ElMain>
@@ -34,10 +38,12 @@
 </template>
 
 <script lang="ts" setup>
-import { ElConfigProvider, ElContainer, ElHeader, ElMain } from 'element-plus'
+import { ElConfigProvider, ElContainer, ElHeader, ElMain, ElMenu } from 'element-plus'
+import { findDefaultRoute, routes } from 'virtual:auto-routes'
 import { qiankunWindow } from 'vite-plugin-qiankun/dist/helper'
 import { computed } from 'vue'
 import { RouterView } from 'vue-router'
+import SubMenu from '@/components/SubMenu/src/index.vue'
 import { useSystemStore } from '@/stores/modules/system'
 
 const systemStore = useSystemStore()
@@ -45,6 +51,7 @@ const themeColor = computed(() => systemStore.themeColor)
 const systemCode = computed(() => {
   return systemStore.systemCode
 })
+const defaultTab = findDefaultRoute(routes)
 </script>
 
 <style lang="scss" scoped>

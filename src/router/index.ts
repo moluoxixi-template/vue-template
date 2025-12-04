@@ -1,24 +1,22 @@
 import { cloneDeep } from 'lodash-es'
 import { assign, isEmpty } from 'radash'
-import { routes as autoRoutes } from 'virtual:auto-routes'
+import { routes as autoRoutes, findDefaultRoute } from 'virtual:auto-routes'
 import { qiankunWindow } from 'vite-plugin-qiankun/dist/helper'
 import { createRouter, createWebHistory } from 'vue-router'
 
-console.log('autoRoutes', autoRoutes)
 // 自动生成的路由
 autoRoutes.push({
   name: '组件文档',
   path: 'view',
   href: 'http://192.168.209.103:9099/vueComponents/index.html',
 })
-const routesChildrens = autoRoutes
 const Routes = [
   {
     path: '/',
     name: 'layout',
     component: () => import('./layout.vue' as string),
-    redirect: '/src/views/demo2/aaa',
-    children: routesChildrens,
+    children: autoRoutes,
+    redirect: findDefaultRoute(autoRoutes),
   },
   {
     path: '/:pathMatch(.*)*',

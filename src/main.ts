@@ -7,7 +7,6 @@ import directives from '@/directives'
 import i18n from '@/locales'
 import { store } from '@/stores'
 import { useSystemStore } from '@/stores/modules/system'
-import { useUserStore } from '@/stores/modules/user'
 import { modifyComponents } from '@/utils'
 import { initSentry } from '@/utils/sentry'
 import App from './App.vue'
@@ -95,13 +94,13 @@ async function render(props: QiankunProps) {
     }
   })
 
-  const userStore = useUserStore()
-  try {
-    await userStore.userLogin()
-  }
-  catch (e) {
-    console.log(e)
-  }
+  // const userStore = useUserStore()
+  // try {
+  //   await userStore.userLogin()
+  // }
+  // catch (e) {
+  //   console.log(e)
+  // }
 
   const router = getRouter(props)
 

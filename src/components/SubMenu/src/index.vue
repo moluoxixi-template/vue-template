@@ -19,6 +19,7 @@
     <ElMenuItem
       v-else
       :index="getRouteIndex(route, index)"
+      @click="goToPageHandle(route)"
     >
       {{ getRouteTitle(route) }}
     </ElMenuItem>
@@ -39,7 +40,6 @@ const props = withDefaults(defineProps<propsType>(), {
   routes: () => [],
   menuHeight: 60,
 })
-
 function getRouteKey(route: subMenuRouteType, index: number): string {
   return route.path ?? `${index}`
 }
@@ -52,6 +52,12 @@ function getRouteTitle(route: subMenuRouteType): string {
 
 function getRouteIndex(route: subMenuRouteType, index: number): string {
   return route.path ?? `${index}`
+}
+
+function goToPageHandle(route: subMenuRouteType) {
+  if (route.href) {
+    window.open(route.href)
+  }
 }
 
 function hasChildren(route: subMenuRouteType): boolean {
