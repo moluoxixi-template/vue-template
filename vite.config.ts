@@ -56,7 +56,7 @@ export default ViteConfig(
         css: {
           postcss: {
             plugins: [
-              cssModuleGlobalRootPlugin(),
+              cssModuleGlobalRootPlugin,
             ],
           },
           preprocessorOptions: {
