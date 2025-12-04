@@ -1,10 +1,8 @@
 import { BaseApi } from '@moluoxixi/ajax-package'
 
-const roleService = new BaseApi({
+const roleRequest = new BaseApi({
   baseURL: '/ts-system',
 })
-console.log('roleService', roleService)
-const roleRequest = roleService.instance
 export function verityApp() {
   return roleRequest.get('/api/sys/parameter/list', {
     params: {
