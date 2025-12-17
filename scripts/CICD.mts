@@ -21,7 +21,7 @@ if (existsSync(ciPath)) {
   const ciText = readFileSync(ciPath, 'utf-8')
   const oldCiText = ciText.match(/variables:\s+systemCode: (.*)/)
   const oldAppCode = oldCiText && oldCiText[1]
-  console.log('oldAppCode', oldAppCode, ciText)
+  // console.log('oldAppCode', oldAppCode, ciText)
   // 处理.gitlab-ci.yml文件
   if (oldAppCode === appCode) {
     console.log(
