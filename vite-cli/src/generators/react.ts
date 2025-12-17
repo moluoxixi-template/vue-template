@@ -108,6 +108,8 @@ function generateSrcStructure(config: ProjectConfig): void {
   generateLocaleFiles(config, targetDir, 'react')
   generateUtilsFiles(config, targetDir, 'react')
   generatePagesFiles(config)
+  generateAssetsFiles(config)
+  generateConstantsFiles(config)
 }
 
 /**
@@ -210,6 +212,45 @@ function generatePagesFiles(config: ProjectConfig): void {
   copyAndRenderTemplate(
     'react/src/pages/about/index.tsx.ejs',
     join(targetDir, 'src/pages/about/index.tsx'),
+    config,
+  )
+}
+
+/**
+ * 生成静态资源文件
+ * @param config 项目配置
+ */
+function generateAssetsFiles(config: ProjectConfig): void {
+  const { targetDir } = config
+
+  // 样式文件
+  const styleFiles = ['main.scss', 'base.scss', 'custom.scss', 'tailwind.scss']
+  styleFiles.forEach((file) => {
+    copyAndRenderTemplate(
+      `react/src/assets/styles/${file}.ejs`,
+      join(targetDir, `src/assets/styles/${file}`),
+      config,
+    )
+  })
+
+  // 字体文件
+  copyAndRenderTemplate(
+    'react/src/assets/fonts/index.css.ejs',
+    join(targetDir, 'src/assets/fonts/index.css'),
+    config,
+  )
+}
+
+/**
+ * 生成常量文件
+ * @param config 项目配置
+ */
+function generateConstantsFiles(config: ProjectConfig): void {
+  const { targetDir } = config
+
+  copyAndRenderTemplate(
+    'react/src/constants/index.ts.ejs',
+    join(targetDir, 'src/constants/index.ts'),
     config,
   )
 }

@@ -109,6 +109,10 @@ function generateSrcStructure(config: ProjectConfig): void {
   generateLocaleFiles(config, targetDir, 'vue')
   generateUtilsFiles(config, targetDir, 'vue')
   generatePagesFiles(config)
+  generateAssetsFiles(config)
+  generateConstantsFiles(config)
+  generateDirectivesFiles(config)
+  generateComponentsFiles(config)
 }
 
 /**
@@ -245,4 +249,83 @@ function generatePagesFiles(config: ProjectConfig): void {
     join(targetDir, 'src/pages/about/index.vue'),
     config,
   )
+}
+
+/**
+ * 生成静态资源文件
+ * @param config 项目配置
+ */
+function generateAssetsFiles(config: ProjectConfig): void {
+  const { targetDir } = config
+
+  // 样式文件
+  const styleFiles = ['main.scss', 'base.scss', 'custom.scss', 'tailwind.scss']
+  styleFiles.forEach((file) => {
+    copyAndRenderTemplate(
+      `vue/src/assets/styles/${file}.ejs`,
+      join(targetDir, `src/assets/styles/${file}`),
+      config,
+    )
+  })
+
+  // Element Plus 样式（仅当使用 element-plus 时）
+  if (config.uiLibrary === 'element-plus') {
+    copyAndRenderTemplate(
+      'vue/src/assets/styles/element/index.scss.ejs',
+      join(targetDir, 'src/assets/styles/element/index.scss'),
+      config,
+    )
+  }
+
+  // 字体文件
+  copyAndRenderTemplate(
+    'vue/src/assets/fonts/index.css.ejs',
+    join(targetDir, 'src/assets/fonts/index.css'),
+    config,
+  )
+}
+
+/**
+ * 生成常量文件
+ * @param config 项目配置
+ */
+function generateConstantsFiles(config: ProjectConfig): void {
+  const { targetDir } = config
+
+  copyAndRenderTemplate(
+    'vue/src/constants/index.ts.ejs',
+    join(targetDir, 'src/constants/index.ts'),
+    config,
+  )
+}
+
+/**
+ * 生成指令文件
+ * @param config 项目配置
+ */
+function generateDirectivesFiles(config: ProjectConfig): void {
+  const { targetDir } = config
+
+  copyAndRenderTemplate(
+    'vue/src/directives/index.ts.ejs',
+    join(targetDir, 'src/directives/index.ts'),
+    config,
+  )
+}
+
+/**
+ * 生成组件文件
+ * @param config 项目配置
+ */
+function generateComponentsFiles(config: ProjectConfig): void {
+  const { targetDir } = config
+
+  // SubMenu 组件（仅当使用 element-plus 时）
+  if (config.uiLibrary === 'element-plus') {
+    copyAndRenderTemplate(
+      'vue/src/components/SubMenu/src/index.vue.ejs',
+      join(targetDir, 'src/components/SubMenu/src/index.vue'),
+      config,
+    )
+  }
 }

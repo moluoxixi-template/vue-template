@@ -6,9 +6,9 @@
 import { cloneDeep } from 'lodash-es'
 import { assign, isEmpty } from 'radash'
 import routes from './routes'
-<% if (config.qiankun) { %>
+<% if (config.qiankun) { -%>
 import { qiankunWindow } from 'vite-plugin-qiankun/dist/helper'
-<% } %>
+<% } -%>
 import { createRouter, createWebHistory } from 'vue-router'
 
 /**
@@ -31,7 +31,7 @@ function getRouter(props: any = {}) {
   let base: string
   const routes = cloneDeep(Routes)
 
-  <% if (config.qiankun) { %>
+<% if (config.qiankun) { -%>
   // qiankun 微前端模式
   if (qiankunWindow.__POWERED_BY_QIANKUN__) {
     const { activeRule } = props.data
@@ -40,10 +40,10 @@ function getRouter(props: any = {}) {
   else {
     base = import.meta.env.VITE_APP_CODE || ''
   }
-  <% } else { %>
+<% } else { -%>
   // 独立运行模式
   base = import.meta.env.VITE_APP_CODE || ''
-  <% } %>
+<% } -%>
 
   const router = createRouter({
     history: createWebHistory(base),
