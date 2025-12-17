@@ -12,6 +12,7 @@ import {
   generateEnvFile,
   generateHuskyFiles,
   generateLocaleFiles,
+  generateScriptsFiles,
   generateUtilsFiles,
 } from './common'
 
@@ -48,6 +49,7 @@ function generateConfigFiles(config: ProjectConfig): void {
   const configFiles = [
     'vite.config.ts',
     'tsconfig.json',
+    'tsconfig.app.json',
     'tsconfig.base.json',
     'tsconfig.node.json',
     'eslint.config.ts',
@@ -77,6 +79,9 @@ function generateConfigFiles(config: ProjectConfig): void {
 
   // husky 配置文件
   generateHuskyFiles(config, targetDir)
+
+  // scripts 目录文件
+  generateScriptsFiles(config, targetDir)
 }
 
 /**

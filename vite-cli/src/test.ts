@@ -4,8 +4,15 @@
  */
 
 import type { ProjectConfig } from './types/index.ts'
+import { execSync } from 'node:child_process'
 import * as process from 'node:process'
+import fs from 'fs-extra'
 import { generateProject } from './generators/project'
+
+/**
+ * 获取测试目录路径
+ */
+const testDir = `${process.cwd().replace(/vite-cli$/, '')}vite-cli-test`
 
 /**
  * Vue 测试配置（启用所有功能）
@@ -21,7 +28,7 @@ const vueTestConfig: ProjectConfig = {
   qiankun: true,
   sentry: true,
   packageManager: 'pnpm',
-  targetDir: `${process.cwd().replace(/vite-cli$/, '')}vite-cli-test/vue`,
+  targetDir: `${testDir}/vue`,
 }
 
 /**
@@ -38,7 +45,61 @@ const reactTestConfig: ProjectConfig = {
   qiankun: true,
   sentry: true,
   packageManager: 'pnpm',
-  targetDir: `${process.cwd().replace(/vite-cli$/, '')}vite-cli-test/react`,
+  targetDir: `${testDir}/react`,
+}
+
+/**
+ * 清空测试目录
+ */
+function cleanTestDir(): void {
+  console.log('🧹 Cleaning test directory...')
+  if (fs.existsSync(testDir)) {
+    fs.removeSync(testDir)
+    console.log(`   Removed: ${testDir}`)
+  }
+  fs.ensureDirSync(testDir)
+  console.log('✅ Test directory cleaned!\n')
+}
+
+/**
+ * 安装项目依赖
+ * @param projectDir 项目目录
+ * @param projectName 项目名称
+ */
+function installDependencies(projectDir: string, projectName: string): void {
+  console.log(`📦 Installing dependencies for ${projectName}...`)
+  try {
+    execSync('pnpm install', {
+      cwd: projectDir,
+      stdio: 'inherit',
+    })
+    console.log(`✅ ${projectName} dependencies installed!\n`)
+  }
+  catch (error) {
+    console.error(`❌ Failed to install dependencies for ${projectName}`)
+    throw error
+  }
+}
+
+/**
+ * 运行项目开发服务器测试
+ * @param projectDir 项目目录
+ * @param projectName 项目名称
+ */
+function testDevServer(projectDir: string, projectName: string): void {
+  console.log(`🚀 Testing ${projectName} dev server (will start and stop)...`)
+  try {
+    // 使用 type-check 来验证 TypeScript 编译
+    execSync('pnpm type-check', {
+      cwd: projectDir,
+      stdio: 'inherit',
+    })
+    console.log(`✅ ${projectName} type-check passed!\n`)
+  }
+  catch (error) {
+    console.error(`❌ ${projectName} type-check failed`)
+    throw error
+  }
 }
 
 /**
@@ -47,6 +108,9 @@ const reactTestConfig: ProjectConfig = {
 async function runTest() {
   try {
     console.log('🚀 Starting test project generation...\n')
+
+    // 清空测试目录
+    cleanTestDir()
 
     // 生成 Vue 项目
     console.log('📦 Generating Vue project...')
@@ -79,6 +143,27 @@ async function runTest() {
     console.log('🎉 All test projects generated successfully!')
     console.log(`\n📁 Vue project: ${vueTestConfig.targetDir}`)
     console.log(`📁 React project: ${reactTestConfig.targetDir}`)
+
+    // 安装依赖并测试
+    console.log(`\n${'='.repeat(50)}`)
+    console.log('📦 Installing dependencies and testing...')
+    console.log(`${'='.repeat(50)}\n`)
+
+    // 安装 Vue 项目依赖
+    installDependencies(vueTestConfig.targetDir, 'Vue')
+
+    // 安装 React 项目依赖
+    installDependencies(reactTestConfig.targetDir, 'React')
+
+    // 测试 Vue 项目
+    testDevServer(vueTestConfig.targetDir, 'Vue')
+
+    // 测试 React 项目
+    testDevServer(reactTestConfig.targetDir, 'React')
+
+    console.log(`\n${'='.repeat(50)}`)
+    console.log('🎉 All tests passed!')
+    console.log('='.repeat(50))
   }
   catch (error) {
     console.error('\n❌ Error:', error)

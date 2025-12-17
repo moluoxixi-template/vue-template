@@ -204,3 +204,23 @@ export function generateHuskyFiles(
     config,
   )
 }
+
+/**
+ * 生成 scripts 目录文件
+ * @param config 项目配置
+ * @param targetDir 目标目录
+ */
+export function generateScriptsFiles(
+  config: ProjectConfig,
+  targetDir: string,
+): void {
+  // 创建 scripts 目录
+  createDir(join(targetDir, 'scripts'))
+
+  // build.mts
+  copyAndRenderTemplate(
+    'common/scripts/build.mts.ejs',
+    join(targetDir, 'scripts/build.mts'),
+    config,
+  )
+}
