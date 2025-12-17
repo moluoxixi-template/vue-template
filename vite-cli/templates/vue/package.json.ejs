@@ -1,105 +1,126 @@
-{
-  "name": "<%= config.projectName %>",
-  "version": "0.0.0",
-  "type": "module",
-  "private": true,
-  "engines": {
-    "node": ">=20.18.0"
-  },
-  "packageManager": "pnpm@10.8.0",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build --mode production",
-    "preview": "vite preview",
-    "type-check": "vue-tsc --noEmit",
-    "lint:eslint": "eslint . --fix",
-    "prepare": "node .husky/install.mjs",
-    "lint-staged": "lint-staged",
-    "commit": "git add . && git-cz"
-  },
-  "postcss": {
-    "plugins": {
-      "tailwindcss": {},
-      "autoprefixer": {}
-    }
-  },
-  "lint-staged": {
-    "*.{js,jsx,ts,tsx,vue,css,scss,less}": [
-      "eslint --fix --no-warn-ignored"
-    ]
-  },
-  "config": {
-    "commitizen": {
-      "path": "cz-customizable"
-    },
-    "cz-customizable": {
-      "config": ".cz-config.cjs"
-    }
-  },
-  "dependencies": {
-    <% if (isElementPlus) { %>
-    "@element-plus/icons-vue": "catalog:build",
-    "element-plus": "catalog:build",
-    <% } else if (isAntDesignVue) { %>
-    "@ant-design/icons-vue": "catalog:build",
-    "ant-design-vue": "catalog:build",
-    <% } %>
-    "@moluoxixi/ajax-package": "catalog:build",
-    "@moluoxixi/class-names": "catalog:build",
-    "crypto-js": "catalog:build",
-    "dayjs": "catalog:build",
-    "lodash-es": "catalog:build",
-    "pinia": "catalog:build",
-    "pinia-plugin-persistedstate": "catalog:build",
-    "radash": "catalog:build",
-    "uuid": "catalog:build",
-    "vue": "catalog:build",
-    <% if (config.i18n) { %>
-    "vue-i18n": "catalog:build",
-    <% } %>
-    "vue-router": "catalog:build",
-    <% if (config.routeMode === 'file-system') { %>
-    "vite-plugin-pages": "catalog:build",
-    <% } %>
-    <% if (config.qiankun) { %>
-    "vite-plugin-qiankun": "catalog:build",
-    <% } %>
-    <% if (config.sentry) { %>
-    "@sentry/vue": "catalog:build",
-    "@sentry/vite-plugin": "catalog:build",
-    <% } %>
-  },
-  "devDependencies": {
-    "@commitlint/cli": "^19.8.0",
-    "@commitlint/config-conventional": "^19.8.0",
-    "@moluoxixi/ajax-package": "^0.0.11-beta.2",
-    "@moluoxixi/css-module-global-root-plugin": "^0.0.5",
-    "@moluoxixi/eslint-config": "^0.0.10",
-    "@moluoxixi/vite-config": "^0.0.27",
-    "@types/crypto-js": "^4.2.2",
-    "@types/lodash": "^4.17.17",
-    "@types/node": "^22.14.0",
-    "@types/uuid": "^10.0.0",
-    "@vue-macros/volar": "^3.0.0-beta.15",
-    "autoprefixer": "^10.4.20",
-    "commitizen": "^4.3.1",
-    "cz-customizable": "^7.4.0",
-    "dotenv": "^16.5.0",
-    "eslint": "^9.22.0",
-    "eslint-plugin-format": "^1.0.1",
-    "husky": "^9.1.7",
-    "jiti": "^2.4.2",
-    "lint-staged": "^15.5.1",
-    "postcss": "^8.5.3",
-    "sass": "^1.87.0",
-    "sass-embedded": "^1.87.0",
-    "sass-loader": "^16.0.5",
-    "tailwindcss": "^4.0.0",
-    "typescript": "~5.8.0",
-    "vite": "^6.2.4",
-    "vue-tsc": "^2.2.8"
-  },
-  "author": "<%= config.author || '' %>",
-  "license": "MIT"
+<%
+// 构建 dependencies 对象
+const dependencies = {}
+
+// UI 库依赖
+if (isElementPlus) {
+  dependencies['@element-plus/icons-vue'] = 'catalog:build'
+  dependencies['element-plus'] = 'catalog:build'
+} else if (isAntDesignVue) {
+  dependencies['@ant-design/icons-vue'] = 'catalog:build'
+  dependencies['ant-design-vue'] = 'catalog:build'
 }
 
+// 核心依赖
+dependencies['@moluoxixi/ajax-package'] = 'catalog:build'
+dependencies['@moluoxixi/class-names'] = 'catalog:build'
+dependencies['crypto-js'] = 'catalog:build'
+dependencies['dayjs'] = 'catalog:build'
+dependencies['lodash-es'] = 'catalog:build'
+dependencies['pinia'] = 'catalog:build'
+dependencies['pinia-plugin-persistedstate'] = 'catalog:build'
+dependencies['radash'] = 'catalog:build'
+dependencies['uuid'] = 'catalog:build'
+dependencies['vue'] = 'catalog:build'
+
+// 可选依赖
+if (config.i18n) {
+  dependencies['vue-i18n'] = 'catalog:build'
+}
+
+dependencies['vue-router'] = 'catalog:build'
+
+if (config.routeMode === 'file-system') {
+  dependencies['vite-plugin-pages'] = 'catalog:build'
+}
+
+if (config.qiankun) {
+  dependencies['vite-plugin-qiankun'] = 'catalog:build'
+}
+
+if (config.sentry) {
+  dependencies['@sentry/vite-plugin'] = 'catalog:build'
+  dependencies['@sentry/vue'] = 'catalog:build'
+}
+
+// 按字母排序
+const sortedDependencies = Object.keys(dependencies).sort().reduce((obj, key) => {
+  obj[key] = dependencies[key]
+  return obj
+}, {})
+
+// 构建完整的 package.json 对象
+const packageJson = {
+  name: config.projectName,
+  version: '0.0.0',
+  type: 'module',
+  private: true,
+  engines: {
+    node: '>=20.18.0'
+  },
+  packageManager: 'pnpm@10.8.0',
+  scripts: {
+    dev: 'vite',
+    build: 'vite build --mode production',
+    preview: 'vite preview',
+    'type-check': 'vue-tsc --noEmit',
+    'lint:eslint': 'eslint . --fix',
+    prepare: 'node .husky/install.mjs',
+    'lint-staged': 'lint-staged',
+    commit: 'git add . && git-cz'
+  },
+  postcss: {
+    plugins: {
+      tailwindcss: {},
+      autoprefixer: {}
+    }
+  },
+  'lint-staged': {
+    '*.{js,jsx,ts,tsx,vue,css,scss,less}': [
+      'eslint --fix --no-warn-ignored'
+    ]
+  },
+  config: {
+    commitizen: {
+      path: 'cz-customizable'
+    },
+    'cz-customizable': {
+      config: '.cz-config.cjs'
+    }
+  },
+  dependencies: sortedDependencies,
+  devDependencies: {
+    '@commitlint/cli': '^19.8.0',
+    '@commitlint/config-conventional': '^19.8.0',
+    '@moluoxixi/ajax-package': '^0.0.11-beta.2',
+    '@moluoxixi/css-module-global-root-plugin': '^0.0.5',
+    '@moluoxixi/eslint-config': '^0.0.10',
+    '@moluoxixi/vite-config': '^0.0.27',
+    '@types/crypto-js': '^4.2.2',
+    '@types/lodash': '^4.17.17',
+    '@types/node': '^22.14.0',
+    '@types/uuid': '^10.0.0',
+    '@vue-macros/volar': '^3.0.0-beta.15',
+    autoprefixer: '^10.4.20',
+    commitizen: '^4.3.1',
+    'cz-customizable': '^7.4.0',
+    dotenv: '^16.5.0',
+    eslint: '^9.22.0',
+    'eslint-plugin-format': '^1.0.1',
+    husky: '^9.1.7',
+    jiti: '^2.4.2',
+    'lint-staged': '^15.5.1',
+    postcss: '^8.5.3',
+    sass: '^1.87.0',
+    'sass-embedded': '^1.87.0',
+    'sass-loader': '^16.0.5',
+    tailwindcss: '^4.0.0',
+    typescript: '~5.8.0',
+    vite: '^6.2.4',
+    'vue-tsc': '^2.2.8'
+  },
+  author: config.author || '',
+  license: 'MIT'
+}
+-%>
+<%- JSON.stringify(packageJson, null, 2) %>
