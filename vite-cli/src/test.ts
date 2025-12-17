@@ -54,8 +54,22 @@ const reactTestConfig: ProjectConfig = {
 function cleanTestDir(): void {
   console.log('🧹 Cleaning test directory...')
   if (fs.existsSync(testDir)) {
-    fs.removeSync(testDir)
-    console.log(`   Removed: ${testDir}`)
+    try {
+      // 尝试使用 fs-extra 删除
+      fs.removeSync(testDir)
+      console.log(`   Removed: ${testDir}`)
+    }
+    catch {
+      // 如果 fs-extra 失败，使用系统命令强制删除（Windows）
+      console.log('   Using system command to remove directory...')
+      try {
+        execSync(`rd /s /q "${testDir}"`, { stdio: 'ignore', shell: 'cmd.exe' })
+        console.log(`   Removed: ${testDir}`)
+      }
+      catch {
+        console.warn('   Warning: Could not fully clean directory, will overwrite files')
+      }
+    }
   }
   fs.ensureDirSync(testDir)
   console.log('✅ Test directory cleaned!\n')
