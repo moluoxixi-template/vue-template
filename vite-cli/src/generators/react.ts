@@ -3,26 +3,30 @@
  * 生成 React 项目结构
  */
 
-import { join } from 'path'
-import { createDir, copyAndRenderTemplate } from '../utils/file'
-import { getDependencies, getDevDependencies } from '../utils/dependencies'
-import type { ProjectConfig } from '../types'
+import type { ProjectConfig } from '../types/index.ts'
+import { join } from 'node:path'
+import { copyAndRenderTemplate } from '../utils/file.ts'
+import {
+  createSrcDirs,
+  generateApisStructure,
+  generateEnvFile,
+  generateLocaleFiles,
+  generateUtilsFiles,
+} from './common.ts'
 
 /**
  * 生成 React 项目
  * @param config 项目配置
  */
 export async function generateReactProject(config: ProjectConfig): Promise<void> {
-  const { targetDir } = config
-
   // 生成基础配置文件
   generateConfigFiles(config)
 
   // 生成源代码目录结构
   generateSrcStructure(config)
 
-  // 生成 apis 目录
-  generateApisStructure(config)
+  // 生成 apis 目录（使用公共函数）
+  generateApisStructure(config, config.targetDir)
 }
 
 /**
@@ -50,7 +54,6 @@ function generateConfigFiles(config: ProjectConfig): void {
     'env.d.ts',
     'index.html',
     '.gitignore',
-    '.env.example',
   ]
 
   configFiles.forEach((file) => {
@@ -60,6 +63,9 @@ function generateConfigFiles(config: ProjectConfig): void {
       config,
     )
   })
+
+  // .env 文件（使用公共函数）
+  generateEnvFile(config, targetDir, 'react')
 }
 
 /**
@@ -70,7 +76,7 @@ function generateSrcStructure(config: ProjectConfig): void {
   const { targetDir } = config
   const srcDir = join(targetDir, 'src')
 
-  // 创建主要目录
+  // 创建主要目录（使用公共函数）
   const dirs = [
     'assets/styles',
     'assets/fonts',
@@ -85,18 +91,15 @@ function generateSrcStructure(config: ProjectConfig): void {
     'apis/types',
     'apis/services',
   ]
-
-  dirs.forEach((dir) => {
-    createDir(join(srcDir, dir))
-  })
+  createSrcDirs(srcDir, dirs)
 
   // 生成主要文件
   generateMainFiles(config)
   generateRouterFiles(config)
   generateStoreFiles(config)
   generateLayoutFiles(config)
-  generateLocaleFiles(config)
-  generateUtilsFiles(config)
+  generateLocaleFiles(config, targetDir, 'react')
+  generateUtilsFiles(config, targetDir, 'react')
   generatePagesFiles(config)
 }
 
@@ -183,59 +186,6 @@ function generateLayoutFiles(config: ProjectConfig): void {
 }
 
 /**
- * 生成国际化文件
- * @param config 项目配置
- */
-function generateLocaleFiles(config: ProjectConfig): void {
-  const { targetDir } = config
-
-  if (!config.i18n) {
-    return
-  }
-
-  // locales/index.ts
-  copyAndRenderTemplate(
-    'react/src/locales/index.ts.ejs',
-    join(targetDir, 'src/locales/index.ts'),
-    config,
-  )
-
-  // 语言文件
-  const langs = ['zh', 'en', 'es']
-  langs.forEach((lang) => {
-    copyAndRenderTemplate(
-      `react/src/locales/lang/${lang}.ts.ejs`,
-      join(targetDir, `src/locales/lang/${lang}.ts`),
-      config,
-    )
-  })
-}
-
-/**
- * 生成工具文件
- * @param config 项目配置
- */
-function generateUtilsFiles(config: ProjectConfig): void {
-  const { targetDir } = config
-
-  // utils/index.ts
-  copyAndRenderTemplate(
-    'react/src/utils/index.ts.ejs',
-    join(targetDir, 'src/utils/index.ts'),
-    config,
-  )
-
-  // utils/sentry.ts（如果启用 Sentry）
-  if (config.sentry) {
-    copyAndRenderTemplate(
-      'react/src/utils/sentry.ts.ejs',
-      join(targetDir, 'src/utils/sentry.ts'),
-      config,
-    )
-  }
-}
-
-/**
  * 生成页面文件
  * @param config 项目配置
  */
@@ -256,61 +206,3 @@ function generatePagesFiles(config: ProjectConfig): void {
     config,
   )
 }
-
-/**
- * 生成 apis 目录结构
- * @param config 项目配置
- */
-function generateApisStructure(config: ProjectConfig): void {
-  const { targetDir } = config
-
-  // apis/request.ts
-  copyAndRenderTemplate(
-    'common/apis/request.ts.ejs',
-    join(targetDir, 'src/apis/request.ts'),
-    config,
-  )
-
-  // apis/types/common.ts
-  copyAndRenderTemplate(
-    'common/apis/types/common.ts.ejs',
-    join(targetDir, 'src/apis/types/common.ts'),
-    config,
-  )
-
-  // apis/types/user.ts
-  copyAndRenderTemplate(
-    'common/apis/types/user.ts.ejs',
-    join(targetDir, 'src/apis/types/user.ts'),
-    config,
-  )
-
-  // apis/types/index.ts
-  copyAndRenderTemplate(
-    'common/apis/types/index.ts.ejs',
-    join(targetDir, 'src/apis/types/index.ts'),
-    config,
-  )
-
-  // apis/services/user.ts
-  copyAndRenderTemplate(
-    'common/apis/services/user.ts.ejs',
-    join(targetDir, 'src/apis/services/user.ts'),
-    config,
-  )
-
-  // apis/services/example.ts
-  copyAndRenderTemplate(
-    'common/apis/services/example.ts.ejs',
-    join(targetDir, 'src/apis/services/example.ts'),
-    config,
-  )
-
-  // apis/index.ts
-  copyAndRenderTemplate(
-    'common/apis/index.ts.ejs',
-    join(targetDir, 'src/apis/index.ts'),
-    config,
-  )
-}
-

@@ -1,5 +1,6 @@
 packages:
   - vite-template-cli
+  - vite-cli
 
 gitChecks: false
 registry: https://registry.npmjs.org/

@@ -31,11 +31,13 @@
     "ora": "^8.1.1"
   },
   "devDependencies": {
+    "@moluoxixi/eslint-config": "catalog:dev",
     "@types/fs-extra": "^11.0.4",
     "@types/inquirer": "^9.0.7",
-    "@types/node": "^22.14.0",
-    "tsx": "^4.20.5",
-    "typescript": "~5.8.0"
+    "@types/node": "catalog:type",
+    "eslint": "catalog:dev",
+    "tsx": "catalog:dev",
+    "typescript": "catalog:dev"
   },
   "engines": {
     "node": ">=20.18.0"
