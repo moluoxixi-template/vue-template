@@ -10,6 +10,7 @@ import {
   createSrcDirs,
   generateApisStructure,
   generateEnvFile,
+  generateHuskyFiles,
   generateLocaleFiles,
   generateUtilsFiles,
 } from './common'
@@ -73,6 +74,9 @@ function generateConfigFiles(config: ProjectConfig): void {
     join(targetDir, 'pnpm-workspace.yaml'),
     config,
   )
+
+  // husky 配置文件
+  generateHuskyFiles(config, targetDir)
 }
 
 /**

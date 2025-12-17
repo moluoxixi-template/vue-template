@@ -170,3 +170,37 @@ export function createSrcDirs(srcDir: string, dirs: string[]): void {
     createDir(join(srcDir, dir))
   })
 }
+
+/**
+ * 生成 husky 配置文件
+ * @param config 项目配置
+ * @param targetDir 目标目录
+ */
+export function generateHuskyFiles(
+  config: ProjectConfig,
+  targetDir: string,
+): void {
+  // 创建 .husky 目录
+  createDir(join(targetDir, '.husky'))
+
+  // install.mjs
+  copyAndRenderTemplate(
+    'common/husky/install.mjs.ejs',
+    join(targetDir, '.husky/install.mjs'),
+    config,
+  )
+
+  // pre-commit
+  copyAndRenderTemplate(
+    'common/husky/pre-commit.ejs',
+    join(targetDir, '.husky/pre-commit'),
+    config,
+  )
+
+  // commit-msg
+  copyAndRenderTemplate(
+    'common/husky/commit-msg.ejs',
+    join(targetDir, '.husky/commit-msg'),
+    config,
+  )
+}
