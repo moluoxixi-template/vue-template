@@ -3,11 +3,11 @@
  * 处理文件复制、创建目录等操作
  */
 
+import type { ProjectConfig } from '../types/index.ts'
+import { readFileSync, writeFileSync } from 'node:fs'
+import { dirname } from 'node:path'
 import fs from 'fs-extra'
-import { readFileSync, writeFileSync } from 'fs'
-import { dirname, join } from 'path'
-import { renderTemplate, getTemplatePath } from './template'
-import type { ProjectConfig } from '../types'
+import { getTemplatePath, renderTemplate } from './template'
 
 /**
  * 复制文件或目录
@@ -82,4 +82,3 @@ export function writeFile(filePath: string, content: string): void {
   fs.ensureDirSync(dirname(filePath))
   writeFileSync(filePath, content, 'utf-8')
 }
-

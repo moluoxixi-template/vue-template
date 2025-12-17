@@ -3,8 +3,8 @@
  * 执行包管理器安装命令
  */
 
-import { execSync } from 'child_process'
-import type { PackageManager } from '../types'
+import type { PackageManager } from '../types/index.ts'
+import { execSync } from 'node:child_process'
 
 /**
  * 安装项目依赖
@@ -46,4 +46,3 @@ export function installDependencies(
     throw error
   }
 }
-

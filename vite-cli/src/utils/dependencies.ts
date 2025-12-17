@@ -3,7 +3,7 @@
  * 根据配置生成 package.json 依赖列表
  */
 
-import type { ProjectConfig } from '../types'
+import type { ProjectConfig } from '../types/index.ts'
 
 /**
  * 获取项目依赖
@@ -24,9 +24,9 @@ export function getDependencies(config: ProjectConfig): Record<string, string> {
 
   // 根据框架添加依赖
   if (config.framework === 'vue') {
-    deps['vue'] = '^3.5.13'
+    deps.vue = '^3.5.13'
     deps['vue-router'] = '^4.5.0'
-    deps['pinia'] = '^2.3.0'
+    deps.pinia = '^2.3.0'
     deps['pinia-plugin-persistedstate'] = '^4.2.0'
 
     // UI 库
@@ -51,21 +51,21 @@ export function getDependencies(config: ProjectConfig): Record<string, string> {
     }
   }
   else if (config.framework === 'react') {
-    deps['react'] = '^18.3.1'
+    deps.react = '^18.3.1'
     deps['react-dom'] = '^18.3.1'
     deps['react-router-dom'] = '^6.26.0'
-    deps['zustand'] = '^4.5.5'
+    deps.zustand = '^4.5.5'
 
     // UI 库
     if (config.uiLibrary === 'ant-design') {
-      deps['antd'] = '^5.21.0'
+      deps.antd = '^5.21.0'
       deps['@ant-design/icons'] = '^5.3.7'
     }
 
     // 国际化
     if (config.i18n) {
       deps['react-i18next'] = '^15.1.0'
-      deps['i18next'] = '^24.2.0'
+      deps.i18next = '^24.2.0'
     }
 
     // 错误监控
@@ -143,4 +143,3 @@ export function getDevDependencies(config: ProjectConfig): Record<string, string
 
   return devDeps
 }
-

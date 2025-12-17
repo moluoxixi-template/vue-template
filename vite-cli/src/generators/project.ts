@@ -6,7 +6,7 @@
 import { createDir } from '../utils/file'
 import { generateVueProject } from './vue'
 import { generateReactProject } from './react'
-import type { ProjectConfig } from '../types'
+import type { ProjectConfig } from '../types/index.ts'
 
 /**
  * 生成项目

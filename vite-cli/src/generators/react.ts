@@ -3,7 +3,7 @@
  * 生成 React 项目结构
  */
 
-import type { ProjectConfig } from '../types'
+import type { ProjectConfig } from '../types/index.ts'
 import { join } from 'node:path'
 import { copyAndRenderTemplate } from '../utils/file'
 import {

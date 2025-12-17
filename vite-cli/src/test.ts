@@ -3,8 +3,9 @@
  * 同时生成 Vue 和 React 测试项目，启用所有功能
  */
 
+import type { ProjectConfig } from './types/index.ts'
+import * as process from 'node:process'
 import { generateProject } from './generators/project'
-import type { ProjectConfig } from './types'
 
 /**
  * Vue 测试配置（启用所有功能）
@@ -20,7 +21,7 @@ const vueTestConfig: ProjectConfig = {
   qiankun: true,
   sentry: true,
   packageManager: 'pnpm',
-  targetDir: process.cwd().replace(/vite-cli$/, '') + 'vite-cli-test/vue',
+  targetDir: `${process.cwd().replace(/vite-cli$/, '')}vite-cli-test/vue`,
 }
 
 /**
@@ -37,7 +38,7 @@ const reactTestConfig: ProjectConfig = {
   qiankun: true,
   sentry: true,
   packageManager: 'pnpm',
-  targetDir: process.cwd().replace(/vite-cli$/, '') + 'vite-cli-test/react',
+  targetDir: `${process.cwd().replace(/vite-cli$/, '')}vite-cli-test/react`,
 }
 
 /**

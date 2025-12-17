@@ -3,8 +3,8 @@
  * 收集用户的项目配置信息
  */
 
+import type { Framework, PackageManager, ProjectConfig, RouteMode, UILibrary } from '../types/index.ts'
 import inquirer from 'inquirer'
-import type { ProjectConfig, Framework, UILibrary, RouteMode, PackageManager } from '../types'
 
 /**
  * 收集项目配置信息
@@ -26,7 +26,7 @@ export async function collectProjectConfig(
           return 'Project name cannot be empty'
         }
         // 验证项目名称格式（只允许字母、数字、连字符、下划线）
-        if (!/^[a-zA-Z0-9_-]+$/.test(input)) {
+        if (!/^[\w-]+$/.test(input)) {
           return 'Project name can only contain letters, numbers, hyphens and underscores'
         }
         return true
@@ -127,7 +127,7 @@ export async function collectProjectConfig(
   ])
 
   // 构建目标目录路径
-  const targetDir = process.cwd() + '/' + answers.projectName
+  const targetDir = `${process.cwd()}/${answers.projectName}`
 
   return {
     projectName: answers.projectName,
@@ -143,4 +143,3 @@ export async function collectProjectConfig(
     targetDir,
   }
 }
-
