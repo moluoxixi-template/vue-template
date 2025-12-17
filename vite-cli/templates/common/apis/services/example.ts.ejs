@@ -4,7 +4,7 @@
  */
 
 import { defaultApi } from '../request'
-import type { ApiResponse, PageResponse, PageParams } from '../types'
+import type { ApiResponse, PageParams } from '../types'
 
 /**
  * 示例：GET 请求（带查询参数）
@@ -51,4 +51,3 @@ export async function updateExample(id: string, data: any) {
 export async function deleteExample(id: string) {
   return defaultApi.delete<ApiResponse<void>>(`/example/${id}`)
 }
-

@@ -3,20 +3,6 @@
  * 使用 vite-plugin-pages 自动生成路由
  */
 
-import { createBrowserRouter } from 'react-router-dom'
-import { routes } from 'virtual:pages'
-import Layout from '@/layouts'
+import routes from '~react-pages'
 
-/**
- * 路由配置
- */
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <Layout />,
-    children: routes,
-  },
-])
-
-export { router }
-
+export { routes }

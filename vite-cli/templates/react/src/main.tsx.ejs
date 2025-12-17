@@ -12,9 +12,13 @@ import { createRoot } from 'react-dom/client'
 <% if (config.sentry) { -%>
 import { initSentry } from '@/utils/sentry'
 <% } -%>
+<% if (config.routeMode === 'file-system') { -%>
+import { BrowserRouter } from 'react-router-dom'
 import App from './App'
+<% } else { -%>
 import { RouterProvider } from 'react-router-dom'
 import { router } from './router'
+<% } -%>
 
 // 导入样式文件
 import '@/assets/styles/main.scss'
@@ -45,11 +49,21 @@ function render(props: QiankunProps = {}) {
   initSentry()
 
 <% } -%>
+<% if (config.routeMode === 'file-system') { -%>
+  root.render(
+    <StrictMode>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </StrictMode>,
+  )
+<% } else { -%>
   root.render(
     <StrictMode>
       <RouterProvider router={router} />
     </StrictMode>,
   )
+<% } -%>
 }
 
 // 独立运行时
@@ -89,10 +103,19 @@ const root = createRoot(rootElement)
 initSentry()
 
 <% } -%>
+<% if (config.routeMode === 'file-system') { -%>
+root.render(
+  <StrictMode>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </StrictMode>,
+)
+<% } else { -%>
 root.render(
   <StrictMode>
     <RouterProvider router={router} />
   </StrictMode>,
 )
 <% } -%>
-
+<% } -%>

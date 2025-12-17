@@ -67,4 +67,3 @@ export async function updateUser(id: string, data: Partial<UserInfo>) {
 export async function deleteUser(id: string) {
   return defaultApi.delete<ApiResponse<void>>(`/user/${id}`)
 }
-

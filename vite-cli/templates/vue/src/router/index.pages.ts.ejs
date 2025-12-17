@@ -5,7 +5,7 @@
 
 import { cloneDeep } from 'lodash-es'
 import { assign, isEmpty } from 'radash'
-import { routes } from 'virtual:pages'
+import routes from '~pages'
 <% if (config.qiankun) { -%>
 import { qiankunWindow } from 'vite-plugin-qiankun/dist/helper'
 <% } -%>
@@ -67,4 +67,3 @@ function getRouter(props: any = {}) {
 }
 
 export default getRouter
-

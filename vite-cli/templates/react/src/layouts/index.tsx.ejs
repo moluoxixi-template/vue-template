@@ -4,19 +4,23 @@
  */
 <% if (isAntDesign) { -%>
 
+import type { ReactNode } from 'react'
 import { Layout as AntLayout } from 'antd'
-import { Outlet } from 'react-router-dom'
 
 const { Header, Content } = AntLayout
 
-function Layout() {
+interface LayoutProps {
+  children?: ReactNode
+}
+
+function Layout({ children }: LayoutProps) {
   return (
     <AntLayout style={{ minHeight: '100vh' }}>
       <Header style={{ background: '#fff', padding: 0 }}>
         {/* 导航栏 */}
       </Header>
       <Content style={{ padding: '24px' }}>
-        <Outlet />
+        {children}
       </Content>
     </AntLayout>
   )
@@ -25,16 +29,19 @@ function Layout() {
 export default Layout
 <% } else { -%>
 
-import { Outlet } from 'react-router-dom'
+import type { ReactNode } from 'react'
 
-function Layout() {
+interface LayoutProps {
+  children?: ReactNode
+}
+
+function Layout({ children }: LayoutProps) {
   return (
     <div className="layout">
-      <Outlet />
+      {children}
     </div>
   )
 }
 
 export default Layout
 <% } -%>
-

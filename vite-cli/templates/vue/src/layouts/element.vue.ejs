@@ -49,7 +49,7 @@
  */
 import { ElConfigProvider, ElContainer, ElHeader, ElMain, ElMenu } from 'element-plus'
 <% if (config.routeMode === 'file-system') { -%>
-import { routes } from 'virtual:pages'
+import routes from '~pages'
 <% } else { -%>
 import routes from '@/router/routes'
 <% } -%>
