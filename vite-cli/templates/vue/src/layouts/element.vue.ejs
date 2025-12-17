@@ -1,0 +1,70 @@
+<template>
+  <ElConfigProvider :namespace="systemCode" :empty-values="[undefined]">
+    <div
+      class="h-full"
+      :class="{ 'h-screen!': !qiankunWindow.__POWERED_BY_QIANKUN__ }"
+      :style="`--el-color-primary: ${themeColor || '#3A77FF'};`"
+    >
+      <ElContainer class="w-full h-full">
+        <ElHeader
+          v-if="!qiankunWindow.__POWERED_BY_QIANKUN__"
+          class="headerbox"
+          style="padding: 0"
+          height="60"
+        >
+          <div class="w-full h-full bg-primary flex justify-center">
+            <ElMenu :default-active="defaultTab" :ellipsis="false" mode="horizontal" router>
+              <SubMenu menu-height="60" :routes="routes" />
+            </ElMenu>
+          </div>
+        </ElHeader>
+        <ElMain>
+          <ElContainer class="h-full w-full">
+            <ElMain style="background-color: #fff">
+              <RouterView v-slot="{ Component, route }">
+                <Transition name="fade">
+                  <KeepAlive v-if="route.meta.keep">
+                    <Component :is="Component" :key="route.path" />
+                  </KeepAlive>
+                  <component :is="Component" v-else :key="route.path" />
+                </Transition>
+              </RouterView>
+            </ElMain>
+          </ElContainer>
+        </ElMain>
+      </ElContainer>
+    </div>
+  </ElConfigProvider>
+</template>
+
+<script lang="ts" setup>
+/**
+ * Element Plus 布局组件
+ */
+<% if (config.qiankun) { %>
+import { qiankunWindow } from 'vite-plugin-qiankun/dist/helper'
+<% } %>
+import { ElConfigProvider, ElContainer, ElHeader, ElMain, ElMenu } from 'element-plus'
+<% if (config.routeMode === 'file-system') { %>
+import { routes } from 'virtual:pages'
+<% } else { %>
+import routes from '@/router/routes'
+<% } %>
+import { computed } from 'vue'
+import { RouterView } from 'vue-router'
+import SubMenu from '@/components/SubMenu/src/index.vue'
+import { useSystemStore } from '@/stores/modules/system'
+
+const systemStore = useSystemStore()
+const themeColor = computed(() => systemStore.themeColor)
+const systemCode = computed(() => systemStore.systemCode)
+<% if (config.routeMode === 'file-system') { %>
+// 文件系统路由模式，使用第一个路由作为默认标签
+const defaultTab = routes[0]?.path || '/'
+<% } else { %>
+// 手动路由模式，使用第一个子路由作为默认标签
+const defaultTab = routes[0]?.children?.[0]?.path || '/'
+<% } %>
+</script>
+
+<style lang="scss" scoped></style>

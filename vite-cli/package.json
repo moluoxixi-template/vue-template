@@ -1,0 +1,43 @@
+{
+  "name": "vite-template-cli",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Vite template CLI for creating Vue/React projects",
+  "main": "dist/index.js",
+  "bin": {
+    "vite-cli": "./dist/index.js"
+  },
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "build": "tsc",
+    "type-check": "tsc --noEmit"
+  },
+  "keywords": [
+    "vite",
+    "vue",
+    "react",
+    "template",
+    "cli",
+    "scaffold"
+  ],
+  "author": "1983531544@qq.com",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "commander": "^12.1.0",
+    "ejs": "^3.1.10",
+    "fs-extra": "^11.3.0",
+    "inquirer": "^12.0.0",
+    "ora": "^8.1.1"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "@types/inquirer": "^9.0.7",
+    "@types/node": "^22.14.0",
+    "tsx": "^4.20.5",
+    "typescript": "~5.8.0"
+  },
+  "engines": {
+    "node": ">=20.18.0"
+  }
+}
