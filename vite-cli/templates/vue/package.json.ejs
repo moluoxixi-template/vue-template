@@ -38,35 +38,35 @@
   },
   "dependencies": {
     <% if (isElementPlus) { %>
-    "@element-plus/icons-vue": "^2.3.1",
-    "element-plus": "^2.11.3",
+    "@element-plus/icons-vue": "catalog:build",
+    "element-plus": "catalog:build",
     <% } else if (isAntDesignVue) { %>
-    "@ant-design/icons-vue": "^7.0.1",
-    "ant-design-vue": "^4.2.1",
+    "@ant-design/icons-vue": "catalog:build",
+    "ant-design-vue": "catalog:build",
     <% } %>
-    "@moluoxixi/ajax-package": "^0.0.16",
-    "@moluoxixi/class-names": "^0.0.3-beta.1",
-    "crypto-js": "^4.2.0",
-    "dayjs": "^1.11.13",
-    "lodash-es": "^4.17.21",
-    "pinia": "^2.3.0",
-    "pinia-plugin-persistedstate": "^4.2.0",
-    "radash": "^12.1.0",
-    "uuid": "^11.1.0",
-    "vue": "^3.5.13",
+    "@moluoxixi/ajax-package": "catalog:build",
+    "@moluoxixi/class-names": "catalog:build",
+    "crypto-js": "catalog:build",
+    "dayjs": "catalog:build",
+    "lodash-es": "catalog:build",
+    "pinia": "catalog:build",
+    "pinia-plugin-persistedstate": "catalog:build",
+    "radash": "catalog:build",
+    "uuid": "catalog:build",
+    "vue": "catalog:build",
     <% if (config.i18n) { %>
-    "vue-i18n": "^11.1.10",
+    "vue-i18n": "catalog:build",
     <% } %>
-    "vue-router": "^4.5.0",
+    "vue-router": "catalog:build",
     <% if (config.routeMode === 'file-system') { %>
-    "vite-plugin-pages": "^0.32.0",
+    "vite-plugin-pages": "catalog:build",
     <% } %>
     <% if (config.qiankun) { %>
-    "vite-plugin-qiankun": "^1.0.15",
+    "vite-plugin-qiankun": "catalog:build",
     <% } %>
     <% if (config.sentry) { %>
-    "@sentry/vue": "^9.27.0",
-    "@sentry/vite-plugin": "^3.5.0",
+    "@sentry/vue": "catalog:build",
+    "@sentry/vite-plugin": "catalog:build",
     <% } %>
   },
   "devDependencies": {

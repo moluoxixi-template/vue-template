@@ -1,0 +1,103 @@
+# pnpm workspace 配置
+# 用于管理项目依赖版本
+
+gitChecks: false
+registry: https://registry.npmjs.org/
+
+# 该分类仅包含多pack共用依赖
+catalogs:
+  build:
+    <% if (isVue) { %>
+    <% if (isElementPlus) { %>
+    '@element-plus/icons-vue': ^2.3.1
+    'element-plus': ^2.11.3
+    <% } else if (isAntDesignVue) { %>
+    '@ant-design/icons-vue': ^7.0.1
+    'ant-design-vue': ^4.2.1
+    <% } %>
+    'vue': ^3.5.13
+    'vue-router': ^4.5.0
+    'pinia': ^2.3.0
+    'pinia-plugin-persistedstate': ^4.2.0
+    <% if (config.i18n) { %>
+    'vue-i18n': ^11.1.10
+    <% } %>
+    <% } else if (isReact) { %>
+    <% if (isAntDesign) { %>
+    'antd': ^5.21.0
+    '@ant-design/icons': ^5.3.7
+    <% } %>
+    'react': ^18.3.1
+    'react-dom': ^18.3.1
+    'react-router-dom': ^6.26.0
+    'zustand': ^4.5.5
+    <% if (config.i18n) { %>
+    'react-i18next': ^15.1.0
+    'i18next': ^24.2.0
+    <% } %>
+    <% } %>
+    '@moluoxixi/ajax-package': 0.0.16
+    '@moluoxixi/class-names': 0.0.3-beta.1
+    'crypto-js': ^4.2.0
+    'dayjs': ^1.11.13
+    'lodash-es': ^4.17.21
+    'radash': ^12.1.0
+    'uuid': ^11.1.0
+    <% if (config.routeMode === 'file-system') { %>
+    'vite-plugin-pages': ^0.32.0
+    <% } %>
+    <% if (config.qiankun) { %>
+    'vite-plugin-qiankun': ^1.0.15
+    <% } %>
+    <% if (config.sentry) { %>
+    <% if (isVue) { %>
+    '@sentry/vue': ^9.27.0
+    <% } else if (isReact) { %>
+    '@sentry/react': ^9.27.0
+    <% } %>
+    '@sentry/vite-plugin': ^3.5.0
+    <% } %>
+  dev:
+    '@commitlint/cli': ^19.8.0
+    '@commitlint/config-conventional': ^19.8.0
+    '@moluoxixi/ajax-package': 0.0.11-beta.2
+    '@moluoxixi/css-module-global-root-plugin': 0.0.5
+    '@moluoxixi/eslint-config': ^0.0.10
+    '@moluoxixi/vite-config': ^0.0.27
+    <% if (isVue) { %>
+    '@vue-macros/volar': ^3.0.0-beta.15
+    'vue-tsc': ^2.2.8
+    <% } else if (isReact) { %>
+    '@vitejs/plugin-react': ^4.3.1
+    '@types/react': ^18.3.12
+    '@types/react-dom': ^18.3.1
+    <% } %>
+    'commitizen': ^4.3.1
+    'compressing': ^1.10.1
+    'cz-customizable': ^7.4.0
+    'dotenv': ^16.5.0
+    'eslint': ^9.5.0
+    'eslint-plugin-format': ^1.0.1
+    'husky': ^9.1.7
+    'jiti': ^2.4.2
+    'lint-staged': ^15.5.1
+    'npm-run-all2': ^7.0.2
+    'oxlint': ^0.16.0
+    'postcss': ^8.5.3
+    'sass': ^1.87.0
+    'sass-embedded': ^1.87.0
+    'sass-loader': ^16.0.5
+    'tailwindcss': npm:tailwindcss@4
+    'tsx': ^4.20.5
+    'typescript': ~5.8.0
+    'vite': 6.2.4
+  type:
+    '@types/crypto-js': ^4.2.2
+    '@types/lodash': ^4.17.17
+    '@types/node': ^22.14.0
+    '@types/uuid': ^10.0.0
+    <% if (isReact) { %>
+    '@types/react': ^18.3.12
+    '@types/react-dom': ^18.3.1
+    <% } %>
+

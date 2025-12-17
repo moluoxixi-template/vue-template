@@ -3,8 +3,7 @@
  * 根据配置生成完整的项目结构
  */
 
-import { join } from 'path'
-import { createDir, copyAndRenderTemplate, copyStaticFile } from '../utils/file'
+import { createDir } from '../utils/file'
 import { generateVueProject } from './vue'
 import { generateReactProject } from './react'
 import type { ProjectConfig } from '../types'

@@ -3,16 +3,16 @@
  * 生成 Vue 3 项目结构
  */
 
-import type { ProjectConfig } from '../types/index.ts'
+import type { ProjectConfig } from '../types'
 import { join } from 'node:path'
-import { copyAndRenderTemplate } from '../utils/file.ts'
+import { copyAndRenderTemplate } from '../utils/file'
 import {
   createSrcDirs,
   generateApisStructure,
   generateEnvFile,
   generateLocaleFiles,
   generateUtilsFiles,
-} from './common.ts'
+} from './common'
 
 /**
  * 生成 Vue 项目
@@ -47,7 +47,7 @@ function generateConfigFiles(config: ProjectConfig): void {
   const configFiles = [
     'vite.config.ts',
     'tsconfig.json',
-    'tsconfig.app.json',
+    'tsconfig.base.json',
     'tsconfig.node.json',
     'eslint.config.ts',
     'commitlint.config.ts',
@@ -66,6 +66,13 @@ function generateConfigFiles(config: ProjectConfig): void {
 
   // .env 文件（使用公共函数）
   generateEnvFile(config, targetDir, 'vue')
+
+  // pnpm-workspace.yaml 文件
+  copyAndRenderTemplate(
+    'common/pnpm-workspace.yaml.ejs',
+    join(targetDir, 'pnpm-workspace.yaml'),
+    config,
+  )
 }
 
 /**

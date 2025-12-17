@@ -10,7 +10,8 @@
   "scripts": {
     "dev": "tsx src/index.ts",
     "build": "tsc",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "lint:eslint": "eslint . --fix"
   },
   "keywords": [
     "vite",
