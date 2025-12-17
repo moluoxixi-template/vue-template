@@ -1,0 +1,26 @@
+# pnpm workspace 配置
+# 用于管理 vite-cli 项目依赖版本
+
+gitChecks: false
+registry: https://registry.npmjs.org/
+
+# 该分类仅包含多pack共用依赖
+catalogs:
+  build:
+    chalk: ^5.3.0
+    commander: ^12.1.0
+    ejs: ^3.1.10
+    'fs-extra': ^11.3.0
+    inquirer: ^12.0.0
+    ora: ^8.1.1
+  dev:
+    '@moluoxixi/eslint-config': ^0.0.10
+    eslint: ^9.5.0
+    tsx: ^4.20.5
+    typescript: ~5.8.0
+  type:
+    '@types/ejs': ^3.1.5
+    '@types/fs-extra': ^11.0.4
+    '@types/inquirer': ^9.0.7
+    '@types/node': ^22.14.0
+

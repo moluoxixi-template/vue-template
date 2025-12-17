@@ -24,17 +24,18 @@
   "author": "1983531544@qq.com",
   "license": "MIT",
   "dependencies": {
-    "chalk": "^5.3.0",
-    "commander": "^12.1.0",
-    "ejs": "^3.1.10",
-    "fs-extra": "^11.3.0",
-    "inquirer": "^12.0.0",
-    "ora": "^8.1.1"
+    "chalk": "catalog:build",
+    "commander": "catalog:build",
+    "ejs": "catalog:build",
+    "fs-extra": "catalog:build",
+    "inquirer": "catalog:build",
+    "ora": "catalog:build"
   },
   "devDependencies": {
     "@moluoxixi/eslint-config": "catalog:dev",
-    "@types/fs-extra": "^11.0.4",
-    "@types/inquirer": "^9.0.7",
+    "@types/ejs": "catalog:type",
+    "@types/fs-extra": "catalog:type",
+    "@types/inquirer": "catalog:type",
     "@types/node": "catalog:type",
     "eslint": "catalog:dev",
     "tsx": "catalog:dev",

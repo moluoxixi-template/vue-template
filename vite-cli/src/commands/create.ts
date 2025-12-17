@@ -3,12 +3,13 @@
  * 创建新项目的核心逻辑
  */
 
+import * as process from 'node:process'
 import chalk from 'chalk'
 import ora from 'ora'
-import { collectProjectConfig } from '../utils/prompts'
-import { pathExists } from '../utils/file'
 import { generateProject } from '../generators/project'
+import { pathExists } from '../utils/file'
 import { installDependencies } from '../utils/install'
+import { collectProjectConfig } from '../utils/prompts'
 
 /**
  * 创建项目
@@ -86,4 +87,3 @@ export async function createProject(projectName?: string): Promise<void> {
     process.exit(1)
   }
 }
-

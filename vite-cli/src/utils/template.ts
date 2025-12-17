@@ -3,12 +3,12 @@
  * 使用 ejs 渲染模板文件
  */
 
+import type { ProjectConfig } from '../types'
+import { readFileSync, writeFileSync } from 'node:fs'
+import { dirname, join } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import ejs from 'ejs'
-import { readFileSync, writeFileSync } from 'fs'
 import fs from 'fs-extra'
-import { dirname, join } from 'path'
-import { fileURLToPath } from 'url'
-import type { ProjectConfig } from '../types/index.ts'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -75,4 +75,3 @@ export function renderTemplate(
 export function getTemplatePath(templatePath: string): string {
   return join(getTemplateDir(), templatePath)
 }
-
