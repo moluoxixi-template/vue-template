@@ -7,9 +7,9 @@ import path from 'node:path'
 import process from 'node:process'
 import cssModuleGlobalRootPlugin from '@moluoxixi/css-module-global-root-plugin'
 import { ViteConfig, wrapperEnv } from '@moluoxixi/vite-config'
-<% if (config.sentry) { %>
+<% if (config.sentry) { -%>
 import { sentryVitePlugin } from '@sentry/vite-plugin'
-<% } %>
+<% } -%>
 import { loadEnv } from 'vite'
 
 export default ViteConfig(
@@ -27,7 +27,7 @@ export default ViteConfig(
       port,
       // 自动组件导入
       autoComponent: true,
-      <% if (config.routeMode === 'file-system') { %>
+<% if (config.routeMode === 'file-system') { -%>
       // 文件系统路由（基于 vite-plugin-pages）
       pageRoutes: {
         dirs: 'src/pages',
@@ -37,13 +37,13 @@ export default ViteConfig(
           '**/__tests__/**',
         ],
       },
-      <% } else { %>
+<% } else { -%>
       // 手动路由模式，不启用 pageRoutes
       pageRoutes: false,
-      <% } %>
+<% } -%>
       viteConfig: {
         plugins: [
-          <% if (config.sentry) { %>
+<% if (config.sentry) { -%>
           // Sentry Source Map 上传插件（仅在生产环境且配置了 VITE_SENTRY 时启用）
           viteEnv.VITE_SENTRY
           && mode === 'production'
@@ -61,7 +61,7 @@ export default ViteConfig(
               name: viteEnv.VITE_APP_VERSION || 'unknown',
             },
           }),
-          <% } %>
+<% } -%>
         ],
         server: {
           proxy: {

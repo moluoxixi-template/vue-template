@@ -41,15 +41,15 @@
 /**
  * Element Plus 布局组件
  */
-<% if (config.qiankun) { %>
+<% if (config.qiankun) { -%>
 import { qiankunWindow } from 'vite-plugin-qiankun/dist/helper'
-<% } %>
+<% } -%>
 import { ElConfigProvider, ElContainer, ElHeader, ElMain, ElMenu } from 'element-plus'
-<% if (config.routeMode === 'file-system') { %>
+<% if (config.routeMode === 'file-system') { -%>
 import { routes } from 'virtual:pages'
-<% } else { %>
+<% } else { -%>
 import routes from '@/router/routes'
-<% } %>
+<% } -%>
 import { computed } from 'vue'
 import { RouterView } from 'vue-router'
 import SubMenu from '@/components/SubMenu/src/index.vue'
@@ -58,13 +58,13 @@ import { useSystemStore } from '@/stores/modules/system'
 const systemStore = useSystemStore()
 const themeColor = computed(() => systemStore.themeColor)
 const systemCode = computed(() => systemStore.systemCode)
-<% if (config.routeMode === 'file-system') { %>
+<% if (config.routeMode === 'file-system') { -%>
 // 文件系统路由模式，使用第一个路由作为默认标签
 const defaultTab = routes[0]?.path || '/'
-<% } else { %>
+<% } else { -%>
 // 手动路由模式，使用第一个子路由作为默认标签
 const defaultTab = routes[0]?.children?.[0]?.path || '/'
-<% } %>
+<% } -%>
 </script>
 
 <style lang="scss" scoped></style>
