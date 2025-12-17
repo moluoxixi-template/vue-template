@@ -331,9 +331,27 @@ function generateComponentsFiles(config: ProjectConfig): void {
 
   // SubMenu 组件（仅当使用 element-plus 时）
   if (config.uiLibrary === 'element-plus') {
+    // 组件入口
+    copyAndRenderTemplate(
+      'vue/src/components/SubMenu/index.ts.ejs',
+      join(targetDir, 'src/components/SubMenu/index.ts'),
+      config,
+    )
+    // 组件主文件
     copyAndRenderTemplate(
       'vue/src/components/SubMenu/src/index.vue.ejs',
       join(targetDir, 'src/components/SubMenu/src/index.vue'),
+      config,
+    )
+    // 类型定义
+    copyAndRenderTemplate(
+      'vue/src/components/SubMenu/src/_types/index.ts.ejs',
+      join(targetDir, 'src/components/SubMenu/src/_types/index.ts'),
+      config,
+    )
+    copyAndRenderTemplate(
+      'vue/src/components/SubMenu/src/_types/props.ts.ejs',
+      join(targetDir, 'src/components/SubMenu/src/_types/props.ts'),
       config,
     )
   }

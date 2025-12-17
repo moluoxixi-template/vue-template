@@ -2,8 +2,8 @@
  * 布局组件
  * 根据系统配置动态加载不同的布局
  */
+<% if (isAntDesign) { -%>
 
-<% if (isAntDesign) { %>
 import { Layout as AntLayout } from 'antd'
 import { Outlet } from 'react-router-dom'
 
@@ -23,7 +23,8 @@ function Layout() {
 }
 
 export default Layout
-<% } else { %>
+<% } else { -%>
+
 import { Outlet } from 'react-router-dom'
 
 function Layout() {
@@ -35,5 +36,5 @@ function Layout() {
 }
 
 export default Layout
-<% } %>
+<% } -%>
 
