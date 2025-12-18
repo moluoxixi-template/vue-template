@@ -9,6 +9,9 @@ import { copyAndRenderTemplate } from '../utils/file'
 import {
   createSrcDirs,
   generateApisStructure,
+  generateCommonAssetsFiles,
+  generateCommonConfigFiles,
+  generateConstantsFiles,
   generateEnvFile,
   generateHuskyFiles,
   generateLocaleFiles,
@@ -45,21 +48,18 @@ function generateConfigFiles(config: ProjectConfig): void {
     config,
   )
 
-  // 其他配置文件
-  const configFiles = [
+  // 框架特定配置文件
+  const frameworkConfigFiles = [
     'vite.config.ts',
     'tsconfig.json',
     'tsconfig.app.json',
     'tsconfig.base.json',
     'tsconfig.node.json',
-    'eslint.config.ts',
-    'commitlint.config.ts',
     'env.d.ts',
     'index.html',
-    '.gitignore',
   ]
 
-  configFiles.forEach((file) => {
+  frameworkConfigFiles.forEach((file) => {
     copyAndRenderTemplate(
       `react/${file}.ejs`,
       join(targetDir, file),
@@ -67,15 +67,11 @@ function generateConfigFiles(config: ProjectConfig): void {
     )
   })
 
-  // .env 文件（使用公共函数）
-  generateEnvFile(config, targetDir, 'react')
+  // 公共配置文件
+  generateCommonConfigFiles(config, targetDir)
 
-  // pnpm-workspace.yaml 文件
-  copyAndRenderTemplate(
-    'common/pnpm-workspace.yaml.ejs',
-    join(targetDir, 'pnpm-workspace.yaml'),
-    config,
-  )
+  // .env 文件（使用公共函数）
+  generateEnvFile(config, targetDir)
 
   // husky 配置文件
   generateHuskyFiles(config, targetDir)
@@ -118,7 +114,7 @@ function generateSrcStructure(config: ProjectConfig): void {
   generateUtilsFiles(config, targetDir, 'react')
   generatePagesFiles(config)
   generateAssetsFiles(config)
-  generateConstantsFiles(config)
+  generateConstantsFiles(config, targetDir)
 }
 
 /**
@@ -232,34 +228,13 @@ function generatePagesFiles(config: ProjectConfig): void {
 function generateAssetsFiles(config: ProjectConfig): void {
   const { targetDir } = config
 
-  // 样式文件
-  const styleFiles = ['main.scss', 'base.scss', 'custom.scss', 'tailwind.scss']
-  styleFiles.forEach((file) => {
-    copyAndRenderTemplate(
-      `react/src/assets/styles/${file}.ejs`,
-      join(targetDir, `src/assets/styles/${file}`),
-      config,
-    )
-  })
+  // 公共样式文件
+  generateCommonAssetsFiles(config, targetDir)
 
-  // 字体文件
+  // main.scss（框架特定）
   copyAndRenderTemplate(
-    'react/src/assets/fonts/index.css.ejs',
-    join(targetDir, 'src/assets/fonts/index.css'),
-    config,
-  )
-}
-
-/**
- * 生成常量文件
- * @param config 项目配置
- */
-function generateConstantsFiles(config: ProjectConfig): void {
-  const { targetDir } = config
-
-  copyAndRenderTemplate(
-    'react/src/constants/index.ts.ejs',
-    join(targetDir, 'src/constants/index.ts'),
+    'react/src/assets/styles/main.scss.ejs',
+    join(targetDir, 'src/assets/styles/main.scss'),
     config,
   )
 }

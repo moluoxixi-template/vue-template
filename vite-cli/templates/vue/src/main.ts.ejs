@@ -19,7 +19,12 @@ import { initSentry } from '@/utils/sentry'
 import App from './App.vue'
 import getRouter from './router'
 
-// 导入样式文件（全局样式统一入口）
+// 导入样式文件
+<% if (isElementPlus) { -%>
+import '@/assets/styles/element/index.scss'
+<% } else if (isAntDesignVue) { -%>
+import 'ant-design-vue/dist/reset.css'
+<% } -%>
 import '@/assets/styles/main.scss'
 import '@/assets/fonts/index.css'
 

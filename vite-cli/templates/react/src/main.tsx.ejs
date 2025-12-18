@@ -20,7 +20,10 @@ import { RouterProvider } from 'react-router-dom'
 import { router } from './router'
 <% } -%>
 
-// 导入样式文件（全局样式统一入口）
+// 导入样式文件
+<% if (isAntDesign) { -%>
+import 'antd/dist/reset.css'
+<% } -%>
 import '@/assets/styles/main.scss'
 import '@/assets/fonts/index.css'
 

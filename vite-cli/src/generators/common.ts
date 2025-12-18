@@ -81,18 +81,18 @@ export function generateLocaleFiles(
     return
   }
 
-  // locales/index.ts
+  // locales/index.ts（框架特定）
   copyAndRenderTemplate(
     `${framework}/src/locales/index.ts.ejs`,
     join(targetDir, 'src/locales/index.ts'),
     config,
   )
 
-  // 语言文件
+  // 语言文件（公共）
   const langs = ['zh', 'en', 'es']
   langs.forEach((lang) => {
     copyAndRenderTemplate(
-      `${framework}/src/locales/lang/${lang}.ts.ejs`,
+      `common/src/locales/lang/${lang}.ts.ejs`,
       join(targetDir, `src/locales/lang/${lang}.ts`),
       config,
     )
@@ -110,14 +110,14 @@ export function generateUtilsFiles(
   targetDir: string,
   framework: 'vue' | 'react',
 ): void {
-  // utils/index.ts
+  // utils/index.ts（公共）
   copyAndRenderTemplate(
-    `${framework}/src/utils/index.ts.ejs`,
+    'common/src/utils/index.ts.ejs',
     join(targetDir, 'src/utils/index.ts'),
     config,
   )
 
-  // utils/sentry.ts（如果启用 Sentry）
+  // utils/sentry.ts（如果启用 Sentry，框架特定）
   if (config.sentry) {
     copyAndRenderTemplate(
       `${framework}/src/utils/sentry.ts.ejs`,
@@ -131,31 +131,110 @@ export function generateUtilsFiles(
  * 生成环境配置文件（.env, .env.development, .env.production）
  * @param config 项目配置
  * @param targetDir 目标目录
- * @param framework 框架类型（vue 或 react）
  */
 export function generateEnvFile(
   config: ProjectConfig,
   targetDir: string,
-  framework: 'vue' | 'react',
 ): void {
   // 生成 .env（基础配置）
   copyAndRenderTemplate(
-    `${framework}/env.ejs`,
+    'common/env.ejs',
     join(targetDir, '.env'),
     config,
   )
 
   // 生成 .env.development（开发环境配置）
   copyAndRenderTemplate(
-    `${framework}/env.development.ejs`,
+    'common/env.development.ejs',
     join(targetDir, '.env.development'),
     config,
   )
 
   // 生成 .env.production（生产环境配置）
   copyAndRenderTemplate(
-    `${framework}/env.production.ejs`,
+    'common/env.production.ejs',
     join(targetDir, '.env.production'),
+    config,
+  )
+}
+
+/**
+ * 生成公共配置文件
+ * @param config 项目配置
+ * @param targetDir 目标目录
+ */
+export function generateCommonConfigFiles(
+  config: ProjectConfig,
+  targetDir: string,
+): void {
+  // .gitignore
+  copyAndRenderTemplate(
+    'common/.gitignore.ejs',
+    join(targetDir, '.gitignore'),
+    config,
+  )
+
+  // commitlint.config.ts
+  copyAndRenderTemplate(
+    'common/commitlint.config.ts.ejs',
+    join(targetDir, 'commitlint.config.ts'),
+    config,
+  )
+
+  // eslint.config.ts
+  copyAndRenderTemplate(
+    'common/eslint.config.ts.ejs',
+    join(targetDir, 'eslint.config.ts'),
+    config,
+  )
+
+  // pnpm-workspace.yaml
+  copyAndRenderTemplate(
+    'common/pnpm-workspace.yaml.ejs',
+    join(targetDir, 'pnpm-workspace.yaml'),
+    config,
+  )
+}
+
+/**
+ * 生成公共静态资源文件
+ * @param config 项目配置
+ * @param targetDir 目标目录
+ */
+export function generateCommonAssetsFiles(
+  config: ProjectConfig,
+  targetDir: string,
+): void {
+  // 公共样式文件
+  const commonStyleFiles = ['base.scss', 'custom.scss', 'tailwind.scss']
+  commonStyleFiles.forEach((file) => {
+    copyAndRenderTemplate(
+      `common/src/assets/styles/${file}.ejs`,
+      join(targetDir, `src/assets/styles/${file}`),
+      config,
+    )
+  })
+
+  // 字体文件
+  copyAndRenderTemplate(
+    'common/src/assets/fonts/index.css.ejs',
+    join(targetDir, 'src/assets/fonts/index.css'),
+    config,
+  )
+}
+
+/**
+ * 生成常量文件（公共）
+ * @param config 项目配置
+ * @param targetDir 目标目录
+ */
+export function generateConstantsFiles(
+  config: ProjectConfig,
+  targetDir: string,
+): void {
+  copyAndRenderTemplate(
+    'common/src/constants/index.ts.ejs',
+    join(targetDir, 'src/constants/index.ts'),
     config,
   )
 }
