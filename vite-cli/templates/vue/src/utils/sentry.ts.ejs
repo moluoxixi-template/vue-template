@@ -22,7 +22,7 @@ export function initSentry(app: App, router: Router): void {
     app,
     dsn: import.meta.env.VITE_SENTRY,
     integrations: [
-      Sentry.browserTracingIntegration(),
+      Sentry.browserTracingIntegration({ router }),
       Sentry.replayIntegration(),
     ],
     // 性能监控
