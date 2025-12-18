@@ -50,7 +50,7 @@
   "devDependencies": {
     "@commitlint/cli": "catalog:dev",
     "@commitlint/config-conventional": "catalog:dev",
-    "@moluoxixi/eslint-config": "catalog:dev",
+    "@moluoxixi/eslint-config": "latest",
     "@types/ejs": "catalog:type",
     "@types/fs-extra": "catalog:type",
     "@types/inquirer": "catalog:type",

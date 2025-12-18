@@ -222,10 +222,10 @@ function generateLayoutFiles(config: ProjectConfig): void {
     config,
   )
 
-  // layouts/element.vue 或 layouts/ant-design.vue
+  // layouts/element.vue 或 layouts/AntDesign.vue
   const layoutFile = config.uiLibrary === 'element-plus'
     ? 'element.vue'
-    : 'ant-design.vue'
+    : 'AntDesign.vue'
 
   copyAndRenderTemplate(
     `vue/src/layouts/${layoutFile}.ejs`,

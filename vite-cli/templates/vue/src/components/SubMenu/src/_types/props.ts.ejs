@@ -1,11 +1,11 @@
+import type { RouteRecordRaw } from 'vue-router'
+
 export interface subMenuRouteMetaType {
   title?: string
   [key: string]: unknown
 }
 
-export interface subMenuRouteType {
-  path?: string
-  name?: string
+export interface subMenuRouteType extends RouteRecordRaw {
   href?: string
   meta?: subMenuRouteMetaType
   children?: subMenuRouteType[]

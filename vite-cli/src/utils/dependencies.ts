@@ -13,8 +13,8 @@ import type { ProjectConfig } from '../types/index.ts'
 export function getDependencies(config: ProjectConfig): Record<string, string> {
   const deps: Record<string, string> = {
     // 工具库（必选）
-    '@moluoxixi/ajax-package': '^0.0.16',
-    '@moluoxixi/class-names': '^0.0.3-beta.1',
+    '@moluoxixi/ajax-package': 'latest',
+    '@moluoxixi/class-names': 'latest',
     'lodash-es': '^4.17.21',
     'radash': '^12.1.0',
     'dayjs': '^1.11.13',
@@ -99,10 +99,10 @@ export function getDevDependencies(config: ProjectConfig): Record<string, string
     'vite': '^6.2.4',
     'typescript': '~5.8.0',
     // 代码规范
-    '@moluoxixi/eslint-config': '^0.0.10',
-    '@moluoxixi/vite-config': '^0.0.27',
-    '@moluoxixi/css-module-global-root-plugin': '^0.0.5',
-    '@moluoxixi/ajax-package': '^0.0.11-beta.2',
+    '@moluoxixi/eslint-config': 'latest',
+    '@moluoxixi/vite-config': 'latest',
+    '@moluoxixi/css-module-global-root-plugin': 'latest',
+    '@moluoxixi/ajax-package': 'latest',
     'eslint': '^9.22.0',
     'eslint-plugin-format': '^1.0.1',
     // Git 提交规范

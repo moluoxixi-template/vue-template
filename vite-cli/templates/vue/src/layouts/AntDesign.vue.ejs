@@ -22,12 +22,11 @@
           <template v-for="(route, index) in routes" :key="route.path || index">
             <AMenuItem
               v-if="!route.children?.length"
-              :key="route.path"
               @click="handleMenuClick(route)"
             >
               {{ route.meta?.title || route.name || route.path }}
             </AMenuItem>
-            <ASubMenu v-else :key="route.path" :title="route.meta?.title || route.name">
+            <ASubMenu v-else :title="route.meta?.title || route.name">
               <AMenuItem
                 v-for="child in route.children"
                 :key="child.path"
@@ -100,7 +99,8 @@ function handleMenuClick(route: any) {
   
   :deep(.ant-menu) {
     line-height: 64px;
+    display: flex;
+    justify-content: center;
   }
 }
 </style>
-
