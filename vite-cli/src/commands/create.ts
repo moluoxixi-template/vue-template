@@ -3,7 +3,7 @@
  * 创建新项目的核心逻辑
  */
 
-import * as process from 'node:process'
+import process from 'node:process'
 import chalk from 'chalk'
 import ora from 'ora'
 import { generateProject } from '../generators/project'
@@ -61,7 +61,7 @@ export async function createProject(projectName?: string): Promise<void> {
       installDependencies(config.packageManager, config.targetDir)
       installSpinner.succeed('Dependencies installed successfully!')
     }
-    catch (error) {
+    catch {
       installSpinner.fail('Failed to install dependencies')
       // 依赖安装失败不影响项目创建，只提示用户
       console.log(

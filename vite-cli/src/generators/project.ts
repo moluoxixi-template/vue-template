@@ -3,10 +3,10 @@
  * 根据配置生成完整的项目结构
  */
 
+import type { ProjectConfig } from '../types'
 import { createDir } from '../utils/file'
-import { generateVueProject } from './vue'
 import { generateReactProject } from './react'
-import type { ProjectConfig } from '../types/index.ts'
+import { generateVueProject } from './vue'
 
 /**
  * 生成项目
@@ -27,4 +27,3 @@ export async function generateProject(config: ProjectConfig): Promise<void> {
     throw new Error(`Unsupported framework: ${config.framework}`)
   }
 }
-

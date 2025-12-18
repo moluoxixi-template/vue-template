@@ -3,7 +3,7 @@
  * 生成 Vue 3 项目结构
  */
 
-import type { ProjectConfig } from '../types/index.ts'
+import type { ProjectConfig } from '../types'
 import { join } from 'node:path'
 import { copyAndRenderTemplate } from '../utils/file'
 import {

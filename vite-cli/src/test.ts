@@ -3,9 +3,9 @@
  * 生成 Vue (Element Plus / Ant Design Vue) 和 React (Ant Design) 测试项目，启用所有功能
  */
 
-import type { ProjectConfig } from './types/index.ts'
+import type { ProjectConfig } from './types'
 import { execSync } from 'node:child_process'
-import * as process from 'node:process'
+import process from 'node:process'
 import fs from 'fs-extra'
 import { generateProject } from './generators/project'
 

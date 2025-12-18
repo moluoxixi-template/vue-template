@@ -3,7 +3,7 @@
  * 处理文件复制、创建目录等操作
  */
 
-import type { ProjectConfig } from '../types/index.ts'
+import type { ProjectConfig } from '../types'
 import { readFileSync, writeFileSync } from 'node:fs'
 import { dirname } from 'node:path'
 import fs from 'fs-extra'
