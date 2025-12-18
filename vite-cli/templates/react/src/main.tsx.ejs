@@ -20,11 +20,8 @@ import { RouterProvider } from 'react-router-dom'
 import { router } from './router'
 <% } -%>
 
-// 导入样式文件
+// 导入样式文件（全局样式统一入口）
 import '@/assets/styles/main.scss'
-<% if (isAntDesign) { -%>
-import 'antd/dist/reset.css'
-<% } -%>
 import '@/assets/fonts/index.css'
 
 <% if (config.qiankun) { -%>

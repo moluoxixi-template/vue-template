@@ -46,8 +46,8 @@
 <script lang="ts" setup>
 /**
  * Element Plus 布局组件
+ * 组件由 unplugin-vue-components 自动导入
  */
-import { ElConfigProvider, ElContainer, ElHeader, ElMain, ElMenu } from 'element-plus'
 <% if (config.routeMode === 'file-system') { -%>
 import routes from '~pages'
 <% } else { -%>
@@ -56,8 +56,6 @@ import routes from '@/router/routes'
 <% if (config.qiankun) { -%>
 import { qiankunWindow } from 'vite-plugin-qiankun/dist/helper'
 <% } -%>
-import { computed } from 'vue'
-import { RouterView } from 'vue-router'
 import SubMenu from '@/components/SubMenu/src/index.vue'
 import { useSystemStore } from '@/stores/modules/system'
 

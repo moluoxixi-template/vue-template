@@ -5,4 +5,7 @@
 
 @import './base.scss';
 @import './custom.scss';
+<% if (isAntDesign) { -%>
+@import 'antd/dist/reset.css';
+<% } -%>
 @import './tailwind.scss';

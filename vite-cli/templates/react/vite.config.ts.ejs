@@ -25,21 +25,14 @@ export default ViteConfig(
       appTitle,
       appCode,
       port,
-      // 自动组件导入
-      autoComponent: true,
+      vue: false,
+      react: true,
+      // 自动组件导入（React 不需要）
+      autoComponent: false,
+      autoImport: false,
 <% if (config.routeMode === 'file-system') { -%>
       // 文件系统路由（基于 vite-plugin-pages）
-      pageRoutes: {
-        dirs: 'src/pages',
-        extensions: ['tsx', 'jsx'],
-        exclude: [
-          '**/components/**',
-          '**/__tests__/**',
-        ],
-      },
-<% } else { -%>
-      // 手动路由模式，不启用 pageRoutes
-      pageRoutes: false,
+      pageRoutes: true,
 <% } -%>
       viteConfig: {
         plugins: [

@@ -25,21 +25,12 @@ export default ViteConfig(
       appTitle,
       appCode,
       port,
+      vue: true,
       // 自动组件导入
       autoComponent: true,
 <% if (config.routeMode === 'file-system') { -%>
       // 文件系统路由（基于 vite-plugin-pages）
-      pageRoutes: {
-        dirs: 'src/pages',
-        extensions: ['vue'],
-        exclude: [
-          '**/components/**',
-          '**/__tests__/**',
-        ],
-      },
-<% } else { -%>
-      // 手动路由模式，不启用 pageRoutes
-      pageRoutes: false,
+      pageRoutes: true,
 <% } -%>
       viteConfig: {
         plugins: [
@@ -82,6 +73,15 @@ export default ViteConfig(
             scss: {
               silenceDeprecations: ['legacy-js-api'],
               api: 'modern-compiler',
+<% if (isElementPlus) { -%>
+              additionalData: (source: string, filename: string) => {
+                if (filename.includes('assets/styles/element/index.scss')) {
+                  return `$namespace: '${appCode || 'el'}';
+                ${source}`
+                }
+                return source
+              },
+<% } -%>
             },
           },
         },
