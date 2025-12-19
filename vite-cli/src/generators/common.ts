@@ -136,26 +136,35 @@ export function generateEnvFile(
   config: ProjectConfig,
   targetDir: string,
 ): void {
-  // 生成 .env（基础配置）
-  copyAndRenderTemplate(
-    'common/env.ejs',
-    join(targetDir, '.env'),
-    config,
-  )
+  const envFiles = [
+    '.env',
+    '.env.development',
+    '.env.production',
+  ]
 
-  // 生成 .env.development（开发环境配置）
-  copyAndRenderTemplate(
-    'common/env.development.ejs',
-    join(targetDir, '.env.development'),
-    config,
-  )
+  generateFiles(config, targetDir, 'common', envFiles)
+}
 
-  // 生成 .env.production（生产环境配置）
-  copyAndRenderTemplate(
-    'common/env.production.ejs',
-    join(targetDir, '.env.production'),
-    config,
-  )
+/**
+ * 批量生成文件（公共方法）
+ * @param config 项目配置
+ * @param targetDir 目标目录
+ * @param templateDir 模板目录（如 'vue', 'react', 'common'）
+ * @param files 文件列表（相对于目标目录的路径）
+ */
+export function generateFiles(
+  config: ProjectConfig,
+  targetDir: string,
+  templateDir: string,
+  files: string[],
+): void {
+  files.forEach((file) => {
+    copyAndRenderTemplate(
+      `${templateDir}/${file}.ejs`,
+      join(targetDir, file),
+      config,
+    )
+  })
 }
 
 /**
@@ -167,33 +176,13 @@ export function generateCommonConfigFiles(
   config: ProjectConfig,
   targetDir: string,
 ): void {
-  // .gitignore
-  copyAndRenderTemplate(
-    'common/.gitignore.ejs',
-    join(targetDir, '.gitignore'),
-    config,
-  )
+  const commonConfigFiles = [
+    '.gitignore',
+    'commitlint.config.ts',
+    'eslint.config.ts',
+  ]
 
-  // commitlint.config.ts
-  copyAndRenderTemplate(
-    'common/commitlint.config.ts.ejs',
-    join(targetDir, 'commitlint.config.ts'),
-    config,
-  )
-
-  // eslint.config.ts
-  copyAndRenderTemplate(
-    'common/eslint.config.ts.ejs',
-    join(targetDir, 'eslint.config.ts'),
-    config,
-  )
-
-  // pnpm-workspace.yaml
-  copyAndRenderTemplate(
-    'common/pnpm-workspace.yaml.ejs',
-    join(targetDir, 'pnpm-workspace.yaml'),
-    config,
-  )
+  generateFiles(config, targetDir, 'common', commonConfigFiles)
 }
 
 /**

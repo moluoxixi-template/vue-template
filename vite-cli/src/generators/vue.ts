@@ -13,6 +13,7 @@ import {
   generateCommonConfigFiles,
   generateConstantsFiles,
   generateEnvFile,
+  generateFiles,
   generateHuskyFiles,
   generateLocaleFiles,
   generateScriptsFiles,
@@ -41,15 +42,9 @@ export async function generateVueProject(config: ProjectConfig): Promise<void> {
 function generateConfigFiles(config: ProjectConfig): void {
   const { targetDir } = config
 
-  // package.json
-  copyAndRenderTemplate(
-    'vue/package.json.ejs',
-    join(targetDir, 'package.json'),
-    config,
-  )
-
-  // 框架特定配置文件
-  const frameworkConfigFiles = [
+  // Vue 框架特定配置文件（根目录）
+  const vueRootConfigFiles = [
+    'package.json',
     'vite.config.ts',
     'tsconfig.json',
     'tsconfig.app.json',
@@ -57,17 +52,13 @@ function generateConfigFiles(config: ProjectConfig): void {
     'tsconfig.node.json',
     'env.d.ts',
     'index.html',
+    'pnpm-workspace.yaml',
   ]
 
-  frameworkConfigFiles.forEach((file) => {
-    copyAndRenderTemplate(
-      `vue/${file}.ejs`,
-      join(targetDir, file),
-      config,
-    )
-  })
+  // 批量生成 Vue 框架特定配置文件
+  generateFiles(config, targetDir, 'vue', vueRootConfigFiles)
 
-  // 公共配置文件
+  // 公共配置文件（使用公共函数）
   generateCommonConfigFiles(config, targetDir)
 
   // .env 文件（使用公共函数）
