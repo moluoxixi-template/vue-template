@@ -178,6 +178,7 @@ export function generateCommonConfigFiles(
 ): void {
   const commonConfigFiles = [
     '.gitignore',
+    '.cz-config.cjs',
     'commitlint.config.ts',
     'eslint.config.ts',
   ]
