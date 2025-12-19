@@ -5,6 +5,7 @@
 
 import type { ProjectConfig } from './types'
 import { execSync } from 'node:child_process'
+import { join } from 'node:path'
 import process from 'node:process'
 import fs from 'fs-extra'
 import { generateProject } from './generators/project'
@@ -66,29 +67,41 @@ const reactAntdConfig: ProjectConfig = {
 }
 
 /**
- * 清空测试目录
+ * 清空测试目录（仅清空内容，保留目录）
  */
 function cleanTestDir(): void {
   console.log('🧹 Cleaning test directory...')
-  if (fs.existsSync(testDir)) {
+
+  // 确保目录存在
+  fs.ensureDirSync(testDir)
+
+  // 读取目录内容
+  const entries = fs.readdirSync(testDir)
+
+  if (entries.length === 0) {
+    console.log('   Directory is already empty')
+    console.log('✅ Test directory cleaned!\n')
+    return
+  }
+
+  // 清空目录内容
+  console.log(`   Removing ${entries.length} item(s)...`)
+  for (const entry of entries) {
+    const entryPath = join(testDir, entry)
     try {
-      // 尝试使用 fs-extra 删除
-      fs.removeSync(testDir)
-      console.log(`   Removed: ${testDir}`)
+      const stat = fs.statSync(entryPath)
+      if (stat.isDirectory()) {
+        fs.removeSync(entryPath)
+      }
+      else {
+        fs.unlinkSync(entryPath)
+      }
     }
-    catch {
-      // 如果 fs-extra 失败，使用系统命令强制删除（Windows）
-      console.log('   Using system command to remove directory...')
-      try {
-        execSync(`rd /s /q "${testDir}"`, { stdio: 'ignore', shell: 'cmd.exe' })
-        console.log(`   Removed: ${testDir}`)
-      }
-      catch {
-        console.warn('   Warning: Could not fully clean directory, will overwrite files')
-      }
+    catch (error) {
+      console.warn(`   Warning: Could not remove ${entry},error: ${error}, will continue...`)
     }
   }
-  fs.ensureDirSync(testDir)
+
   console.log('✅ Test directory cleaned!\n')
 }
 
