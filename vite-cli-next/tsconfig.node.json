@@ -1,0 +1,22 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "lib": [
+      "ESNext"
+    ],
+    "module": "NodeNext",
+    "moduleResolution": "nodenext",
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "composite": true
+  },
+  "include": [
+    "src/**/*",
+    "eslint.config.ts",
+    "tsconfig*.json"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+  ]
+}
