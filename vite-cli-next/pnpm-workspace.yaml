@@ -1,0 +1,2 @@
+packages:
+  - . # CLI 本身作为 workspace 根

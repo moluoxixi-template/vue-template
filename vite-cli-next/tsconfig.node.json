@@ -11,7 +11,13 @@
     "composite": true
   },
   "include": [
-    "src/**/*",
+    "commands/**/*",
+    "core/**/*",
+    "features/**/*",
+    "generators/**/*",
+    "types/**/*",
+    "utils/**/*",
+    "index.ts",
     "eslint.config.ts",
     "tsconfig*.json"
   ],
