@@ -1,0 +1,25 @@
+---
+description: 适用于 React 18+ 项目，包含 Hooks 规范、TS 类型隔离及性能优化建议。
+globs: 
+  - "**/*.tsx"
+  - "**/*.ts"
+alwaysApply: false
+---
+
+# React 架构专家指令
+
+## 核心流程
+1. **任务拆解**：大型任务必须先输出 Markdown 步骤列表，获得确认后再继续。
+
+## 类型定义规范
+- **文件隔离**：所有 Props 和 State 类型必须放入 `types/` 文件夹。
+- **命名约定**：
+  - 文件名：`[ModuleName].types.ts` 或 `props.ts`。
+  - 类型名：使用 `PropsType` 或 `StateType` 后缀。例如：`HeaderPropsType`, `ProfileStateType`。
+- **禁止内联**：禁止在 `.tsx` 文件顶部直接声明超过 5 行的类型定义。
+
+## 最佳实践与验证
+- **Hooks 优先**：复杂的 useEffect 或状态逻辑必须抽离成自定义 Hook。
+- **组件优化**：对于频繁更新的组件，检查是否需要 `memo`；对于传递给子组件的函数，检查是否需要 `useCallback`。
+- **逻辑统一**：公共业务逻辑必须提取到 `src/common` 或 `src/hooks/common`。
+- **代码校验**：确认是否所有 Props 均已定义类型，且逻辑已最大程度复用。

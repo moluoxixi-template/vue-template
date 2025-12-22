@@ -1,0 +1,45 @@
+---
+description: TypeScript 类型规范，包含类型定义位置、命名约定及严格类型要求。
+globs: 
+  - "**/*.ts"
+  - "**/*.tsx"
+  - "**/*.vue"
+alwaysApply: false
+---
+
+# TypeScript 类型规范
+
+## 类型定义位置
+- **文件隔离**：所有 Props、State、接口类型必须放入 `types/` 文件夹
+- **禁止内联**：禁止在组件文件顶部直接声明超过 5 行的类型定义
+
+## 类型文件命名
+- 模块类型：`[ModuleName].types.ts`
+- Props 类型：`props.ts`
+- API 参数：`api-params.ts`
+- 数据模型：`models.ts`
+
+## 类型命名约定
+| 类型用途 | 命名格式 | 示例 |
+|----------|----------|------|
+| 组件 Props | `[ComponentName]PropsType` | `UserCardPropsType` |
+| 组件 State | `[ComponentName]StateType` | `ProfileStateType` |
+| 数据模型 | `[EntityName]ModelType` | `UserModelType` |
+| API 响应 | `[Action]ResponseType` | `GetUserResponseType` |
+
+## 严格类型要求
+- 所有函数参数必须有明确类型
+- 避免使用 `any`，优先使用 `unknown` 或具体类型
+- 导出的函数必须声明返回类型
+
+```typescript
+// ✅ 正确
+function getUserById(id: string): Promise<UserModelType> {
+  // ...
+}
+
+// ❌ 错误
+function getUserById(id): any {
+  // ...
+}
+```

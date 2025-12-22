@@ -1,0 +1,29 @@
+---
+description: 适用于 Java 后端开发，强调 Spring Boot 规范、分层架构及代码质量。
+globs: 
+  - "**/*.java"
+alwaysApply: false
+---
+
+# Java 后端架构指令
+
+## 核心流程
+1. **清单确认**：涉及 Controller/Service/Repository 联动修改时，必须先列出改动清单并获得确认。
+
+## 命名规范
+- **类名**：使用 PascalCase，如 `UserService`, `OrderController`
+- **方法名**：使用 camelCase，如 `getUserById`, `createOrder`
+- **常量**：使用 UPPER_SNAKE_CASE，如 `MAX_RETRY_COUNT`
+- **包名**：全小写，如 `com.example.service`
+
+## 分层架构规范
+- **Controller**：只处理请求参数校验和响应格式化，禁止包含业务逻辑
+- **Service**：业务逻辑层，必须定义接口和实现类分离
+- **Repository/DAO**：数据访问层，禁止在 Service 中直接写 SQL
+
+## 最佳实践与验证
+- **依赖注入**：优先使用构造函数注入，避免字段注入
+- **异常处理**：使用统一的全局异常处理器 `@ControllerAdvice`
+- **参数校验**：DTO 必须使用 `@Valid` 配合 `javax.validation` 注解
+- **日志规范**：使用 SLF4J，禁止使用 `System.out.println`
+- **自检**：完成后确认是否正确处理了事务边界及异常抛出

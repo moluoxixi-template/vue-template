@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "vue-i18n": "catalog:build"
+  }
+}
+
