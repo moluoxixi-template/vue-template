@@ -25,4 +25,9 @@ alwaysApply: false
 - **逻辑复用**：
   - 相同逻辑或副作用必须抽离至 `composables/` 或 `src/utils/common.ts`。
   - 严禁在多个组件中复制粘贴相似的 `watch` 或 `computed` 逻辑。
-- **自检**：输出代码后，请检查是否符合 Vue 3 官方风格指南及 TS 严谨性。
+- **自检清单**：
+  1. 检查是否符合 Vue 3 官方风格指南及 TS 严谨性
+  2. 检查是否存在重复的 composable 逻辑，必须抽离
+  3. 删除未使用的导入、变量、函数
+  4. 运行 ESLint 检查并修复所有错误
+  5. 确保所有 Props、Emits、函数都有完整的类型标注

@@ -1,33 +1,26 @@
 /**
  * 应用入口文件
  * 初始化 React 应用并挂载到 DOM
+ * 
+ * 架构说明：
+ * - 容器模式（Container Pattern）：模板零逻辑，只负责展开最终配置
+ * - 所有处理由中央配置处理器完成
+ * - 通过 main.typeImports、main.imports、main.inits 数组注入代码
  */
 
-<% if (config.qiankun) { -%>
-import type { QiankunProps } from 'vite-plugin-qiankun/dist/helper'
-import { qiankunWindow, renderWithQiankun } from 'vite-plugin-qiankun/dist/helper'
+<% if (main.typeImports.length > 0) { -%>
+<%- main.typeImports.join('\n') %>
+
 <% } -%>
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-<% if (config.sentry) { -%>
-import { initSentry } from '@/utils/sentry'
-<% } -%>
-<% if (config.routeMode === 'file-system') { -%>
-import { BrowserRouter } from 'react-router-dom'
-import App from './App'
-<% } else { -%>
-import { RouterProvider } from 'react-router-dom'
-import { router } from './router'
-<% } -%>
+<%- main.imports.join('\n') %>
+<% if (main.styles.length > 0) { -%>
 
 // 导入样式文件
-<% if (isAntDesign) { -%>
-import 'antd/dist/reset.css'
+<%- main.styles.join('\n') %>
 <% } -%>
-import '@/assets/styles/main.scss'
-import '@/assets/fonts/index.css'
 
-<% if (config.qiankun) { -%>
+
+<% if (main.qiankun) { -%>
 /**
  * 渲染应用（支持 qiankun 微前端）
  * @param props qiankun 传递的 props
@@ -44,23 +37,15 @@ function render(props: QiankunProps = {}) {
 
   const root = createRoot(rootElement)
 
-<% if (config.sentry) { -%>
-  // 初始化 Sentry（生产环境标准配置）
-  initSentry()
-
+<% if (main.inits.length > 0) { -%>
+<%- main.inits.map(init => `  ${init}`).join('\n') %>
 <% } -%>
-<% if (config.routeMode === 'file-system') { -%>
-  root.render(
-    <StrictMode>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </StrictMode>,
-  )
+<% if (main.renderCode) { -%>
+  <%- main.renderCode.split('\n').map(line => `  ${line}`).join('\n') %>
 <% } else { -%>
   root.render(
     <StrictMode>
-      <RouterProvider router={router} />
+      <App />
     </StrictMode>,
   )
 <% } -%>
@@ -98,25 +83,16 @@ if (!rootElement) {
 
 const root = createRoot(rootElement)
 
-<% if (config.sentry) { -%>
-// 初始化 Sentry（生产环境标准配置）
-initSentry()
-
+<% if (main.inits.length > 0) { -%>
+<%- main.inits.map(init => `  ${init}`).join('\n') %>
 <% } -%>
-<% if (config.routeMode === 'file-system') { -%>
-root.render(
-  <StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </StrictMode>,
-)
+<% if (main.renderCode) { -%>
+<%- main.renderCode.split('\n').map(line => `  ${line}`).join('\n') %>
 <% } else { -%>
 root.render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <App />
   </StrictMode>,
 )
 <% } -%>
 <% } -%>
-

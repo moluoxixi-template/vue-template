@@ -26,4 +26,9 @@ alwaysApply: false
 - **异常处理**：使用统一的全局异常处理器 `@ControllerAdvice`
 - **参数校验**：DTO 必须使用 `@Valid` 配合 `javax.validation` 注解
 - **日志规范**：使用 SLF4J，禁止使用 `System.out.println`
-- **自检**：完成后确认是否正确处理了事务边界及异常抛出
+- **自检清单**：
+  1. 确认是否正确处理了事务边界及异常抛出
+  2. 检查是否存在重复的业务逻辑，必须抽离到 Service 或工具类
+  3. 删除未使用的导入、变量、方法、类
+  4. 运行 Checkstyle/SpotBugs 检查并修复所有错误
+  5. 确保所有方法参数、返回值都有完整的 JavaDoc 注释

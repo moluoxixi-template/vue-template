@@ -1,0 +1,460 @@
+# 模板重构指南（参考 create-vue 模式）
+
+## 一、架构设计
+
+### 1.1 核心原则
+
+1. **逻辑预处理化**：所有条件判断在 Node.js 层完成，模板只负责渲染
+2. **Feature 片段化**：每个 Feature 独立定义代码片段
+3. **物理隔离**：Feature 模块存放在 `src/features/` 目录
+
+### 1.2 目录结构
+
+```
+vite-cli-next/
+├── src/
+│   ├── features/              # Feature 模块系统
+│   │   ├── types.ts           # Feature 类型定义
+│   │   ├── index.ts           # Feature 注册表
+│   │   └── vue/               # Vue 框架的 Features
+│   │       ├── store/
+│   │       ├── router/
+│   │       ├── i18n/
+│   │       └── ...
+│   └── core/
+│       └── template-data.ts   # 数据预处理层
+└── templates/
+    └── vue/
+        └── base/
+            ├── src/main.ts.ejs
+            ├── eslint.config.ts.ejs
+            └── vite.config.ts.ejs
+```
+
+---
+
+## 二、数据模型（Data Schema）
+
+### 2.1 TemplateData 接口
+
+```typescript
+interface TemplateData {
+  config: ProjectConfig
+  main: {
+    typeImports: string[]      // 类型导入语句数组
+    imports: string[]           // 普通导入语句数组
+    styles: string[]            // 样式导入数组
+    inits: string[]             // 初始化代码片段数组
+    qiankun: boolean            // 是否启用 qiankun
+  }
+  vite: {
+    imports: string[]           // Vite 插件导入数组
+    plugins: string[]           // 插件实例化代码数组
+    cssPreprocessorOptions: string  // CSS 预处理器配置代码
+  }
+  eslint: {
+    configBlocks: string[]      // ESLint 配置块数组
+  }
+}
+```
+
+### 2.2 FeatureManifest 接口
+
+```typescript
+interface FeatureManifest {
+  name: string                                    // Feature 名称
+  enabled: (config: Record<string, unknown>) => boolean  // 启用条件
+  main?: {
+    typeImports?: string[]       // main.ts 类型导入
+    imports?: string[]           // main.ts 普通导入
+    inits?: string[]             // main.ts 初始化代码
+    styles?: string[]            // main.ts 样式导入
+  }
+  vite?: {
+    imports?: string[]           // vite.config.ts 导入
+    plugins?: string[]           // vite.config.ts 插件代码
+    config?: string              // vite.config.ts 配置片段
+  }
+  eslint?: {
+    config?: string              // eslint.config.ts 配置片段
+  }
+}
+```
+
+---
+
+## 三、Feature 模块示例
+
+### 3.1 Store Feature（基础示例）
+
+```typescript
+// src/features/vue/store/index.ts
+import type { FeatureManifest } from '../types'
+
+export default {
+  name: 'store',
+  enabled: () => true,  // 始终启用
+  main: {
+    imports: [
+      "import { store } from '@/stores'",
+    ],
+    inits: [
+      'app.use(store)',
+    ],
+  },
+} satisfies FeatureManifest
+```
+
+### 3.2 Router Feature（条件逻辑示例）
+
+```typescript
+// src/features/vue/router/index.ts
+import type { FeatureManifest } from '../types'
+
+export default {
+  name: 'router',
+  enabled: () => true,
+  main: {
+    imports: [
+      "import getRouter from './router'",
+    ],
+    // 注意：qiankun 相关的变量替换在 template-data.ts 中处理
+    inits: [
+      'const router = getRouter(<%= qiankun ? \'props\' : \'{}\' %>)',  // 占位符
+      'app.use(router)',
+    ],
+  },
+} satisfies FeatureManifest
+```
+
+### 3.3 Sentry Feature（多文件配置示例）
+
+```typescript
+// src/features/vue/sentry/index.ts
+import type { FeatureManifest } from '../types'
+
+export default {
+  name: 'sentry',
+  enabled: (config) => Boolean(config.sentry),
+  main: {
+    imports: [
+      "import { initSentry } from '@/utils/sentry'",
+    ],
+    inits: [
+      '// 初始化 Sentry（生产环境标准配置）',
+      'initSentry(app, router)',
+    ],
+  },
+  vite: {
+    imports: [
+      "import { sentryVitePlugin } from '@sentry/vite-plugin'",
+    ],
+    plugins: [
+      `viteEnv.VITE_SENTRY && mode === 'production' && sentryVitePlugin({
+            authToken: process.env.SENTRY_AUTH_TOKEN,
+            org: 'f1f562b9b82f',
+            project: 'javascript-vue',
+            sourcemaps: {
+              assets: './dist/**',
+              ignore: ['node_modules'],
+            },
+            release: {
+              name: viteEnv.VITE_APP_VERSION || 'unknown',
+            },
+          })`,
+    ],
+  },
+} satisfies FeatureManifest
+```
+
+---
+
+## 四、重构后的模板
+
+### 4.1 main.ts.ejs（容器模式）
+
+```ejs
+/**
+ * 应用入口文件
+ * 架构说明：容器模式，通过数组注入代码
+ */
+
+<% if (main.typeImports.length > 0) { -%>
+<%- main.typeImports.join('\n') %>
+
+<% } -%>
+<%- main.imports.join('\n') %>
+<% if (main.styles.length > 0) { -%>
+
+// 导入样式文件
+<%- main.styles.join('\n') %>
+<% } -%>
+
+let app: App | null = null
+
+<% if (main.qiankun) { -%>
+// qiankun 模式代码
+<% } else { -%>
+// 独立模式代码
+<% } -%>
+
+<%- main.inits.map(init => `  ${init}`).join('\n') %>
+```
+
+**关键点**：
+- ✅ 无嵌套条件判断（最多 1 层）
+- ✅ 通过数组 join 生成代码
+- ✅ 逻辑在 template-data.ts 中预处理
+
+### 4.2 eslint.config.ts.ejs（扁平组合模式）
+
+```ejs
+/**
+ * ESLint 配置
+ * 架构说明：扁平组合模式，配置块数组
+ */
+
+import eslintConfig from '@moluoxixi/eslint-config'
+
+export default eslintConfig(
+<%- eslint.configBlocks.map((block, index) => 
+  `  ${block}${index < eslint.configBlocks.length - 1 ? ',' : ''}`
+).join('\n') %>
+)
+```
+
+**关键点**：
+- ✅ 配置块数组在预处理时生成
+- ✅ 模板只负责遍历和组合
+
+### 4.3 vite.config.ts.ejs（配置拼装模式）
+
+```ejs
+/**
+ * Vite 配置
+ * 架构说明：配置拼装模式，插件和配置片段注入
+ */
+
+<% if (vite.imports.length > 0) { -%>
+<%- vite.imports.join('\n') %>
+<% } -%>
+
+export default ViteConfig(
+  ({ mode }) => {
+    // ... 配置代码
+    return {
+      viteConfig: {
+        plugins: [
+<%- vite.plugins.map((plugin, index) => 
+  `          ${plugin}${index < vite.plugins.length - 1 ? ',' : ''}`
+).join('\n') %>
+        ],
+        css: {
+          preprocessorOptions: {
+            <%= vite.cssPreprocessorOptions %>
+          },
+        },
+      },
+    }
+  },
+)
+```
+
+---
+
+## 五、生成代码对比
+
+### 5.1 场景：Vue + Element Plus + i18n + Sentry + Qiankun
+
+#### 输入配置
+```typescript
+{
+  framework: 'vue',
+  uiLibrary: 'element-plus',
+  routeMode: 'file-system',
+  i18n: true,
+  sentry: true,
+  qiankun: true,
+}
+```
+
+#### 预处理后的 TemplateData
+```typescript
+{
+  main: {
+    typeImports: [
+      "import type { QiankunProps } from 'vite-plugin-qiankun/dist/helper'",
+    ],
+    imports: [
+      "import type { App } from 'vue'",
+      "import { createApp } from 'vue'",
+      "import { qiankunWindow, renderWithQiankun } from 'vite-plugin-qiankun/dist/helper'",
+      "import directives from '@/directives'",
+      "import i18n from '@/locales'",
+      "import { store } from '@/stores'",
+      "import { initSentry } from '@/utils/sentry'",
+      "import App from './App.vue'",
+      "import getRouter from './router'",
+    ],
+    styles: [
+      "import '@/assets/styles/element/index.scss'",
+      "import '@/assets/styles/main.scss'",
+      "import '@/assets/fonts/index.css'",
+    ],
+    inits: [
+      'directives(app)',
+      'const router = getRouter(props)',
+      'initSentry(app, router)',
+      'app.use(store)',
+      'app.use(i18n)',
+      'app.use(router)',
+    ],
+    qiankun: true,
+  },
+  vite: {
+    imports: [
+      "import { sentryVitePlugin } from '@sentry/vite-plugin'",
+    ],
+    plugins: [
+      `viteEnv.VITE_SENTRY && mode === 'production' && sentryVitePlugin({...})`,
+    ],
+    cssPreprocessorOptions: `scss: { /* element-plus config */ }`,
+  },
+}
+```
+
+#### 生成的 main.ts
+```typescript
+import type { QiankunProps } from 'vite-plugin-qiankun/dist/helper'
+import type { App } from 'vue'
+import { createApp } from 'vue'
+import { qiankunWindow, renderWithQiankun } from 'vite-plugin-qiankun/dist/helper'
+import directives from '@/directives'
+import i18n from '@/locales'
+import { store } from '@/stores'
+import { initSentry } from '@/utils/sentry'
+import App from './App.vue'
+import getRouter from './router'
+
+// 导入样式文件
+import '@/assets/styles/element/index.scss'
+import '@/assets/styles/main.scss'
+import '@/assets/fonts/index.css'
+
+let app: App | null = null
+
+async function render(props: QiankunProps = {}) {
+  const { container } = props
+  app = createApp(App)
+  
+  directives(app)
+  const router = getRouter(props)
+  initSentry(app, router)
+  app.use(store)
+  app.use(i18n)
+  app.use(router)
+  app.config.warnHandler = () => null
+
+  if (container) {
+    const root = container.querySelector('#app')
+    app.mount(root)
+  }
+  else {
+    app.mount('#app')
+  }
+}
+
+// ... qiankun 生命周期钩子
+```
+
+#### 生成的 vite.config.ts
+```typescript
+import { sentryVitePlugin } from '@sentry/vite-plugin'
+
+export default ViteConfig(
+  ({ mode }) => {
+    // ... 配置
+    return {
+      viteConfig: {
+        plugins: [
+          viteEnv.VITE_SENTRY && mode === 'production' && sentryVitePlugin({
+            // ... 配置
+          }),
+        ],
+        css: {
+          preprocessorOptions: {
+            scss: {
+              // element-plus 配置
+            },
+          },
+        },
+      },
+    }
+  },
+)
+```
+
+---
+
+## 六、扩展指南
+
+### 6.1 添加新 Feature
+
+1. **创建 Feature 模块**
+```typescript
+// src/features/vue/vitest/index.ts
+import type { FeatureManifest } from '../types'
+
+export default {
+  name: 'vitest',
+  enabled: (config) => Boolean(config.vitest),
+  vite: {
+    config: `
+      test: {
+        globals: true,
+        environment: 'jsdom',
+      },
+    `,
+  },
+} satisfies FeatureManifest
+```
+
+2. **注册到 Feature 表**
+```typescript
+// src/features/index.ts
+import vitestFeature from './vue/vitest'
+
+export const vueFeatures: Record<string, FeatureManifest> = {
+  // ... 其他 features
+  vitest: vitestFeature,
+}
+```
+
+3. **无需修改主模板** ✨
+
+### 6.2 修改现有 Feature
+
+只需修改对应的 Feature 模块文件，无需触碰主模板。
+
+---
+
+## 七、优势总结
+
+| 对比项 | 重构前 | 重构后 |
+|--------|--------|--------|
+| 模板代码行数 | ~120 行 | ~50 行 |
+| 条件嵌套层级 | 3-4 层 | 0-1 层 |
+| 新增 Feature 成本 | 修改 3 个模板 | 添加 1 个 Feature 模块 |
+| 可测试性 | 低（模板难以测试） | 高（逻辑层可单元测试） |
+| 代码复用 | 低 | 高（Feature 独立） |
+
+---
+
+## 八、约束检查清单
+
+- ✅ 模板中无复杂条件判断（最多 1 层）
+- ✅ 所有逻辑在 template-data.ts 中预处理
+- ✅ Feature 模块物理隔离
+- ✅ 生成的代码符合 TypeScript 标准
+- ✅ 无隐式 `any` 类型
+

@@ -1,37 +1,27 @@
 /**
  * 应用入口文件
  * 初始化 Vue 应用并挂载到 DOM
+ * 
+ * 架构说明：
+ * - 容器模式（Container Pattern）：模板零逻辑，只负责展开最终配置
+ * - 所有处理由中央配置处理器完成
+ * - 通过 main.typeImports、main.imports、main.inits 数组注入代码
  */
 
-<% if (config.qiankun) { -%>
-import type { QiankunProps } from 'vite-plugin-qiankun/dist/helper'
-import { qiankunWindow, renderWithQiankun } from 'vite-plugin-qiankun/dist/helper'
+<% if (main.typeImports.length > 0) { -%>
+<%- main.typeImports.join('\n') %>
+
 <% } -%>
-import type { App } from 'vue'
-import { createApp } from 'vue'
-import directives from '@/directives'
-<% if (config.i18n) { -%>
-import i18n from '@/locales'
-<% } -%>
-import { store } from '@/stores'
-<% if (config.sentry) { -%>
-import { initSentry } from '@/utils/sentry'
-<% } -%>
-import App from './App.vue'
-import getRouter from './router'
+<%- main.imports.join('\n') %>
+<% if (main.styles.length > 0) { -%>
 
 // 导入样式文件
-<% if (isElementPlus) { -%>
-import '@/assets/styles/element/index.scss'
-<% } else if (isAntDesignVue) { -%>
-import 'ant-design-vue/dist/reset.css'
+<%- main.styles.join('\n') %>
 <% } -%>
-import '@/assets/styles/main.scss'
-import '@/assets/fonts/index.css'
 
 let app: App | null = null
 
-<% if (config.qiankun) { -%>
+<% if (main.qiankun) { -%>
 /**
  * 渲染应用（支持 qiankun 微前端）
  * @param props qiankun 传递的 props
@@ -39,22 +29,8 @@ let app: App | null = null
 async function render(props: QiankunProps = {}) {
   const { container } = props
   app = createApp(App)
-  
-  // 注册指令
-  directives(app)
 
-  const router = getRouter(props)
-
-<% if (config.sentry) { -%>
-  // 初始化 Sentry（生产环境标准配置）
-  initSentry(app, router)
-
-<% } -%>
-  app.use(store)
-<% if (config.i18n) { -%>
-  app.use(i18n)
-<% } -%>
-  app.use(router)
+<%- main.inits.map(init => `  ${init}`).join('\n') %>
   app.config.warnHandler = () => null
 
   if (container) {
@@ -93,23 +69,8 @@ else {
  */
 app = createApp(App)
 
-// 注册指令
-directives(app)
-
-const router = getRouter({})
-
-<% if (config.sentry) { -%>
-// 初始化 Sentry（生产环境标准配置）
-initSentry(app, router)
-
-<% } -%>
-app.use(store)
-<% if (config.i18n) { -%>
-app.use(i18n)
-<% } -%>
-app.use(router)
+<%- main.inits.map(init => `  ${init}`).join('\n') %>
 app.config.warnHandler = () => null
 
 app.mount('#app')
 <% } -%>
-

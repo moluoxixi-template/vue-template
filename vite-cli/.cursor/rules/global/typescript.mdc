@@ -28,9 +28,18 @@ alwaysApply: false
 | API 响应 | `[Action]ResponseType` | `GetUserResponseType` |
 
 ## 严格类型要求
-- 所有函数参数必须有明确类型
+- **所有函数参数必须有明确类型**
+- **所有函数返回值必须声明类型**
 - 避免使用 `any`，优先使用 `unknown` 或具体类型
-- 导出的函数必须声明返回类型
+- 导出的函数、类、接口必须完整类型标注
+
+## 类型检查清单（必须执行）
+每次编写 TypeScript 代码后，必须检查：
+1. ✅ 所有函数参数是否已标注类型
+2. ✅ 所有函数返回值是否已标注类型
+3. ✅ 是否使用了 `any`（必须替换为具体类型或 `unknown`）
+4. ✅ 类型定义是否已放入 `types/` 目录
+5. ✅ 是否有多处使用相同类型定义（应提取为公共类型）
 
 ```typescript
 // ✅ 正确
@@ -38,7 +47,7 @@ function getUserById(id: string): Promise<UserModelType> {
   // ...
 }
 
-// ❌ 错误
+// ❌ 错误 - 缺少类型
 function getUserById(id): any {
   // ...
 }

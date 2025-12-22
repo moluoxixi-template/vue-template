@@ -3,13 +3,15 @@
  * 负责分层合并和文件渲染
  */
 
-import type { EjsRenderData, LayerConfig, ProjectConfig } from '../types'
+import type { LayerConfig, ProjectConfig } from '../types'
+import type { ProcessedTemplateData } from './orchestrator/types'
 import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs'
 import { basename, dirname, join } from 'node:path'
 import ejs from 'ejs'
 import fs from 'fs-extra'
 import { resolveLayers } from './layer-resolver'
 import { mergePackageJson, mergeTsConfig } from './merger'
+import { createTemplateData } from './template-data'
 
 /**
  * 渲染项目
@@ -17,7 +19,7 @@ import { mergePackageJson, mergeTsConfig } from './merger'
  */
 export async function renderProject(config: ProjectConfig): Promise<void> {
   const layers = resolveLayers(config)
-  const ejsData = createEjsRenderData(config)
+  const ejsData = createTemplateData(config)
 
   // 收集所有层的文件
   const fileMap = new Map<string, { sourcePath: string, layer: LayerConfig }[]>()
@@ -34,6 +36,11 @@ export async function renderProject(config: ProjectConfig): Promise<void> {
   for (const [relativePath, sources] of fileMap) {
     await processFile(relativePath, sources, config, ejsData)
   }
+
+  // 生成 eslint.config.ts（无需模板文件，直接由 processor 生成）
+  const eslintConfigPath = join(config.targetDir, 'eslint.config.ts')
+  fs.ensureDirSync(dirname(eslintConfigPath))
+  writeFileSync(eslintConfigPath, ejsData.eslint.fileContent, 'utf-8')
 }
 
 /**
@@ -77,7 +84,7 @@ async function processFile(
   relativePath: string,
   sources: { sourcePath: string, layer: LayerConfig }[],
   config: ProjectConfig,
-  ejsData: EjsRenderData,
+  ejsData: ProcessedTemplateData,
 ): Promise<void> {
   const targetPath = join(config.targetDir, relativePath)
   const fileName = basename(relativePath)
@@ -148,14 +155,20 @@ async function processTsConfig(
 async function processRegularFile(
   sourcePath: string,
   targetPath: string,
-  ejsData: EjsRenderData,
+  ejsData: ProcessedTemplateData,
 ): Promise<void> {
   const content = readFileSync(sourcePath, 'utf-8')
 
   // 检查源文件是否是 EJS 模板
   if (sourcePath.endsWith('.ejs')) {
-    // EJS 渲染
-    const rendered = ejs.render(content, ejsData, {
+    // EJS 渲染 - 将 ProcessedTemplateData 展开传递，使模板可以直接访问 main、vite、eslint、config
+    const rendered = ejs.render(content, {
+      ...ejsData,
+      main: ejsData.main,
+      vite: ejsData.vite,
+      eslint: ejsData.eslint,
+      config: ejsData.config,
+    }, {
       filename: sourcePath,
     })
     writeFileSync(targetPath, rendered, 'utf-8')
@@ -163,21 +176,5 @@ async function processRegularFile(
   else {
     // 直接复制
     writeFileSync(targetPath, content, 'utf-8')
-  }
-}
-
-/**
- * 创建 EJS 渲染数据
- */
-function createEjsRenderData(config: ProjectConfig): EjsRenderData {
-  return {
-    config,
-    isVue: config.framework === 'vue',
-    isReact: config.framework === 'react',
-    isFileSystemRoute: config.routeMode === 'file-system',
-    isManualRoute: config.routeMode === 'manual',
-    isElementPlus: config.uiLibrary === 'element-plus',
-    isAntDesignVue: config.uiLibrary === 'ant-design-vue',
-    isAntDesign: config.uiLibrary === 'ant-design',
   }
 }

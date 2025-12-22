@@ -1,14 +1,19 @@
 /**
  * Vite 配置文件
  * 基于 @moluoxixi/vite-config 的配置
+ * 
+ * 架构说明：
+ * - 配置拼装模式（Configuration Assembly Pattern）
+ * - 插件和配置片段在 template-data.ts 中预处理
+ * - 模板只负责占位符填充，无复杂逻辑
  */
 
 import path from 'node:path'
 import process from 'node:process'
 import cssModuleGlobalRootPlugin from '@moluoxixi/css-module-global-root-plugin'
 import { ViteConfig, wrapperEnv } from '@moluoxixi/vite-config'
-<% if (config.sentry) { -%>
-import { sentryVitePlugin } from '@sentry/vite-plugin'
+<% if (vite.imports.length > 0) { -%>
+<%- vite.imports.join('\n') %>
 <% } -%>
 import { loadEnv } from 'vite'
 
@@ -36,24 +41,10 @@ export default ViteConfig(
 <% } -%>
       viteConfig: {
         plugins: [
-<% if (config.sentry) { -%>
-          // Sentry Source Map 上传插件（仅在生产环境且配置了 VITE_SENTRY 时启用）
-          viteEnv.VITE_SENTRY
-          && mode === 'production'
-          && sentryVitePlugin({
-            authToken: process.env.SENTRY_AUTH_TOKEN,
-            org: 'f1f562b9b82f',
-            project: 'javascript-react',
-            // 仅上传 source map，不上传源码
-            sourcemaps: {
-              assets: './dist/**',
-              ignore: ['node_modules'],
-            },
-            // 设置发布版本
-            release: {
-              name: viteEnv.VITE_APP_VERSION || 'unknown',
-            },
-          }),
+<% if (vite.plugins.length > 0) { -%>
+<%- vite.plugins.map((plugin, index) => 
+  `          ${plugin}${index < vite.plugins.length - 1 ? ',' : ''}`
+).join('\n') %>
 <% } -%>
         ],
         server: {
@@ -71,12 +62,16 @@ export default ViteConfig(
               cssModuleGlobalRootPlugin,
             ],
           },
+<% if (vite.config.css && vite.config.css.preprocessorOptions) { -%>
+          preprocessorOptions: <%- JSON.stringify(vite.config.css.preprocessorOptions, null, 12).replace(/^/gm, '            ').replace(/"/g, "'") %>
+<% } else { -%>
           preprocessorOptions: {
             scss: {
               silenceDeprecations: ['legacy-js-api'],
               api: 'modern-compiler',
             },
           },
+<% } -%>
         },
       },
     }

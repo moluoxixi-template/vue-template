@@ -23,4 +23,9 @@ alwaysApply: false
 - **进程安全**：禁止在渲染进程直接调用 Node.js 原生模块；必须通过 `contextBridge` 暴露 API。
 - **IPC 管理**：所有 IPC 事件名必须定义为常量，并在 `common/` 目录下维护。
 - **逻辑隔离**：与 Electron 平台无关的纯业务逻辑应抽离到 `src/common`，确保可测试性。
-- **验证环节**：检查是否开启了 Context Isolation，IPC 回调是否存在内存泄漏。
+- **自检清单**：
+  1. 检查是否开启了 Context Isolation，IPC 回调是否存在内存泄漏
+  2. 检查是否存在重复的 IPC 处理逻辑，必须抽离到公共模块
+  3. 删除未使用的导入、变量、函数、IPC 监听器
+  4. 运行 ESLint 检查并修复所有错误
+  5. 确保所有 IPC 通道、Payload 都有完整的类型标注

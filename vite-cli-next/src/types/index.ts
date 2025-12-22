@@ -79,16 +79,3 @@ export interface FeatureConfig {
   enabled: boolean
 }
 
-/**
- * EJS 渲染数据
- */
-export interface EjsRenderData {
-  config: ProjectConfig
-  isVue: boolean
-  isReact: boolean
-  isFileSystemRoute: boolean
-  isManualRoute: boolean
-  isElementPlus: boolean
-  isAntDesignVue: boolean
-  isAntDesign: boolean
-}
