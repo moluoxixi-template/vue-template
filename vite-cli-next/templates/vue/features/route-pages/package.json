@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "vite-plugin-pages": "catalog:build"
-  }
-}
-

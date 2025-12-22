@@ -11,7 +11,8 @@
   "scripts": {
     "dev": "tsx index.ts",
     "build": "tsc",
-    "test": "tsx src/test.ts",
+    "test": "tsx scripts/generateSamples.ts",
+    "test:samples": "tsx scripts/generateSamples.ts",
     "lint": "eslint . --fix"
   },
   "engines": {

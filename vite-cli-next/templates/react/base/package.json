@@ -53,6 +53,7 @@
   "devDependencies": {
     "@commitlint/cli": "catalog:dev",
     "@commitlint/config-conventional": "catalog:dev",
+    "@eslint-react/eslint-plugin": "catalog:dev",
     "@moluoxixi/ajax-package": "catalog:dev",
     "@moluoxixi/css-module-global-root-plugin": "catalog:dev",
     "@moluoxixi/eslint-config": "catalog:dev",
@@ -71,6 +72,8 @@
     "dotenv": "catalog:dev",
     "eslint": "catalog:dev",
     "eslint-plugin-format": "catalog:dev",
+    "eslint-plugin-react-hooks": "catalog:dev",
+    "eslint-plugin-react-refresh": "catalog:dev",
     "husky": "catalog:dev",
     "jiti": "catalog:dev",
     "lint-staged": "catalog:dev",
