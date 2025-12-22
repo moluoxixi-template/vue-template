@@ -47,7 +47,7 @@ export async function collectProjectConfig(projectName?: string): Promise<Projec
       type: 'list',
       name: 'uiLibrary',
       message: 'Select UI library:',
-      choices: (answers) => {
+      choices: (answers: { framework?: Framework }) => {
         if (answers.framework === 'vue') {
           return [
             { name: 'Element Plus', value: 'element-plus' },
