@@ -1,7 +1,0 @@
-{
-  "dependencies": {
-    "@ant-design/icons-vue": "catalog:build",
-    "ant-design-vue": "catalog:build"
-  }
-}
-
