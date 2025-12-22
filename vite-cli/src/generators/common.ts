@@ -180,7 +180,6 @@ export function generateCommonConfigFiles(
     '.gitignore',
     '.cz-config.cjs',
     'commitlint.config.ts',
-    'eslint.config.ts',
   ]
 
   generateFiles(config, targetDir, 'common', commonConfigFiles)

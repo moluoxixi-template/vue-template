@@ -53,6 +53,7 @@ function generateConfigFiles(config: ProjectConfig): void {
     'env.d.ts',
     'index.html',
     'pnpm-workspace.yaml',
+    'eslint.config.ts',
   ]
 
   // 批量生成 React 框架特定配置文件
