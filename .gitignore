@@ -3,6 +3,7 @@ test
 test.zip
 typings
 vite-cli-test
+vite-cli-next-test
 
 # Logs
 logs
