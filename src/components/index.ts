@@ -2,8 +2,6 @@ import type { App, Component } from 'vue'
 
 import * as Components from './components'
 
-export * from './_hooks'
-
 export * from './components'
 
 const components: Component[] = Object.keys(Components)

@@ -23,7 +23,7 @@
             <ElMain style="background-color: #fff">
               <RouterView v-slot="{ Component, route }">
                 <Transition name="fade">
-                  <KeepAlive v-if="route.meta.keep">
+                  <KeepAlive v-if="route.meta?.keep">
                     <Component :is="Component" :key="route.path" />
                   </KeepAlive>
                   <component :is="Component" v-else :key="route.path" />
