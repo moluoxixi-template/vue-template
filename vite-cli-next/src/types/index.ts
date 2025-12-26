@@ -34,6 +34,7 @@ export type TemplateLayerType = 'L0' | 'L1' | 'L2'
 export type FeatureFlagType
   = | 'router'
     | 'pinia'
+    | 'zustand'
     | 'i18n'
     | 'sentry'
     | 'qiankun'
@@ -69,10 +70,10 @@ export interface ProjectConfigType {
 }
 
 /**
- * Vite 配置数据接口
- * L2 features 层的 vite.config.data.ts 导出格式
+ * Vite 配置扩展接口
+ * L2 features 层的 vite.config.ts 导出格式
  */
-export interface ViteConfigDataType {
+export interface ViteConfigExtension {
   /** 需要导入的模块 [[标识符, 模块路径]] */
   imports: Array<[string, string]>
   /** 插件配置字符串 */
@@ -82,56 +83,17 @@ export interface ViteConfigDataType {
 }
 
 /**
- * Vite 配置数据工厂函数类型
+ * main.ts 扩展接口
  */
-export type ViteConfigDataFactoryType = (
-  config: ProjectConfigType,
-) => ViteConfigDataType
-
-/**
- * 特性元数据接口
- */
-export interface FeatureMetadataType {
-  /** 特性标识 */
-  id: FeatureFlagType
-  /** 特性名称 */
-  name: string
-  /** 特性描述 */
-  description: string
-  /** 依赖的其他特性 */
-  dependencies?: FeatureFlagType[]
-  /** 是否影响 pnpm-workspace.yaml */
-  affectsWorkspace: boolean
-  /** 对 main.ts 的影响 */
-  mainTsHooks?: MainTsHooksType
-  /** package.json 依赖 */
-  packageDeps?: PackageDepsType
-  /** vite.config.ts 配置 */
-  viteConfigData?: ViteConfigDataFactoryType
-}
-
-/**
- * main.ts hooks 类型
- */
-export interface MainTsHooksType {
+export interface MainTsExtension {
   /** 导入语句 */
   imports?: string[]
   /** app.use() 调用 */
   appUse?: string[]
-  /** 初始化逻辑（在 createApp 后） */
-  init?: string[]
-  /** mount 前逻辑 */
+  /** router 创建后执行 */
+  afterRouter?: string[]
+  /** mount 前执行 */
   beforeMount?: string[]
-}
-
-/**
- * package.json 依赖类型
- */
-export interface PackageDepsType {
-  /** 运行时依赖 */
-  dependencies?: Record<string, string>
-  /** 开发依赖 */
-  devDependencies?: Record<string, string>
 }
 
 /**
@@ -159,8 +121,8 @@ export interface PackageJsonType {
  * pnpm-workspace.yaml 结构
  */
 export interface PnpmWorkspaceType {
-  gitChecks: boolean
-  registry: string
+  gitChecks?: boolean
+  registry?: string
   catalogs: {
     build: Record<string, string>
     dev: Record<string, string>
@@ -190,27 +152,13 @@ export interface TemplateContextType extends ProjectConfigType {
 export type FileOperationType = 'copy' | 'render' | 'merge' | 'skip'
 
 /**
- * 文件映射配置
+ * 特性目录映射
  */
-export interface FileMappingType {
-  /** 源文件路径（相对于模板目录） */
-  source: string
-  /** 目标文件路径（相对于项目目录） */
-  target: string
-  /** 操作类型 */
-  operation: FileOperationType
-  /** 条件函数（返回 false 则跳过） */
-  condition?: (config: ProjectConfigType) => boolean
-}
-
-/**
- * 层级配置
- */
-export interface LayerConfigType {
-  /** 层级标识 */
-  layer: TemplateLayerType
-  /** 模板目录 */
-  templateDir: string
-  /** 文件映射列表 */
-  files: FileMappingType[]
+export interface FeatureMappingType {
+  /** 特性 ID */
+  id: string
+  /** 特性目录名 */
+  dirName: string
+  /** 条件函数 */
+  condition: (config: ProjectConfigType) => boolean
 }

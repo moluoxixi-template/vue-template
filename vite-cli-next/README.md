@@ -1,147 +1,117 @@
-# Vite CLI Next - 原子化分层叠加架构
+# @moluoxixi/create-app
 
-基于原子化分层叠加架构的 Vue/React 项目脚手架，对标 create-vue。
+> 基于原子化分层叠加架构的项目脚手架 CLI
 
-## 核心架构
-
-### 模板分层结构
-
-```
-templates/
-├─ base/                    # L0：跨框架通用
-│  ├─ .gitignore
-│  ├─ .npmrc
-│  ├─ .cz-config.cjs
-│  ├─ commitlint.config.ts
-│  ├─ .env*
-│  ├─ .husky/
-│  ├─ scripts/
-│  └─ src/
-│     ├─ apis/              # API 服务
-│     ├─ assets/            # 静态资源
-│     ├─ constants/         # 常量定义
-│     ├─ locales/           # 语言包
-│     └─ utils/             # 工具函数
-│
-├─ vue/
-│  ├─ base/                 # L1：Vue 母版
-│  │  ├─ vite.config.ts.ejs
-│  │  ├─ main.ts.ejs
-│  │  ├─ eslint.config.ts
-│  │  ├─ tsconfig*.json
-│  │  ├─ package.json.data.ts
-│  │  ├─ pnpm-workspace.data.ts
-│  │  └─ src/
-│  │     ├─ router/
-│  │     ├─ stores/
-│  │     ├─ layouts/
-│  │     ├─ directives/
-│  │     ├─ components/
-│  │     └─ pages/
-│  │
-│  └─ features/             # L2：Vue 原子特性
-│     ├─ sentry/
-│     │  └─ vite.config.data.ts
-│     └─ pageRoutes/
-│        └─ vite.config.data.ts
-│
-└─ react/
-   ├─ base/                 # L1：React 母版
-   └─ features/             # L2：React 原子特性
-```
-
-### 渲染扫描顺序
-
-**L0 → L1 → L2**，遵循"后覆盖前"原则：
-
-1. **L0 (base/)**: 跨框架通用文件，直接复制
-2. **L1 (vue/base/ 或 react/base/)**: 框架母版模板，覆盖 L0
-3. **L2 (features/)**: 原子特性，根据配置选择性叠加
-
-### 特殊文件处理
-
-| 文件 | 处理方式 |
-|------|---------|
-| `package.json` | 深度合并（禁用 EJS） |
-| `pnpm-workspace.yaml` | 数据驱动生成 |
-| `vite.config.ts` | EJS 模板 + 数据注入 |
-| `main.ts` | EJS 模板（插槽化） |
-| 其他文件 | 物理覆盖或累加 |
-
-## 强制依赖约束
-
-所有生成的项目必须包含以下 `@moluoxixi` 依赖：
-
-| 包名 | 版本 | 说明 |
-|------|------|------|
-| `@moluoxixi/eslint-config` | `latest` | ESLint 配置 |
-| `@moluoxixi/vite-config` | `latest` | Vite 配置 |
-| `@moluoxixi/ajax-package` | `latest` | 网络请求 |
-| `@moluoxixi/class-names` | `latest` | 类名工具 |
-| `@moluoxixi/css-module-global-root-plugin` | `latest` | CSS 插件 |
-
-## vite.config.data.ts 接口
-
-L2 特性的 `vite.config.data.ts` 导出格式：
-
-```typescript
-import type { ViteConfigDataType } from '../../../src/types';
-
-export function getFeatureViteConfig(): ViteConfigDataType {
-  return {
-    imports: [['identifier', 'modulePath']],  // 导入语句
-    plugins: ['pluginFactory(options)'],       // 插件配置
-    config: { /* 部分 Vite 配置 */ },
-  };
-}
-```
-
-## main.ts.ejs 逻辑块设计
-
-插件顺序规范：
-
-1. `createApp` - 创建应用
-2. `directives` - 全局指令
-3. `router` - 路由
-4. `store` - 状态管理
-5. `i18n` - 国际化（可选）
-6. `sentry` - 错误监控（可选）
-7. `app.mount` - 挂载
-
-## CLI 使用
+## 快速开始
 
 ```bash
-# 安装
-pnpm add -g @moluoxixi/create-app
+# 使用 npx
+npx @moluoxixi/create-app
 
-# 创建项目
-create-mox create my-project
+# 使用 pnpm
+pnpm create @moluoxixi/app
 
-# 或直接运行
-create-mox my-project
+# 使用 npm
+npm create @moluoxixi/app
 ```
 
-### 交互选项
+## 特性
 
-| 选项 | 说明 |
-|------|------|
-| 项目名称 | 项目文件夹名称 |
-| 框架 | Vue 3 / React |
-| UI 组件库 | Element Plus / Ant Design Vue / Ant Design |
-| 路由模式 | 文件系统路由 / 手动配置 |
-| 国际化 | 是否启用 vue-i18n / react-i18next |
-| 微前端 | 是否启用 qiankun |
-| 错误监控 | 是否启用 Sentry |
-| 包管理器 | pnpm / npm / yarn |
+- 🚀 **原子化分层架构** - L0/L1/L2 三层模板，灵活组合
+- 📦 **多框架支持** - Vue 3、React 18
+- 🎨 **多 UI 库** - Element Plus、Ant Design Vue、Ant Design
+- 🌍 **国际化** - 内置 vue-i18n / i18next 支持
+- 📊 **错误监控** - 可选 Sentry 集成
+- 🔗 **微前端** - 可选 Qiankun 支持 (Vue)
+- ⚡ **文件系统路由** - 可选 vite-plugin-pages
+- 📝 **TypeScript** - 全面的类型支持
+- 🔧 **规范配置** - ESLint + Commitlint + Husky
+
+## 内置依赖
+
+所有生成的项目都包含以下核心依赖：
+
+| 依赖包 | 用途 |
+|--------|------|
+| `@moluoxixi/eslint-config` | ESLint 统一配置 |
+| `@moluoxixi/vite-config` | Vite 构建配置 |
+| `@moluoxixi/ajax-package` | HTTP 请求封装 |
+| `@moluoxixi/class-names` | CSS 类名工具 |
+| `@moluoxixi/css-module-global-root-plugin` | CSS Module 插件 |
+
+## 项目结构
+
+生成的项目结构示例：
+
+```
+my-project/
+├── .husky/              # Git Hooks
+├── scripts/             # 构建脚本
+├── src/
+│   ├── apis/            # API 请求层
+│   ├── assets/          # 静态资源
+│   ├── components/      # 公共组件
+│   ├── constants/       # 常量定义
+│   ├── directives/      # Vue 指令
+│   ├── layouts/         # 布局组件
+│   ├── locales/         # 多语言文件
+│   ├── pages/           # 页面组件
+│   ├── router/          # 路由配置
+│   ├── stores/          # 状态管理
+│   ├── utils/           # 工具函数
+│   ├── App.vue          # 根组件
+│   └── main.ts          # 入口文件
+├── .env                 # 环境变量
+├── package.json         # 项目配置
+├── pnpm-workspace.yaml  # pnpm 工作区
+├── vite.config.ts       # Vite 配置
+├── eslint.config.ts     # ESLint 配置
+└── tsconfig.json        # TypeScript 配置
+```
+
+## 命令
+
+```bash
+# 开发
+pnpm dev
+
+# 构建
+pnpm build
+
+# 构建并打包
+pnpm build:zip
+
+# 类型检查
+pnpm type-check
+
+# 代码检查
+pnpm lint:eslint
+
+# 提交代码
+pnpm commit
+```
+
+## 配置选项
+
+| 选项 | 类型 | 说明 |
+|------|------|------|
+| 项目名称 | string | 项目名称，用于 package.json |
+| 框架 | vue / react | 前端框架 |
+| UI 库 | element-plus / ant-design-vue / ant-design | UI 组件库 |
+| 路由模式 | manual / file-system | 手动配置或文件系统路由 |
+| 国际化 | boolean | 是否启用多语言支持 |
+| 错误监控 | boolean | 是否集成 Sentry |
+| 微前端 | boolean | 是否支持 Qiankun (仅 Vue) |
+| 包管理器 | pnpm / npm / yarn | 包管理器 |
 
 ## 开发
 
 ```bash
+# 克隆仓库
+git clone https://github.com/moluoxixi/create-app.git
+
 # 安装依赖
 pnpm install
-
-# 开发模式
-pnpm dev
 
 # 运行测试
 pnpm test
@@ -150,24 +120,10 @@ pnpm test
 pnpm build
 ```
 
-## 测试矩阵
+## 架构文档
 
-| 配置 | 框架 | UI 库 | 路由 | i18n | qiankun | sentry |
-|------|------|-------|------|------|---------|--------|
-| vue-element-basic | Vue | Element Plus | 手动 | ✓ | ✗ | ✗ |
-| vue-element-full | Vue | Element Plus | 文件系统 | ✓ | ✓ | ✓ |
-| vue-antd-basic | Vue | Ant Design Vue | 手动 | ✓ | ✗ | ✗ |
+详细的架构说明请参阅 [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md)
 
-## 验收标准
-
-1. ✅ 所有生成产物包含 `@moluoxixi/eslint-config@latest`
-2. ✅ 所有生成产物包含 `@moluoxixi/vite-config@latest`
-3. ✅ 所有生成产物包含 `@moluoxixi/ajax-package@latest`
-4. ✅ `vite.config.ts` 遵循数据化规范
-5. ✅ `main.ts` 遵循中心化规范
-6. ✅ CLI 使用体验与 create-vue 保持一致
-
-## License
+## 许可证
 
 MIT
-

@@ -3,35 +3,24 @@
  * 初始化 Sentry 配置
  */
 
-import type { App } from 'vue';
-import type { Router } from 'vue-router';
-import * as Sentry from '@sentry/vue';
+import * as Sentry from '@sentry/react'
 
 /**
  * 初始化 Sentry
- * @param app Vue 应用实例
- * @param router 路由实例
  */
-export function initSentry(app: App, router: Router): void {
-  // 仅在生产环境且开启 Sentry 时初始化
+export function initSentry(): void {
   if (import.meta.env.VITE_SENTRY && import.meta.env.MODE === 'production') {
     Sentry.init({
-      app,
       dsn: import.meta.env.VITE_SENTRY_DSN || '',
       integrations: [
-        Sentry.browserTracingIntegration({ router }),
+        Sentry.browserTracingIntegration(),
         Sentry.replayIntegration(),
       ],
-      // 性能监控采样率
       tracesSampleRate: 0.1,
-      // 会话回放采样率
       replaysSessionSampleRate: 0.1,
       replaysOnErrorSampleRate: 1.0,
-      // 发布版本
       release: import.meta.env.VITE_APP_VERSION || 'unknown',
-      // 环境
       environment: import.meta.env.VITE_APP_ENV || 'production',
-    });
+    })
   }
 }
-

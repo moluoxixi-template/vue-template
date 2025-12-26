@@ -64,6 +64,36 @@ const TEST_CONFIGS: Array<{ name: string, config: Partial<ProjectConfigType> }> 
       packageManager: 'pnpm',
     },
   },
+  {
+    name: 'react-antd-basic',
+    config: {
+      projectName: 'react-antd-basic',
+      description: 'React + Ant Design 基础项目',
+      author: 'test',
+      framework: 'react',
+      uiLibrary: 'ant-design',
+      routeMode: 'manual',
+      i18n: true,
+      qiankun: false,
+      sentry: false,
+      packageManager: 'pnpm',
+    },
+  },
+  {
+    name: 'react-antd-full',
+    config: {
+      projectName: 'react-antd-full',
+      description: 'React + Ant Design 全量特性项目',
+      author: 'test',
+      framework: 'react',
+      uiLibrary: 'ant-design',
+      routeMode: 'manual',
+      i18n: true,
+      qiankun: false,
+      sentry: true,
+      packageManager: 'pnpm',
+    },
+  },
 ]
 
 /**

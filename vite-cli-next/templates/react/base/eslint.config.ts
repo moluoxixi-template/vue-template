@@ -6,7 +6,7 @@
 import eslintConfig from '@moluoxixi/eslint-config'
 
 export default eslintConfig({
-  vue: true,
+  react: true,
   typescript: true,
   ignores: [],
   rules: {

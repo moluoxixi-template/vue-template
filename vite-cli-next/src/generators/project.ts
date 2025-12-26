@@ -5,6 +5,7 @@
 
 import type { ProjectConfigType } from '../types'
 import { createDir } from '../utils/file'
+import { generateReactProject } from './react'
 import { generateVueProject } from './vue'
 
 /**
@@ -20,8 +21,7 @@ export async function generateProject(config: ProjectConfigType): Promise<void> 
     await generateVueProject(config)
   }
   else if (config.framework === 'react') {
-    // TODO: 实现 React 项目生成器
-    throw new Error('React 项目生成器尚未实现')
+    await generateReactProject(config)
   }
   else {
     throw new Error(`不支持的框架: ${config.framework}`)
