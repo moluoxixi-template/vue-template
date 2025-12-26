@@ -6,6 +6,7 @@
  */
 
 import { Command } from 'commander'
+
 import { createProject } from './commands/create'
 
 const program = new Command()

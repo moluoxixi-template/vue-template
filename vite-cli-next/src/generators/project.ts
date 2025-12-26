@@ -4,6 +4,7 @@
  */
 
 import type { ProjectConfigType } from '../types'
+
 import { createDir } from '../utils/file'
 import { generateReactProject } from './react'
 import { generateVueProject } from './vue'

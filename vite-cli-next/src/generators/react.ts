@@ -4,12 +4,14 @@
  */
 
 import type { ProjectConfigType } from '../types'
+
 import fs from 'node:fs'
 import path from 'node:path'
-import { renderTemplate } from '../utils/renderTemplate'
+
 import { renderEjsToFile } from '../utils/ejs'
-import { renderViteConfig } from '../utils/viteConfigRender'
 import { getTemplatesDir } from '../utils/file'
+import { renderTemplate } from '../utils/renderTemplate'
+import { renderViteConfig } from '../utils/viteConfigRender'
 
 /**
  * 生成 React 项目

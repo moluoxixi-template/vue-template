@@ -47,6 +47,7 @@
     "ejs": "catalog:build",
     "fs-extra": "catalog:build",
     "inquirer": "catalog:build",
+    "jiti": "catalog:dev",
     "lodash-es": "catalog:build",
     "ora": "catalog:build",
     "yaml": "catalog:build"

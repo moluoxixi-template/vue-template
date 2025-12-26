@@ -4,6 +4,7 @@
  */
 
 import type { PackageManagerType } from '../types'
+
 import { execSync } from 'node:child_process'
 
 /**

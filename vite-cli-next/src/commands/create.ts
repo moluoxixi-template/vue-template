@@ -4,8 +4,10 @@
  */
 
 import process from 'node:process'
+
 import chalk from 'chalk'
 import ora from 'ora'
+
 import { generateProject } from '../generators/project'
 import { pathExists } from '../utils/file'
 import { initGit, installDependencies } from '../utils/install'

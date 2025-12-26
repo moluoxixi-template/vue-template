@@ -4,13 +4,16 @@
  * 从各 feature 的 vite.config.data.ts 中读取配置
  */
 
-import type { ViteConfigData } from '../types/viteConfig'
-import type { ProjectConfigType } from '../types'
+import type { ProjectConfigType, ViteConfigData } from '../types'
+
 import fs from 'node:fs'
 import path from 'node:path'
+
 import { createJiti } from 'jiti'
+
 import { getTemplatesDir } from './file'
 
+/** Jiti 实例，用于动态加载 TypeScript 配置文件 */
 const jiti = createJiti(import.meta.url)
 
 /**

@@ -3,8 +3,16 @@
  * 收集用户的项目配置信息（对标 create-vue）
  */
 
-import type { FrameworkType, PackageManagerType, ProjectConfigType, RouteModeType, UILibraryType } from '../types'
+import type {
+  FrameworkType,
+  PackageManagerType,
+  ProjectConfigType,
+  RouteModeType,
+  UILibraryType,
+} from '../types'
+
 import process from 'node:process'
+
 import inquirer from 'inquirer'
 
 /**

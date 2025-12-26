@@ -3,13 +3,16 @@
  * 生成验收样本并进行产物审计
  */
 
-import fs from 'fs-extra'
-import path from 'node:path'
-import { fileURLToPath } from 'node:url'
-import chalk from 'chalk'
-import { generateProject } from './generators/project'
 import type { ProjectConfigType } from './types'
+
+import path from 'node:path'
 import process from 'node:process'
+import { fileURLToPath } from 'node:url'
+
+import chalk from 'chalk'
+import fs from 'fs-extra'
+
+import { generateProject } from './generators/project'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
