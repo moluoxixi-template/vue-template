@@ -1,5 +1,6 @@
 /**
  * Vite 配置数据类型定义
+ * 用于 features 中的 vite.config.data.ts
  */
 
 export interface ViteConfigData {
