@@ -1,0 +1,49 @@
+/**
+ * 路由配置
+ * Vue Router 配置
+ */
+
+<%_ if (qiankun) { _%>
+import type { QiankunProps } from 'vite-plugin-qiankun/dist/helper';
+import { qiankunWindow } from 'vite-plugin-qiankun/dist/helper';
+<%_ } _%>
+import { createRouter, createWebHistory } from 'vue-router';
+<%_ if (isPageRoutes) { _%>
+import routes from '~pages';
+<%_ } else { _%>
+import routes from './routes';
+<%_ } _%>
+
+<%_ if (qiankun) { _%>
+/**
+ * 获取路由实例
+ * @param props qiankun props
+ */
+export default function getRouter(props: QiankunProps = {}) {
+  const { container } = props;
+  
+  const router = createRouter({
+    history: createWebHistory(
+      qiankunWindow.__POWERED_BY_QIANKUN__
+        ? '/sub-app/'
+        : import.meta.env.BASE_URL
+    ),
+    routes,
+  });
+
+  return router;
+}
+<%_ } else { _%>
+/**
+ * 获取路由实例
+ */
+export default function getRouter(_props: Record<string, unknown> = {}) {
+  const router = createRouter({
+    history: createWebHistory(import.meta.env.BASE_URL),
+    routes,
+  });
+
+  return router;
+}
+<%_ } _%>
+
