@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "pinia": "^3.0.2",
+    "pinia-plugin-persistedstate": "^4.2.0"
+  }
+}
+

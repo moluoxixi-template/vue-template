@@ -2,8 +2,11 @@
  * 工具函数导出
  */
 
+export * from './deepMerge'
+export * from './ejs'
 export * from './file'
 export * from './install'
-export * from './merge'
 export * from './prompts'
-export * from './template'
+export * from './renderTemplate'
+export * from './sortDependencies'
+export * from './viteConfigRender'

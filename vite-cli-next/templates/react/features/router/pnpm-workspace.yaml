@@ -1,0 +1,4 @@
+catalogs:
+  build:
+    react-router-dom: ^7.1.1
+
