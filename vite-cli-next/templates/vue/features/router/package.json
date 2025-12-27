@@ -1,5 +1,5 @@
 {
   "dependencies": {
-    "vue-router": "^4.5.0"
+    "vue-router": "catalog:build"
   }
 }

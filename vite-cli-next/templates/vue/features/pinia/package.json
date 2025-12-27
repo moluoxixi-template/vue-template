@@ -1,7 +1,6 @@
 {
   "dependencies": {
-    "pinia": "^3.0.2",
-    "pinia-plugin-persistedstate": "^4.2.0"
+    "pinia": "catalog:build",
+    "pinia-plugin-persistedstate": "catalog:build"
   }
 }
-
