@@ -19,17 +19,21 @@ vite-cli-next/
 │   │   └── index.ts
 │   ├── utils/             # 工具函数
 │   │   ├── file.ts        # 文件操作
-│   │   ├── merge.ts       # 配置合并
+│   │   ├── deepMerge.ts   # 配置合并
 │   │   ├── prompts.ts     # 交互提示
 │   │   ├── install.ts     # 依赖安装
-│   │   ├── template.ts    # 模板渲染
+│   │   ├── renderTemplate.ts  # 模板渲染
+│   │   ├── viteConfigRender.ts # Vite 配置渲染
 │   │   └── index.ts
 │   ├── types/             # 类型定义
 │   │   └── index.ts
 │   ├── index.ts           # CLI 入口
 │   └── test.ts            # 产物审计测试
 ├── templates/
-│   ├── base/              # L0: 跨框架通用模板
+│   ├── common/
+│   │   ├── base/          # L0: 跨框架通用模板
+│   │   └── features/      # 公共可选特性
+│   │       └── husky/     # Git Hooks (commitlint + lint-staged)
 │   ├── vue/
 │   │   ├── base/          # L1: Vue 母版模板
 │   │   └── features/      # L2: Vue 原子特性
@@ -42,24 +46,26 @@ vite-cli-next/
 
 ## 模板层级说明
 
-### L0 - 跨框架通用模板 (`templates/base/`)
+### L0 - 跨框架通用模板 (`templates/common/base/`)
 
 包含所有框架共用的基础配置文件：
 
 | 文件/目录 | 说明 | @moluoxixi 依赖 |
 |-----------|------|-----------------|
-| `.gitignore` | Git 忽略配置 | - |
-| `.npmrc` | NPM 配置 | - |
-| `.cz-config.cjs` | Commitizen 配置 | - |
-| `commitlint.config.ts` | Commit 规范配置 | - |
-| `.husky/` | Git Hooks 配置 | - |
-| `.env*` | 环境变量配置 | - |
 | `scripts/build.mts` | 构建脚本 | - |
 | `src/assets/` | 公共样式和字体 | - |
 | `src/apis/` | API 请求层 | `@moluoxixi/ajax-package` |
 | `src/constants/` | 常量定义 | - |
 | `src/utils/` | 工具函数 | - |
 | `src/locales/lang/` | 多语言文件 | - |
+
+### 公共特性 (`templates/common/features/`)
+
+跨框架的可选特性：
+
+| 特性目录 | 说明 | 包含文件 |
+|----------|------|----------|
+| `husky/` | Git Hooks + Commitlint + lint-staged | `.husky/`, `.cz-config.cjs`, `commitlint.config.ts`, `package.json` |
 
 ### L1 - Vue 母版模板 (`templates/vue/base/`)
 
@@ -109,33 +115,41 @@ React 18 项目的核心模板文件：
 
 | 特性目录 | 说明 | 包含文件 |
 |----------|------|----------|
-| `element-plus/` | Element Plus UI | `package.json`, `pnpm-workspace.yaml`, `vite.config.ts` |
+| `element-plus/` | Element Plus UI | `package.json`, `pnpm-workspace.yaml`, `vite.config.data.ts` |
 | `ant-design-vue/` | Ant Design Vue UI | `package.json`, `pnpm-workspace.yaml` |
-| `i18n/` | 国际化支持 | `package.json`, `pnpm-workspace.yaml`, `main.ts` |
-| `sentry/` | 错误监控 | `package.json`, `pnpm-workspace.yaml`, `vite.config.ts`, `main.ts` |
-| `qiankun/` | 微前端支持 | `package.json`, `pnpm-workspace.yaml` |
-| `pageRoutes/` | 文件系统路由 | `package.json`, `pnpm-workspace.yaml`, `vite.config.ts` |
+| `i18n/` | 国际化支持 | `package.json`, `pnpm-workspace.yaml`, `src/locales/index.ts` |
+| `sentry/` | 错误监控 | `package.json`, `pnpm-workspace.yaml`, `vite.config.data.ts`, `src/utils/sentry.ts` |
+| `qiankun/` | 微前端支持 | `package.json`, `pnpm-workspace.yaml`, `src/qiankun/index.ts` |
+| `pageRoutes/` | 文件系统路由 | `package.json`, `pnpm-workspace.yaml`, `vite.config.data.ts` |
+| `router/` | 路由配置 | `package.json`, `pnpm-workspace.yaml`, `src/router/` |
+| `pinia/` | 状态管理 | `package.json`, `pnpm-workspace.yaml`, `src/stores/` |
+| `eslint/` | ESLint 配置 | `eslint.config.ts`, `package.json`, `pnpm-workspace.yaml` |
 
 ### L2 - React 原子特性 (`templates/react/features/`)
 
 | 特性目录 | 说明 | 包含文件 |
 |----------|------|----------|
 | `ant-design/` | Ant Design UI | `package.json`, `pnpm-workspace.yaml` |
-| `i18n/` | 国际化支持 | `package.json`, `pnpm-workspace.yaml` |
-| `sentry/` | 错误监控 | `package.json`, `pnpm-workspace.yaml` |
+| `i18n/` | 国际化支持 | `package.json`, `pnpm-workspace.yaml`, `src/locales/index.ts` |
+| `sentry/` | 错误监控 | `package.json`, `pnpm-workspace.yaml`, `vite.config.data.ts`, `src/utils/sentry.ts` |
+| `router/` | 路由配置 | `package.json`, `pnpm-workspace.yaml`, `src/router/` |
+| `zustand/` | 状态管理 | `package.json`, `pnpm-workspace.yaml`, `src/stores/` |
+| `eslint/` | ESLint 配置 | `eslint.config.ts`, `package.json`, `pnpm-workspace.yaml` |
 
 ## 渲染顺序
 
-模板渲染遵循 **L0 → L1 → L2** 的顺序，后层覆盖前层：
+模板渲染遵循 **L0 → Common Features → L1 → L2** 的顺序，后层覆盖前层：
 
-1. **L0 复制**: 复制跨框架通用文件
-2. **L1 复制**: 复制框架特定的母版文件
-3. **配置合并**: 
+1. **L0 复制**: 复制 `common/base/` 跨框架通用文件
+2. **公共特性复制**: 复制 `common/features/husky/` 等公共特性
+3. **L1 复制**: 复制框架特定的母版文件
+4. **L2 特性复制**: 复制启用的原子特性
+5. **配置合并**: 
    - `package.json`: 深度合并 L1 + 启用的 L2 特性
    - `pnpm-workspace.yaml`: 合并 catalogs
    - `vite.config.ts`: 注入特性配置
    - `main.ts/tsx`: 注入特性初始化代码
-4. **条件文件生成**: 根据配置生成 router、locales、sentry 等
+6. **条件文件清理**: 根据配置删除不需要的文件
 
 ## 配置合并规则
 
@@ -144,9 +158,11 @@ React 18 项目的核心模板文件：
 ```typescript
 // 深度合并规则
 {
+  scripts: { ...base, ...features },
   dependencies: { ...base, ...features },
   devDependencies: { ...base, ...features },
-  scripts: { ...base, ...features },
+  'lint-staged': { ...base, ...features },
+  config: { ...base, ...features },
 }
 ```
 
@@ -164,32 +180,19 @@ catalogs:
 
 ### vite.config.ts 配置注入
 
-每个 L2 特性可以通过 `vite.config.ts` 导出配置扩展：
+每个 L2 特性可以通过 `vite.config.data.ts` 导出配置扩展：
 
 ```typescript
-// templates/vue/features/sentry/vite.config.ts
-const config: ViteConfigExtension = {
+// templates/vue/features/sentry/vite.config.data.ts
+import type { ViteConfigDataType } from '../../../../src/types/viteConfig'
+
+const config: ViteConfigDataType = {
   imports: [
-    ['sentryVitePlugin', '@sentry/vite-plugin'],
+    { name: 'sentryVitePlugin', from: '@sentry/vite-plugin' },
   ],
   plugins: [
     `sentryVitePlugin({ ... })`,
   ],
-  config: {},
-}
-
-export default config
-```
-
-### main.ts 逻辑注入
-
-每个 L2 特性可以通过 `main.ts` 导出初始化代码：
-
-```typescript
-// templates/vue/features/i18n/main.ts
-const config: MainTsExtension = {
-  imports: ["import i18n from '@/locales'"],
-  appUse: ['app.use(i18n)'],
 }
 
 export default config
@@ -249,14 +252,20 @@ pnpm test
 
 ## 扩展指南
 
+### 添加新的公共特性
+
+1. 在 `templates/common/features/` 创建特性目录
+2. 添加必要的配置文件
+3. 在生成器中添加渲染逻辑
+
 ### 添加新的 L2 特性
 
 1. 在 `templates/{framework}/features/` 创建特性目录
 2. 添加 `package.json` (依赖定义)
 3. 添加 `pnpm-workspace.yaml` (版本锁定)
-4. 可选: 添加 `vite.config.ts` (Vite 插件)
-5. 可选: 添加 `main.ts` (初始化代码)
-6. 在 `src/utils/merge.ts` 的 `getFeatureDirs` 添加特性映射
+4. 可选: 添加 `vite.config.data.ts` (Vite 插件)
+5. 可选: 添加源代码文件
+6. 在生成器中添加渲染逻辑
 
 ### 添加新框架
 

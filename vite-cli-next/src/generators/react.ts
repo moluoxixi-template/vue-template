@@ -20,8 +20,11 @@ export async function generateReactProject(config: ProjectConfigType): Promise<v
   const { targetDir } = config
   const templatesDir = getTemplatesDir()
 
-  // 1. 渲染 L0 基础模板
-  renderTemplate(path.join(templatesDir, 'base'), targetDir)
+  // 1. 渲染 L0 公共基础模板
+  renderTemplate(path.join(templatesDir, 'common', 'base'), targetDir)
+
+  // 渲染公共特性模板 (husky/eslint 等)
+  renderTemplate(path.join(templatesDir, 'common', 'features', 'husky'), targetDir)
 
   // 2. 渲染 L1 React 基础模板
   renderTemplate(path.join(templatesDir, 'react', 'base'), targetDir)
