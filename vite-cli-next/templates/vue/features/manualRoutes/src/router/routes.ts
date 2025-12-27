@@ -1,4 +1,4 @@
-import Layout from '@/layouts/index'
+import Layout from './layout.vue'
 
 export const routes = [
   {
@@ -25,4 +25,3 @@ export const routes = [
     ],
   },
 ]
-
