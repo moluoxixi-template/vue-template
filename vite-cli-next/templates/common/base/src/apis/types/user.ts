@@ -2,24 +2,23 @@
  * 用户类型定义
  */
 
-/** 用户信息 */
-export interface UserInfo {
-  id: string;
-  username: string;
-  email: string;
-  avatar?: string;
-  roles: string[];
+/** 用户信息类型 */
+export interface UserInfoType {
+  id: string
+  username: string
+  email: string
+  avatar?: string
+  roles: string[]
 }
 
-/** 登录参数 */
-export interface LoginParams {
-  username: string;
-  password: string;
+/** 登录参数类型 */
+export interface LoginParamsType {
+  username: string
+  password: string
 }
 
-/** 登录响应 */
-export interface LoginResponse {
-  token: string;
-  userInfo: UserInfo;
+/** 登录响应类型 */
+export interface LoginResponseType {
+  token: string
+  userInfo: UserInfoType
 }
-

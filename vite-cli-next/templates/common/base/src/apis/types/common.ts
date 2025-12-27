@@ -3,27 +3,26 @@
  * API 响应通用类型
  */
 
-/** 分页参数 */
-export interface PaginationParams {
-  page: number;
-  pageSize: number;
+/** 分页参数类型 */
+export interface PaginationParamsType {
+  page: number
+  pageSize: number
 }
 
-/** 分页响应 */
-export interface PaginationResponse<T> {
-  list: T[];
-  total: number;
-  page: number;
-  pageSize: number;
+/** 分页响应类型 */
+export interface PaginationResponseType<T> {
+  list: T[]
+  total: number
+  page: number
+  pageSize: number
 }
 
-/** 通用响应 */
-export interface ApiResponse<T = unknown> {
-  code: number;
-  message: string;
-  data: T;
+/** 通用响应类型 */
+export interface ApiResponseType<T = unknown> {
+  code: number
+  message: string
+  data: T
 }
 
-/** 列表响应 */
-export interface ListResponse<T> extends ApiResponse<PaginationResponse<T>> {}
-
+/** 列表响应类型 */
+export interface ListResponseType<T> extends ApiResponseType<PaginationResponseType<T>> {}

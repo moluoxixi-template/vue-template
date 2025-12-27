@@ -1,26 +1,19 @@
+import type { UserStateType } from '@/types/stores'
+
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
-interface UserState {
-  token: string
-  userInfo: Record<string, unknown>
-  setToken: (token: string) => void
-  setUserInfo: (info: Record<string, unknown>) => void
-  logout: () => void
-}
-
-export const useUserStore = create<UserState>()(
+export const useUserStore = create<UserStateType>()(
   persist(
     set => ({
       token: '',
-      userInfo: {},
+      userInfo: null,
       setToken: (token: string) => set({ token }),
-      setUserInfo: (userInfo: Record<string, unknown>) => set({ userInfo }),
-      logout: () => set({ token: '', userInfo: {} }),
+      setUserInfo: (userInfo) => set({ userInfo }),
+      logout: () => set({ token: '', userInfo: null }),
     }),
     {
       name: 'user-storage',
     },
   ),
 )
-
