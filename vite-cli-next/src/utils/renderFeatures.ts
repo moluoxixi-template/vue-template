@@ -9,6 +9,12 @@ import path from 'node:path'
 
 import { getTemplatesDir } from './file'
 import { renderTemplate } from './renderTemplate'
+import {
+  getCommonFeatureMap,
+  getConfigToFeatureMap,
+  getRouteModeFeature,
+  getUILibraryFeature,
+} from './featureMapping'
 
 /**
  * 渲染框架特定的 features
@@ -18,16 +24,7 @@ import { renderTemplate } from './renderTemplate'
 export function renderFrameworkFeatures(config: ProjectConfigType, targetDir: string): void {
   const templatesDir = getTemplatesDir()
   const framework = config.framework
-
-  // 定义 features 映射：配置项名称 -> feature 目录名称
-  const featureMap: Record<string, string> = {
-    router: 'router',
-    stateManagement: framework === 'vue' ? 'pinia' : 'zustand',
-    eslint: 'eslint',
-    i18n: 'i18n',
-    sentry: 'sentry',
-    qiankun: 'qiankun',
-  }
+  const featureMap = getConfigToFeatureMap(framework)
 
   // 统一处理布尔类型的 features
   for (const [configKey, featureName] of Object.entries(featureMap)) {
@@ -37,26 +34,21 @@ export function renderFrameworkFeatures(config: ProjectConfigType, targetDir: st
     }
   }
 
-  // 特殊处理：路由模式相关的 features
-  if (config.routeMode === 'manual') {
-    renderTemplate(path.join(templatesDir, framework, 'features', 'manualRoutes'), targetDir)
-  }
-  else if (config.routeMode === 'file-system') {
-    renderTemplate(path.join(templatesDir, framework, 'features', 'pageRoutes'), targetDir)
-  }
+  // 路由模式
+  const routeModeFeature = getRouteModeFeature(config.routeMode)
+  renderTemplate(path.join(templatesDir, framework, 'features', routeModeFeature), targetDir)
 
-  // 特殊处理：UI 库相关的 features
+  // UI 库（保持原有的条件判断，因为不是所有 UI 库都适用于所有框架）
   if (framework === 'vue') {
-    if (config.uiLibrary === 'element-plus') {
-      renderTemplate(path.join(templatesDir, framework, 'features', 'element-plus'), targetDir)
-    }
-    else if (config.uiLibrary === 'ant-design-vue') {
-      renderTemplate(path.join(templatesDir, framework, 'features', 'ant-design-vue'), targetDir)
+    if (config.uiLibrary === 'element-plus' || config.uiLibrary === 'ant-design-vue') {
+      const uiLibraryFeature = getUILibraryFeature(config.uiLibrary)
+      renderTemplate(path.join(templatesDir, framework, 'features', uiLibraryFeature), targetDir)
     }
   }
   else if (framework === 'react') {
     if (config.uiLibrary === 'ant-design') {
-      renderTemplate(path.join(templatesDir, framework, 'features', 'ant-design'), targetDir)
+      const uiLibraryFeature = getUILibraryFeature(config.uiLibrary)
+      renderTemplate(path.join(templatesDir, framework, 'features', uiLibraryFeature), targetDir)
     }
   }
 }
@@ -68,11 +60,7 @@ export function renderFrameworkFeatures(config: ProjectConfigType, targetDir: st
  */
 export function renderCommonFeatures(config: ProjectConfigType, targetDir: string): void {
   const templatesDir = getTemplatesDir()
-
-  // 公共 features 映射
-  const commonFeatureMap: Record<string, string> = {
-    gitHooks: 'husky',
-  }
+  const commonFeatureMap = getCommonFeatureMap()
 
   for (const [configKey, featureName] of Object.entries(commonFeatureMap)) {
     if (config[configKey as keyof ProjectConfigType] === true) {

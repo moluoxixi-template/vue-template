@@ -1,6 +1,10 @@
 /**
  * 测试脚本
  * 通过文件系统扫描自动生成所有测试用例组合
+ *
+ * 用法:
+ *   pnpm test              # 生成所有测试用例
+ *   pnpm test --minimal    # 只生成全量和最小配置
  */
 
 import type { ProjectConfigType } from './types'
@@ -13,7 +17,7 @@ import chalk from 'chalk'
 import fs from 'fs-extra'
 
 import { generateProject } from './generators/project'
-import { getTemplatesDir } from './utils/file'
+import { featureToConfig, scanAllFeatures } from './utils/featureMapping'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -22,338 +26,140 @@ const __dirname = path.dirname(__filename)
 const TEST_OUTPUT_DIR = path.resolve(__dirname, '../test')
 
 /**
- * 扫描框架的 features 目录，获取所有可用的 features
+ * 解析命令行参数
  */
-function scanFrameworkFeatures(framework: 'vue' | 'react'): string[] {
-  const templatesDir = getTemplatesDir()
-  const featuresDir = path.join(templatesDir, framework, 'features')
+function parseArgs(): { minimalOnly: boolean } {
+  const args = process.argv.slice(2)
+  const minimalOnly = args.includes('--minimal') || args.includes('--min') || args.includes('-m')
+  return { minimalOnly }
+}
 
-  if (!fs.existsSync(featuresDir)) {
-    return []
+/**
+ * 生成所有可能的组合（包括全开、全关）
+ */
+function generateAllCombinations<T>(items: T[]): boolean[][] {
+  const n = items.length
+  const combinations: boolean[][] = []
+
+  // 生成 2^n 种组合
+  for (let i = 0; i < 2 ** n; i++) {
+    const combination: boolean[] = []
+    for (let j = 0; j < n; j++) {
+      combination.push((i & (1 << j)) !== 0)
+    }
+    combinations.push(combination)
   }
 
-  return fs.readdirSync(featuresDir).filter((item) => {
-    const itemPath = path.join(featuresDir, item)
-    return fs.statSync(itemPath).isDirectory()
-  })
+  return combinations
 }
-/**
- * 自动生成测试用例配置
- */
-function generateTestConfigs(): Array<{ name: string, config: Partial<ProjectConfigType> }> {
-  const configs: Array<{ name: string, config: Partial<ProjectConfigType> }> = []
 
-  // 扫描所有框架
+/**
+ * 自动生成测试用例配置（基于组合算法）
+ * @param minimalOnly 是否只生成全量和最小配置
+ */
+function generateTestConfigs(minimalOnly = false): Array<{ name: string, config: Partial<ProjectConfigType> }> {
+  const configs: Array<{ name: string, config: Partial<ProjectConfigType> }> = []
   const frameworks: Array<'vue' | 'react'> = ['vue', 'react']
 
   for (const framework of frameworks) {
-    const features = scanFrameworkFeatures(framework)
+    const allFeatures = scanAllFeatures(framework)
 
-    // 确定 UI 库选项
+    // 分离不同类型的 features
     const uiLibraries: string[] = []
-    if (framework === 'vue') {
-      if (features.includes('element-plus')) {
-        uiLibraries.push('element-plus')
+    const routeModes: string[] = []
+    const booleanFeatures: string[] = []
+
+    for (const feature of allFeatures) {
+      const config = featureToConfig(feature, framework)
+      if (!config)
+        continue
+
+      if (config.key === 'uiLibrary') {
+        uiLibraries.push(feature)
       }
-      if (features.includes('ant-design-vue')) {
-        uiLibraries.push('ant-design-vue')
+      else if (config.key === 'routeMode') {
+        routeModes.push(feature)
+      }
+      else {
+        booleanFeatures.push(feature)
+      }
+    }
+
+    if (uiLibraries.length === 0)
+      continue
+
+    if (minimalOnly) {
+      // 只生成全量和最小配置：每个框架只选择一个 UI 库和一个路由模式
+      const uiLibrary = uiLibraries[0] // 只选择第一个 UI 库
+      const routeModeFeature = routeModes.length > 0 ? routeModes[0] : 'manualRoutes' // 只选择第一个路由模式
+
+      // 只生成全量和最小两种配置
+      const allFalse = Array.from({ length: booleanFeatures.length }, () => false)
+      const allTrue = Array.from({ length: booleanFeatures.length }, () => true)
+      const combinations = [allFalse, allTrue]
+
+      for (const combination of combinations) {
+        const config: any = {
+          framework,
+          uiLibrary: uiLibrary as any,
+          routeMode: featureToConfig(routeModeFeature, framework)!.value,
+          packageManager: 'pnpm',
+        }
+
+        // 应用布尔 features 的组合
+        for (let i = 0; i < booleanFeatures.length; i++) {
+          const feature = booleanFeatures[i]
+          const enabled = combination[i]
+          const featureConfig = featureToConfig(feature, framework)
+          if (featureConfig && featureConfig.key !== 'uiLibrary' && featureConfig.key !== 'routeMode') {
+            config[featureConfig.key] = enabled
+          }
+        }
+
+        // 生成测试用例名称
+        const suffix = combination.every(v => !v) ? 'minimal' : 'full'
+        configs.push(createTestConfig(framework, uiLibrary, suffix, config))
       }
     }
     else {
-      if (features.includes('ant-design')) {
-        uiLibraries.push('ant-design')
-      }
-    }
+      // 生成所有组合
+      for (const uiLibrary of uiLibraries) {
+        // 为每个路由模式生成测试用例
+        const routeModesToTest = routeModes.length > 0 ? routeModes : ['manualRoutes'] // 默认
 
-    // 如果没有 UI 库，使用默认值
-    if (uiLibraries.length === 0) {
-      uiLibraries.push(framework === 'vue' ? 'element-plus' : 'ant-design')
-    }
+        for (const routeModeFeature of routeModesToTest) {
+          // 生成所有布尔 features 的组合（2^n 种）
+          const combinations = generateAllCombinations(booleanFeatures)
 
-    // 包管理器选项,目前仅提供pnpm
-    const packageManagers: Array<'pnpm' | 'npm' | 'yarn'> = ['pnpm']
+          for (const combination of combinations) {
+            const config: any = {
+              framework,
+              uiLibrary: uiLibrary as any,
+              routeMode: featureToConfig(routeModeFeature, framework)!.value,
+              packageManager: 'pnpm',
+            }
 
-    // 生成关键场景组合
-    for (const uiLibrary of uiLibraries) {
-      // 1. 最小配置（所有特性关闭）
-      configs.push({
-        name: `${framework}-${uiLibrary.replace(/-/g, '-')}-minimal`,
-        config: {
-          projectName: `${framework}-${uiLibrary.replace(/-/g, '-')}-minimal`,
-          description: `${framework === 'vue' ? 'Vue' : 'React'} + ${uiLibrary} 最小配置`,
-          author: 'test',
-          framework,
-          uiLibrary: uiLibrary as any,
-          routeMode: 'manual',
-          router: false,
-          stateManagement: false,
-          i18n: false,
-          qiankun: false,
-          sentry: false,
-          eslint: false,
-          gitHooks: false,
-          packageManager: 'pnpm',
-        },
-      })
+            // 应用布尔 features 的组合
+            for (let i = 0; i < booleanFeatures.length; i++) {
+              const feature = booleanFeatures[i]
+              const enabled = combination[i]
+              const featureConfig = featureToConfig(feature, framework)
+              if (featureConfig && featureConfig.key !== 'uiLibrary' && featureConfig.key !== 'routeMode') {
+                config[featureConfig.key] = enabled
+              }
+            }
 
-      // 2. 基础配置（基本特性开启）
-      configs.push({
-        name: `${framework}-${uiLibrary.replace(/-/g, '-')}-basic`,
-        config: {
-          projectName: `${framework}-${uiLibrary.replace(/-/g, '-')}-basic`,
-          description: `${framework === 'vue' ? 'Vue' : 'React'} + ${uiLibrary} 基础项目`,
-          author: 'test',
-          framework,
-          uiLibrary: uiLibrary as any,
-          routeMode: 'manual',
-          router: true,
-          stateManagement: true,
-          i18n: true,
-          qiankun: false,
-          sentry: false,
-          eslint: true,
-          gitHooks: true,
-          packageManager: 'pnpm',
-        },
-      })
+            // 生成测试用例名称
+            const enabledFeatures = booleanFeatures.filter((_, i) => combination[i])
+            const suffix = enabledFeatures.length === 0
+              ? 'minimal'
+              : enabledFeatures.length === booleanFeatures.length
+                ? 'full'
+                : enabledFeatures.join('-')
 
-      // 3. 全量配置（所有特性开启）
-      configs.push({
-        name: `${framework}-${uiLibrary.replace(/-/g, '-')}-full`,
-        config: {
-          projectName: `${framework}-${uiLibrary.replace(/-/g, '-')}-full`,
-          description: `${framework === 'vue' ? 'Vue' : 'React'} + ${uiLibrary} 全量特性项目`,
-          author: 'test',
-          framework,
-          uiLibrary: uiLibrary as any,
-          routeMode: 'file-system',
-          router: true,
-          stateManagement: true,
-          i18n: true,
-          qiankun: framework === 'vue',
-          sentry: true,
-          eslint: true,
-          gitHooks: true,
-          packageManager: 'pnpm',
-        },
-      })
-
-      // 4. 手动路由模式
-      configs.push({
-        name: `${framework}-${uiLibrary.replace(/-/g, '-')}-manual-routes`,
-        config: {
-          projectName: `${framework}-${uiLibrary.replace(/-/g, '-')}-manual-routes`,
-          description: `${framework === 'vue' ? 'Vue' : 'React'} + ${uiLibrary} 手动路由模式`,
-          author: 'test',
-          framework,
-          uiLibrary: uiLibrary as any,
-          routeMode: 'manual',
-          router: true,
-          stateManagement: true,
-          i18n: true,
-          qiankun: false,
-          sentry: false,
-          eslint: true,
-          gitHooks: true,
-          packageManager: 'pnpm',
-        },
-      })
-
-      // 5. 文件系统路由模式
-      configs.push({
-        name: `${framework}-${uiLibrary.replace(/-/g, '-')}-file-routes`,
-        config: {
-          projectName: `${framework}-${uiLibrary.replace(/-/g, '-')}-file-routes`,
-          description: `${framework === 'vue' ? 'Vue' : 'React'} + ${uiLibrary} 文件系统路由模式`,
-          author: 'test',
-          framework,
-          uiLibrary: uiLibrary as any,
-          routeMode: 'file-system',
-          router: true,
-          stateManagement: true,
-          i18n: true,
-          qiankun: false,
-          sentry: false,
-          eslint: true,
-          gitHooks: true,
-          packageManager: 'pnpm',
-        },
-      })
-
-      // 6. 无路由
-      configs.push({
-        name: `${framework}-${uiLibrary.replace(/-/g, '-')}-no-router`,
-        config: {
-          projectName: `${framework}-${uiLibrary.replace(/-/g, '-')}-no-router`,
-          description: `${framework === 'vue' ? 'Vue' : 'React'} + ${uiLibrary} 无路由`,
-          author: 'test',
-          framework,
-          uiLibrary: uiLibrary as any,
-          routeMode: 'manual',
-          router: false,
-          stateManagement: true,
-          i18n: true,
-          qiankun: false,
-          sentry: false,
-          eslint: true,
-          gitHooks: true,
-          packageManager: 'pnpm',
-        },
-      })
-
-      // 7. 无状态管理
-      configs.push({
-        name: `${framework}-${uiLibrary.replace(/-/g, '-')}-no-state`,
-        config: {
-          projectName: `${framework}-${uiLibrary.replace(/-/g, '-')}-no-state`,
-          description: `${framework === 'vue' ? 'Vue' : 'React'} + ${uiLibrary} 无状态管理`,
-          author: 'test',
-          framework,
-          uiLibrary: uiLibrary as any,
-          routeMode: 'manual',
-          router: true,
-          stateManagement: false,
-          i18n: true,
-          qiankun: false,
-          sentry: false,
-          eslint: true,
-          gitHooks: true,
-          packageManager: 'pnpm',
-        },
-      })
-
-      // 8. 无国际化
-      configs.push({
-        name: `${framework}-${uiLibrary.replace(/-/g, '-')}-no-i18n`,
-        config: {
-          projectName: `${framework}-${uiLibrary.replace(/-/g, '-')}-no-i18n`,
-          description: `${framework === 'vue' ? 'Vue' : 'React'} + ${uiLibrary} 无国际化`,
-          author: 'test',
-          framework,
-          uiLibrary: uiLibrary as any,
-          routeMode: 'manual',
-          router: true,
-          stateManagement: true,
-          i18n: false,
-          qiankun: false,
-          sentry: false,
-          eslint: true,
-          gitHooks: true,
-          packageManager: 'pnpm',
-        },
-      })
-
-      // 9. 仅 Sentry
-      if (features.includes('sentry')) {
-        configs.push({
-          name: `${framework}-${uiLibrary.replace(/-/g, '-')}-sentry-only`,
-          config: {
-            projectName: `${framework}-${uiLibrary.replace(/-/g, '-')}-sentry-only`,
-            description: `${framework === 'vue' ? 'Vue' : 'React'} + ${uiLibrary} 仅 Sentry`,
-            author: 'test',
-            framework,
-            uiLibrary: uiLibrary as any,
-            routeMode: 'manual',
-            router: true,
-            stateManagement: true,
-            i18n: false,
-            qiankun: false,
-            sentry: true,
-            eslint: true,
-            gitHooks: true,
-            packageManager: 'pnpm',
-          },
-        })
-      }
-
-      // 10. 仅 Qiankun (仅 Vue)
-      if (framework === 'vue' && features.includes('qiankun')) {
-        configs.push({
-          name: `${framework}-${uiLibrary.replace(/-/g, '-')}-qiankun-only`,
-          config: {
-            projectName: `${framework}-${uiLibrary.replace(/-/g, '-')}-qiankun-only`,
-            description: `Vue + ${uiLibrary} 仅 Qiankun`,
-            author: 'test',
-            framework,
-            uiLibrary: uiLibrary as any,
-            routeMode: 'manual',
-            router: true,
-            stateManagement: true,
-            i18n: false,
-            qiankun: true,
-            sentry: false,
-            eslint: true,
-            gitHooks: true,
-            packageManager: 'pnpm',
-          },
-        })
-      }
-
-      // 11. Sentry + Qiankun (仅 Vue)
-      if (framework === 'vue' && features.includes('sentry') && features.includes('qiankun')) {
-        configs.push({
-          name: `${framework}-${uiLibrary.replace(/-/g, '-')}-sentry-qiankun`,
-          config: {
-            projectName: `${framework}-${uiLibrary.replace(/-/g, '-')}-sentry-qiankun`,
-            description: `Vue + ${uiLibrary} Sentry + Qiankun`,
-            author: 'test',
-            framework,
-            uiLibrary: uiLibrary as any,
-            routeMode: 'manual',
-            router: true,
-            stateManagement: true,
-            i18n: false,
-            qiankun: true,
-            sentry: true,
-            eslint: true,
-            gitHooks: true,
-            packageManager: 'pnpm',
-          },
-        })
-      }
-
-      // 12. 无 ESLint 无 Git Hooks
-      configs.push({
-        name: `${framework}-${uiLibrary.replace(/-/g, '-')}-no-eslint-no-hooks`,
-        config: {
-          projectName: `${framework}-${uiLibrary.replace(/-/g, '-')}-no-eslint-no-hooks`,
-          description: `${framework === 'vue' ? 'Vue' : 'React'} + ${uiLibrary} 无 ESLint 无 Git Hooks`,
-          author: 'test',
-          framework,
-          uiLibrary: uiLibrary as any,
-          routeMode: 'manual',
-          router: true,
-          stateManagement: true,
-          i18n: true,
-          qiankun: false,
-          sentry: false,
-          eslint: false,
-          gitHooks: false,
-          packageManager: 'pnpm',
-        },
-      })
-
-      // 13. 不同包管理器
-      for (const packageManager of packageManagers.slice(1)) { // 跳过 pnpm（已包含）
-        configs.push({
-          name: `${framework}-${uiLibrary.replace(/-/g, '-')}-${packageManager}`,
-          config: {
-            projectName: `${framework}-${uiLibrary.replace(/-/g, '-')}-${packageManager}`,
-            description: `${framework === 'vue' ? 'Vue' : 'React'} + ${uiLibrary} 使用 ${packageManager}`,
-            author: 'test',
-            framework,
-            uiLibrary: uiLibrary as any,
-            routeMode: 'manual',
-            router: true,
-            stateManagement: true,
-            i18n: true,
-            qiankun: false,
-            sentry: false,
-            eslint: true,
-            gitHooks: true,
-            packageManager,
-          },
-        })
+            configs.push(createTestConfig(framework, uiLibrary, `${routeModeFeature}-${suffix}`, config))
+          }
+        }
       }
     }
   }
@@ -362,13 +168,31 @@ function generateTestConfigs(): Array<{ name: string, config: Partial<ProjectCon
 }
 
 /**
- * 生成测试项目
+ * 创建测试配置的辅助函数
  */
-async function generateTestProjects(): Promise<void> {
-  console.log(chalk.blue.bold('\n🧪 开始生成测试项目...\n'))
+function createTestConfig(framework: 'vue' | 'react', uiLibrary: string, suffix: string, overrides: any) {
+  const name = `${framework}-${uiLibrary}-${suffix}`
+  return {
+    name,
+    config: {
+      projectName: name,
+      description: `${framework === 'vue' ? 'Vue' : 'React'} + ${uiLibrary} ${suffix}`,
+      author: 'test',
+      ...overrides,
+    },
+  }
+}
+
+/**
+ * 生成测试项目
+ * @param minimalOnly 是否只生成全量和最小配置
+ */
+async function generateTestProjects(minimalOnly = false): Promise<void> {
+  const mode = minimalOnly ? '（仅全量和最小配置）' : '（全部组合）'
+  console.log(chalk.blue.bold(`\n🧪 开始生成测试项目${mode}...\n`))
 
   // 扫描并生成测试配置
-  const TEST_CONFIGS = generateTestConfigs()
+  const TEST_CONFIGS = generateTestConfigs(minimalOnly)
   console.log(chalk.cyan(`📋 扫描到 ${TEST_CONFIGS.length} 个测试用例\n`))
 
   // 清理并创建测试目录
@@ -466,11 +290,12 @@ function checkPackageJsonVersions(projectDir: string): boolean {
 
 /**
  * 审计 @moluoxixi 依赖
+ * @param minimalOnly 是否只生成全量和最小配置
  */
-async function auditMoluoxixiDeps(): Promise<void> {
+async function auditMoluoxixiDeps(minimalOnly = false): Promise<void> {
   console.log(chalk.blue.bold('\n🔍 开始审计 @moluoxixi 依赖...\n'))
 
-  const TEST_CONFIGS = generateTestConfigs()
+  const TEST_CONFIGS = generateTestConfigs(minimalOnly)
   const requiredDeps = [
     '@moluoxixi/vite-config',
     '@moluoxixi/ajax-package',
@@ -644,15 +469,20 @@ async function printFileTree(dir: string, indent: string): Promise<void> {
  * 主函数
  */
 async function main(): Promise<void> {
+  const { minimalOnly } = parseArgs()
+
   console.log(chalk.blue.bold(`\n${'='.repeat(60)}`))
   console.log(chalk.blue.bold('  Vite CLI Next - 产物审计测试'))
+  if (minimalOnly) {
+    console.log(chalk.yellow.bold('  模式: 仅全量和最小配置'))
+  }
   console.log(chalk.blue.bold('='.repeat(60)))
 
   // 1. 生成测试项目
-  await generateTestProjects()
+  await generateTestProjects(minimalOnly)
 
   // 2. 审计 @moluoxixi 依赖
-  await auditMoluoxixiDeps()
+  await auditMoluoxixiDeps(minimalOnly)
 
   // 3. 显示文件树
   await showFileTrees()
