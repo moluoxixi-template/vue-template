@@ -90,6 +90,24 @@ export async function collectProjectConfig(
         { name: '手动配置路由', value: 'manual' },
       ],
     },
+    // 是否启用路由
+    {
+      type: 'confirm',
+      name: 'router',
+      message: '是否启用路由 (vue-router/react-router-dom)?',
+      default: true,
+    },
+    // 是否启用状态管理
+    {
+      type: 'confirm',
+      name: 'stateManagement',
+      message: (answers: Record<string, unknown>) => {
+        return answers.framework === 'vue'
+          ? '是否启用状态管理 (Pinia)?'
+          : '是否启用状态管理 (Zustand)?'
+      },
+      default: true,
+    },
     // 是否启用国际化
     {
       type: 'confirm',
@@ -148,6 +166,8 @@ export async function collectProjectConfig(
     framework: answers.framework as FrameworkType,
     uiLibrary: answers.uiLibrary as UILibraryType,
     routeMode: answers.routeMode as RouteModeType,
+    router: answers.router,
+    stateManagement: answers.stateManagement,
     i18n: answers.i18n,
     qiankun: answers.qiankun,
     sentry: answers.sentry,

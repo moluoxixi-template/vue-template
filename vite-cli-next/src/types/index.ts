@@ -43,6 +43,10 @@ export interface ProjectConfigType {
   uiLibrary: UILibraryType
   /** 路由模式 */
   routeMode: RouteModeType
+  /** 是否启用路由 */
+  router: boolean
+  /** 是否启用状态管理 (Vue: pinia, React: zustand) */
+  stateManagement: boolean
   /** 是否启用国际化 */
   i18n: boolean
   /** 是否启用微前端支持 */

@@ -218,6 +218,8 @@ async function generateTestProjects(): Promise<void> {
       framework: config.framework!,
       uiLibrary: config.uiLibrary!,
       routeMode: config.routeMode!,
+      router: config.router ?? true,
+      stateManagement: config.stateManagement ?? true,
       i18n: config.i18n!,
       qiankun: config.qiankun!,
       sentry: config.sentry!,

@@ -28,6 +28,8 @@ const TEST_CONFIG: ProjectConfigType = {
   framework: 'vue',
   uiLibrary: 'element-plus',
   routeMode: 'manual',
+  router: true,
+  stateManagement: true,
   i18n: true,
   qiankun: false,
   sentry: false,
