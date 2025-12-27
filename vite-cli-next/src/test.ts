@@ -18,10 +18,11 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 /** 测试输出目录 */
-const TEST_OUTPUT_DIR = path.resolve(__dirname, '../../vite-cli-test')
+const TEST_OUTPUT_DIR = path.resolve(__dirname, '../test')
 
 /** 测试配置矩阵 */
 const TEST_CONFIGS: Array<{ name: string, config: Partial<ProjectConfigType> }> = [
+  // Vue 基础配置组合
   {
     name: 'vue-element-basic',
     config: {
@@ -68,6 +69,37 @@ const TEST_CONFIGS: Array<{ name: string, config: Partial<ProjectConfigType> }> 
     },
   },
   {
+    name: 'vue-antd-minimal',
+    config: {
+      projectName: 'vue-antd-minimal',
+      description: 'Vue + Ant Design Vue 最小配置（无 i18n）',
+      author: 'test',
+      framework: 'vue',
+      uiLibrary: 'ant-design-vue',
+      routeMode: 'manual',
+      i18n: false,
+      qiankun: false,
+      sentry: false,
+      packageManager: 'pnpm',
+    },
+  },
+  {
+    name: 'vue-element-sentry-only',
+    config: {
+      projectName: 'vue-element-sentry-only',
+      description: 'Vue + Element Plus + Sentry（无其他特性）',
+      author: 'test',
+      framework: 'vue',
+      uiLibrary: 'element-plus',
+      routeMode: 'manual',
+      i18n: false,
+      qiankun: false,
+      sentry: true,
+      packageManager: 'pnpm',
+    },
+  },
+  // React 配置组合
+  {
     name: 'react-antd-basic',
     config: {
       projectName: 'react-antd-basic',
@@ -94,6 +126,21 @@ const TEST_CONFIGS: Array<{ name: string, config: Partial<ProjectConfigType> }> 
       i18n: true,
       qiankun: false,
       sentry: true,
+      packageManager: 'pnpm',
+    },
+  },
+  {
+    name: 'react-antd-minimal',
+    config: {
+      projectName: 'react-antd-minimal',
+      description: 'React + Ant Design 最小配置（无 i18n, 无 sentry）',
+      author: 'test',
+      framework: 'react',
+      uiLibrary: 'ant-design',
+      routeMode: 'manual',
+      i18n: false,
+      qiankun: false,
+      sentry: false,
       packageManager: 'pnpm',
     },
   },

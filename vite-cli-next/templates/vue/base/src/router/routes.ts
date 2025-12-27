@@ -3,7 +3,7 @@
  * 手动路由模式
  */
 
-import type { RouteRecordRaw } from 'vue-router';
+import type { RouteRecordRaw } from 'vue-router'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -31,7 +31,6 @@ const routes: RouteRecordRaw[] = [
     name: 'NotFound',
     redirect: '/home',
   },
-];
+]
 
-export default routes;
-
+export { routes }

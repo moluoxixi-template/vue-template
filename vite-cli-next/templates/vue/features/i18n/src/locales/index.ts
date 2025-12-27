@@ -1,16 +1,16 @@
 import { createI18n } from 'vue-i18n'
-import en from './lang/en.json'
-import zh from './lang/zh-CN.json'
+
+import en from './lang/en'
+import zh from './lang/zh'
 
 const i18n = createI18n({
   legacy: false,
-  locale: localStorage.getItem('locale') || 'zh-CN',
-  fallbackLocale: 'zh-CN',
+  locale: localStorage.getItem('locale') || 'zh',
+  fallbackLocale: 'zh',
   messages: {
-    'zh-CN': zh,
-    'en': en,
+    zh,
+    en,
   },
 })
 
 export default i18n
-
