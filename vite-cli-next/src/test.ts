@@ -35,6 +35,8 @@ const TEST_CONFIGS: Array<{ name: string, config: Partial<ProjectConfigType> }> 
       i18n: true,
       qiankun: false,
       sentry: false,
+      eslint: true,
+      gitHooks: true,
       packageManager: 'pnpm',
     },
   },
@@ -50,6 +52,8 @@ const TEST_CONFIGS: Array<{ name: string, config: Partial<ProjectConfigType> }> 
       i18n: true,
       qiankun: true,
       sentry: true,
+      eslint: true,
+      gitHooks: true,
       packageManager: 'pnpm',
     },
   },
@@ -65,6 +69,8 @@ const TEST_CONFIGS: Array<{ name: string, config: Partial<ProjectConfigType> }> 
       i18n: true,
       qiankun: false,
       sentry: false,
+      eslint: true,
+      gitHooks: true,
       packageManager: 'pnpm',
     },
   },
@@ -80,6 +86,8 @@ const TEST_CONFIGS: Array<{ name: string, config: Partial<ProjectConfigType> }> 
       i18n: false,
       qiankun: false,
       sentry: false,
+      eslint: true,
+      gitHooks: true,
       packageManager: 'pnpm',
     },
   },
@@ -95,6 +103,25 @@ const TEST_CONFIGS: Array<{ name: string, config: Partial<ProjectConfigType> }> 
       i18n: false,
       qiankun: false,
       sentry: true,
+      eslint: true,
+      gitHooks: true,
+      packageManager: 'pnpm',
+    },
+  },
+  {
+    name: 'vue-no-eslint-no-hooks',
+    config: {
+      projectName: 'vue-no-eslint-no-hooks',
+      description: 'Vue 项目（无 ESLint，无 Git Hooks）',
+      author: 'test',
+      framework: 'vue',
+      uiLibrary: 'element-plus',
+      routeMode: 'manual',
+      i18n: false,
+      qiankun: false,
+      sentry: false,
+      eslint: false,
+      gitHooks: false,
       packageManager: 'pnpm',
     },
   },
@@ -111,6 +138,8 @@ const TEST_CONFIGS: Array<{ name: string, config: Partial<ProjectConfigType> }> 
       i18n: true,
       qiankun: false,
       sentry: false,
+      eslint: true,
+      gitHooks: true,
       packageManager: 'pnpm',
     },
   },
@@ -122,10 +151,12 @@ const TEST_CONFIGS: Array<{ name: string, config: Partial<ProjectConfigType> }> 
       author: 'test',
       framework: 'react',
       uiLibrary: 'ant-design',
-      routeMode: 'manual',
+      routeMode: 'file-system',
       i18n: true,
       qiankun: false,
       sentry: true,
+      eslint: true,
+      gitHooks: true,
       packageManager: 'pnpm',
     },
   },
@@ -141,6 +172,25 @@ const TEST_CONFIGS: Array<{ name: string, config: Partial<ProjectConfigType> }> 
       i18n: false,
       qiankun: false,
       sentry: false,
+      eslint: true,
+      gitHooks: true,
+      packageManager: 'pnpm',
+    },
+  },
+  {
+    name: 'react-no-eslint-no-hooks',
+    config: {
+      projectName: 'react-no-eslint-no-hooks',
+      description: 'React 项目（无 ESLint，无 Git Hooks）',
+      author: 'test',
+      framework: 'react',
+      uiLibrary: 'ant-design',
+      routeMode: 'manual',
+      i18n: false,
+      qiankun: false,
+      sentry: false,
+      eslint: false,
+      gitHooks: false,
       packageManager: 'pnpm',
     },
   },
@@ -171,6 +221,8 @@ async function generateTestProjects(): Promise<void> {
       i18n: config.i18n!,
       qiankun: config.qiankun!,
       sentry: config.sentry!,
+      eslint: config.eslint!,
+      gitHooks: config.gitHooks!,
       packageManager: config.packageManager!,
       targetDir: path.join(TEST_OUTPUT_DIR, name),
     }
@@ -194,19 +246,24 @@ async function auditMoluoxixiDeps(): Promise<void> {
   console.log(chalk.blue.bold('\n🔍 开始审计 @moluoxixi 依赖...\n'))
 
   const requiredDeps = [
-    '@moluoxixi/eslint-config',
     '@moluoxixi/vite-config',
     '@moluoxixi/ajax-package',
   ]
 
   let hasError = false
 
-  for (const { name } of TEST_CONFIGS) {
+  for (const { name, config } of TEST_CONFIGS) {
     const projectDir = path.join(TEST_OUTPUT_DIR, name)
     const packageJsonPath = path.join(projectDir, 'package.json')
     const workspacePath = path.join(projectDir, 'pnpm-workspace.yaml')
 
     console.log(chalk.cyan(`📋 检查 ${name}...`))
+
+    // 根据配置决定需要检查的依赖
+    const depsToCheck = [...requiredDeps]
+    if (config.eslint) {
+      depsToCheck.push('@moluoxixi/eslint-config')
+    }
 
     // 检查 package.json
     if (fs.existsSync(packageJsonPath)) {
@@ -216,7 +273,7 @@ async function auditMoluoxixiDeps(): Promise<void> {
         ...packageJson.devDependencies,
       }
 
-      for (const dep of requiredDeps) {
+      for (const dep of depsToCheck) {
         if (!allDeps[dep]) {
           console.log(chalk.red(`  ❌ package.json 缺少 ${dep}`))
           hasError = true
@@ -235,7 +292,7 @@ async function auditMoluoxixiDeps(): Promise<void> {
     if (fs.existsSync(workspacePath)) {
       const workspaceContent = fs.readFileSync(workspacePath, 'utf-8')
 
-      for (const dep of requiredDeps) {
+      for (const dep of depsToCheck) {
         if (!workspaceContent.includes(dep)) {
           console.log(chalk.red(`  ❌ pnpm-workspace.yaml 缺少 ${dep}`))
           hasError = true
@@ -250,15 +307,38 @@ async function auditMoluoxixiDeps(): Promise<void> {
       hasError = true
     }
 
+    // 检查可选特性文件
+    if (!config.eslint) {
+      const eslintConfig = path.join(projectDir, 'eslint.config.ts')
+      if (fs.existsSync(eslintConfig)) {
+        console.log(chalk.red(`  ❌ 不应存在 eslint.config.ts（ESLint 已禁用）`))
+        hasError = true
+      }
+      else {
+        console.log(chalk.green(`  ✅ eslint.config.ts 已正确移除`))
+      }
+    }
+
+    if (!config.gitHooks) {
+      const huskyDir = path.join(projectDir, '.husky')
+      if (fs.existsSync(huskyDir)) {
+        console.log(chalk.red(`  ❌ 不应存在 .husky/ 目录（Git Hooks 已禁用）`))
+        hasError = true
+      }
+      else {
+        console.log(chalk.green(`  ✅ .husky/ 目录已正确移除`))
+      }
+    }
+
     console.log('')
   }
 
   if (hasError) {
-    console.log(chalk.red.bold('\n❌ 审计失败: 存在缺失的 @moluoxixi 依赖\n'))
+    console.log(chalk.red.bold('\n❌ 审计失败: 存在问题\n'))
     process.exit(1)
   }
   else {
-    console.log(chalk.green.bold('\n✅ 审计通过: 所有 @moluoxixi 依赖均存在\n'))
+    console.log(chalk.green.bold('\n✅ 审计通过: 所有检查项均通过\n'))
   }
 }
 

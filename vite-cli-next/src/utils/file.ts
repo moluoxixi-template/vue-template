@@ -20,6 +20,14 @@ export function createDir(dirPath: string): void {
 }
 
 /**
+ * 清空并重新创建目录
+ * @param dirPath 目录路径
+ */
+export function emptyDir(dirPath: string): void {
+  fs.emptyDirSync(dirPath)
+}
+
+/**
  * 检查路径是否存在
  * @param filePath 文件路径
  */

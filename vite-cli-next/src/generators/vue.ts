@@ -23,16 +23,26 @@ export async function generateVueProject(config: ProjectConfigType): Promise<voi
   // 1. 渲染 L0 公共基础模板
   renderTemplate(path.join(templatesDir, 'common', 'base'), targetDir)
 
-  // 渲染公共特性模板 (husky/eslint 等)
-  renderTemplate(path.join(templatesDir, 'common', 'features', 'husky'), targetDir)
+  // 2. 渲染公共特性模板
+  if (config.gitHooks) {
+    renderTemplate(path.join(templatesDir, 'common', 'features', 'husky'), targetDir)
+  }
 
-  // 2. 渲染 L1 Vue 基础模板
+  // 3. 渲染 L1 Vue 基础模板
   renderTemplate(path.join(templatesDir, 'vue', 'base'), targetDir)
 
-  // 3. 渲染 L2 特性模板
+  // 4. 渲染 L2 特性模板
   renderTemplate(path.join(templatesDir, 'vue', 'features', 'router'), targetDir)
   renderTemplate(path.join(templatesDir, 'vue', 'features', 'pinia'), targetDir)
-  renderTemplate(path.join(templatesDir, 'vue', 'features', 'eslint'), targetDir)
+
+  // 根据路由模式渲染对应模板
+  if (config.routeMode === 'manual') {
+    renderTemplate(path.join(templatesDir, 'vue', 'features', 'manualRoutes'), targetDir)
+  }
+
+  if (config.eslint) {
+    renderTemplate(path.join(templatesDir, 'vue', 'features', 'eslint'), targetDir)
+  }
 
   if (config.i18n) {
     renderTemplate(path.join(templatesDir, 'vue', 'features', 'i18n'), targetDir)
@@ -57,7 +67,7 @@ export async function generateVueProject(config: ProjectConfigType): Promise<voi
     renderTemplate(path.join(templatesDir, 'vue', 'features', 'ant-design-vue'), targetDir)
   }
 
-  // 4. 渲染 EJS 模板（main.ts, router/index.ts）
+  // 5. 渲染 EJS 模板（main.ts, router/index.ts）
   const ejsData = {
     i18n: config.i18n,
     sentry: config.sentry,
@@ -78,57 +88,7 @@ export async function generateVueProject(config: ProjectConfigType): Promise<voi
     ejsData,
   )
 
-  // 5. 数据驱动生成 vite.config.ts
+  // 6. 数据驱动生成 vite.config.ts
   const viteConfigContent = renderViteConfig(config)
   fs.writeFileSync(path.join(targetDir, 'vite.config.ts'), viteConfigContent)
-
-  // 6. 清理不需要的文件
-  cleanupFiles(config, targetDir)
-}
-
-/**
- * 清理不需要的文件
- */
-function cleanupFiles(config: ProjectConfigType, targetDir: string): void {
-  // 如果不是 element-plus，删除 element 相关文件
-  if (config.uiLibrary !== 'element-plus') {
-    const elementStyleDir = path.join(targetDir, 'src', 'assets', 'styles', 'element')
-    if (fs.existsSync(elementStyleDir)) {
-      fs.rmSync(elementStyleDir, { recursive: true })
-    }
-
-    const subMenuDir = path.join(targetDir, 'src', 'components', 'SubMenu')
-    if (fs.existsSync(subMenuDir)) {
-      fs.rmSync(subMenuDir, { recursive: true })
-    }
-  }
-
-  // 如果不启用 i18n，删除 locales/index.ts
-  if (!config.i18n) {
-    const localesIndex = path.join(targetDir, 'src', 'locales', 'index.ts')
-    if (fs.existsSync(localesIndex)) {
-      fs.unlinkSync(localesIndex)
-    }
-  }
-
-  // 如果不启用 sentry，删除 utils/sentry.ts
-  if (!config.sentry) {
-    const sentryFile = path.join(targetDir, 'src', 'utils', 'sentry.ts')
-    if (fs.existsSync(sentryFile)) {
-      fs.unlinkSync(sentryFile)
-    }
-  }
-
-  // 如果使用文件系统路由，删除手动路由文件
-  if (config.routeMode === 'file-system') {
-    const routesFile = path.join(targetDir, 'src', 'router', 'routes.ts')
-    if (fs.existsSync(routesFile)) {
-      fs.unlinkSync(routesFile)
-    }
-
-    const layoutVue = path.join(targetDir, 'src', 'router', 'layout.vue')
-    if (fs.existsSync(layoutVue)) {
-      fs.unlinkSync(layoutVue)
-    }
-  }
 }

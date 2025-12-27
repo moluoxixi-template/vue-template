@@ -49,6 +49,10 @@ export interface ProjectConfigType {
   qiankun: boolean
   /** 是否启用错误监控 */
   sentry: boolean
+  /** 是否启用 ESLint */
+  eslint: boolean
+  /** 是否启用 Git Hooks (husky + commitlint + lint-staged) */
+  gitHooks: boolean
   /** 包管理器 */
   packageManager: PackageManagerType
   /** 目标目录 */

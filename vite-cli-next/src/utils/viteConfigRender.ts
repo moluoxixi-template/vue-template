@@ -51,7 +51,7 @@ export function collectViteConfigData(config: ProjectConfigType): ViteConfigData
     enabledFeatures.push('sentry')
   }
 
-  if (framework === 'vue' && config.routeMode === 'file-system') {
+  if (config.routeMode === 'file-system') {
     enabledFeatures.push('pageRoutes')
   }
 

@@ -111,6 +111,20 @@ export async function collectProjectConfig(
       message: '是否启用错误监控 (Sentry)?',
       default: false,
     },
+    // 是否启用 ESLint
+    {
+      type: 'confirm',
+      name: 'eslint',
+      message: '是否启用 ESLint 代码规范检查?',
+      default: true,
+    },
+    // 是否启用 Git Hooks
+    {
+      type: 'confirm',
+      name: 'gitHooks',
+      message: '是否启用 Git Hooks (husky + commitlint)?',
+      default: true,
+    },
     // 包管理器
     {
       type: 'list',
@@ -137,6 +151,8 @@ export async function collectProjectConfig(
     i18n: answers.i18n,
     qiankun: answers.qiankun,
     sentry: answers.sentry,
+    eslint: answers.eslint,
+    gitHooks: answers.gitHooks,
     packageManager: answers.packageManager as PackageManagerType,
     targetDir,
   }

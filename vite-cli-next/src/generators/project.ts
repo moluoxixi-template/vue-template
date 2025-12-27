@@ -5,7 +5,7 @@
 
 import type { ProjectConfigType } from '../types'
 
-import { createDir } from '../utils/file'
+import { emptyDir } from '../utils/file'
 import { generateReactProject } from './react'
 import { generateVueProject } from './vue'
 
@@ -14,8 +14,8 @@ import { generateVueProject } from './vue'
  * @param config 项目配置
  */
 export async function generateProject(config: ProjectConfigType): Promise<void> {
-  // 创建项目根目录
-  createDir(config.targetDir)
+  // 清空并创建项目根目录（确保干净的构建环境）
+  emptyDir(config.targetDir)
 
   // 根据框架类型生成不同的项目结构
   if (config.framework === 'vue') {

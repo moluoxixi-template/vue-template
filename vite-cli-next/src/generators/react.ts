@@ -23,16 +23,26 @@ export async function generateReactProject(config: ProjectConfigType): Promise<v
   // 1. 渲染 L0 公共基础模板
   renderTemplate(path.join(templatesDir, 'common', 'base'), targetDir)
 
-  // 渲染公共特性模板 (husky/eslint 等)
-  renderTemplate(path.join(templatesDir, 'common', 'features', 'husky'), targetDir)
+  // 2. 渲染公共特性模板
+  if (config.gitHooks) {
+    renderTemplate(path.join(templatesDir, 'common', 'features', 'husky'), targetDir)
+  }
 
-  // 2. 渲染 L1 React 基础模板
+  // 3. 渲染 L1 React 基础模板
   renderTemplate(path.join(templatesDir, 'react', 'base'), targetDir)
 
-  // 3. 渲染 L2 特性模板
+  // 4. 渲染 L2 特性模板
   renderTemplate(path.join(templatesDir, 'react', 'features', 'router'), targetDir)
   renderTemplate(path.join(templatesDir, 'react', 'features', 'zustand'), targetDir)
-  renderTemplate(path.join(templatesDir, 'react', 'features', 'eslint'), targetDir)
+
+  // 根据路由模式渲染对应模板
+  if (config.routeMode === 'manual') {
+    renderTemplate(path.join(templatesDir, 'react', 'features', 'manualRoutes'), targetDir)
+  }
+
+  if (config.eslint) {
+    renderTemplate(path.join(templatesDir, 'react', 'features', 'eslint'), targetDir)
+  }
 
   if (config.i18n) {
     renderTemplate(path.join(templatesDir, 'react', 'features', 'i18n'), targetDir)
@@ -42,14 +52,19 @@ export async function generateReactProject(config: ProjectConfigType): Promise<v
     renderTemplate(path.join(templatesDir, 'react', 'features', 'sentry'), targetDir)
   }
 
+  if (config.routeMode === 'file-system') {
+    renderTemplate(path.join(templatesDir, 'react', 'features', 'pageRoutes'), targetDir)
+  }
+
   if (config.uiLibrary === 'ant-design') {
     renderTemplate(path.join(templatesDir, 'react', 'features', 'ant-design'), targetDir)
   }
 
-  // 4. 渲染 EJS 模板（main.tsx）
+  // 5. 渲染 EJS 模板（main.tsx, router/index.tsx）
   const ejsData = {
     i18n: config.i18n,
     sentry: config.sentry,
+    routeMode: config.routeMode,
     uiLibrary: config.uiLibrary,
   }
 
@@ -59,31 +74,13 @@ export async function generateReactProject(config: ProjectConfigType): Promise<v
     ejsData,
   )
 
-  // 5. 数据驱动生成 vite.config.ts
+  renderEjsToFile(
+    path.join(templatesDir, 'react', 'base', 'src', 'router', 'index.tsx.ejs'),
+    path.join(targetDir, 'src', 'router', 'index.tsx'),
+    ejsData,
+  )
+
+  // 6. 数据驱动生成 vite.config.ts
   const viteConfigContent = renderViteConfig(config)
   fs.writeFileSync(path.join(targetDir, 'vite.config.ts'), viteConfigContent)
-
-  // 6. 清理不需要的文件
-  cleanupFiles(config, targetDir)
-}
-
-/**
- * 清理不需要的文件
- */
-function cleanupFiles(config: ProjectConfigType, targetDir: string): void {
-  // 如果不启用 i18n，删除 locales/index.ts
-  if (!config.i18n) {
-    const localesIndex = path.join(targetDir, 'src', 'locales', 'index.ts')
-    if (fs.existsSync(localesIndex)) {
-      fs.unlinkSync(localesIndex)
-    }
-  }
-
-  // 如果不启用 sentry，删除 utils/sentry.ts
-  if (!config.sentry) {
-    const sentryFile = path.join(targetDir, 'src', 'utils', 'sentry.ts')
-    if (fs.existsSync(sentryFile)) {
-      fs.unlinkSync(sentryFile)
-    }
-  }
 }
