@@ -1,7 +1,0 @@
-{
-  "dependencies": {
-    "@sentry/vite-plugin": "catalog:build",
-    "@sentry/vue": "catalog:build"
-  }
-}
-

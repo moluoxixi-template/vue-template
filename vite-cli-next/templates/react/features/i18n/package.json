@@ -1,7 +1,0 @@
-{
-  "dependencies": {
-    "i18next": "catalog:build",
-    "react-i18next": "catalog:build"
-  }
-}
-
