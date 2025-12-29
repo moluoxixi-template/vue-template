@@ -5,8 +5,8 @@ registry: https://registry.npmjs.org/
 catalogs:
   build:
     '@element-plus/icons-vue': ^2.3.1
-    '@moluoxixi/ajax-package': 0.0.16
-    '@moluoxixi/class-names': 0.0.3-beta.1
+    '@moluoxixi/ajaxpackage': 0.0.9
+    '@moluoxixi/classnames': latest
     '@sentry/vite-plugin': ^3.5.0
     '@sentry/vue': ^9.27.0
     axios: 1.12.0
@@ -28,21 +28,17 @@ catalogs:
   dev:
     '@commitlint/cli': ^19.8.0
     '@commitlint/config-conventional': ^19.8.0
-    '@eslint-react/eslint-plugin': ^1.9.2
-    '@moluoxixi/ajax-package': 0.0.11-beta.2
-    '@moluoxixi/auto-routes-plugin': 0.0.4
-    '@moluoxixi/css-module-global-root-plugin': 0.0.5
-    '@moluoxixi/eslint-config': 0.0.10
-    '@moluoxixi/vite-config': 0.0.27
+    '@moluoxixi/ajax-package': latest
+    "@moluoxixi/css-module-global-root-plugin": latest
+    '@moluoxixi/eslint-config': latest
+    '@moluoxixi/vite-config': latest
     '@vue-macros/volar': ^3.0.0-beta.15
     commitizen: ^4.3.1
     compressing: ^1.10.1
     cz-customizable: ^7.4.0
     dotenv: ^16.5.0
-    eslint: latest
+    eslint: ^9.22.0
     eslint-plugin-format: ^1.0.1
-    eslint-plugin-react-hooks: ^5.1.0
-    eslint-plugin-react-refresh: ^0.4.15
     husky: ^9.1.7
     jiti: ^2.4.2
     lint-staged: ^15.5.1
@@ -55,7 +51,7 @@ catalogs:
     tailwindcss: npm:tailwindcss@4
     tsx: ^4.20.5
     typescript: ~5.8.0
-    vite: 6.2.4
+    vite: 7.1.11
     vue-tsc: ^2.2.8
   type:
     '@types/crypto-js': ^4.2.2
