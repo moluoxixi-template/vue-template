@@ -5,8 +5,8 @@ registry: https://registry.npmjs.org/
 catalogs:
   build:
     '@element-plus/icons-vue': ^2.3.1
-    '@moluoxixi/ajaxpackage': 0.0.9
-    '@moluoxixi/classnames': latest
+    '@moluoxixi/class-names': latest
+    '@moluoxixi/ajax-package': latest
     '@sentry/vite-plugin': ^3.5.0
     '@sentry/vue': ^9.27.0
     axios: 1.12.0
@@ -28,7 +28,6 @@ catalogs:
   dev:
     '@commitlint/cli': ^19.8.0
     '@commitlint/config-conventional': ^19.8.0
-    '@moluoxixi/ajax-package': latest
     "@moluoxixi/css-module-global-root-plugin": latest
     '@moluoxixi/eslint-config': latest
     '@moluoxixi/vite-config': latest
