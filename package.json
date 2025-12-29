@@ -76,8 +76,6 @@
     "@eslint-react/eslint-plugin": "catalog:dev",
     "eslint": "catalog:dev",
     "eslint-plugin-format": "catalog:dev",
-    "eslint-plugin-react-hooks": "catalog:dev",
-    "eslint-plugin-react-refresh": "catalog:dev",
     "husky": "catalog:dev",
     "jiti": "catalog:dev",
     "lint-staged": "catalog:dev",
