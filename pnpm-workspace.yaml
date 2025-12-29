@@ -28,11 +28,10 @@ catalogs:
   dev:
     '@commitlint/cli': ^19.8.0
     '@commitlint/config-conventional': ^19.8.0
-    '@moluoxixi/ajaxpackage': 0.0.2-beta.1
-    '@moluoxixi/autoroutesplugin': 0.0.3-beta.1
-    '@moluoxixi/cssmoduleglobalrootplugin': 0.0.4
-    '@moluoxixi/eslintconfig': 0.0.9-beta.2
-    '@moluoxixi/viteconfig': 0.0.24-beta.1
+    '@moluoxixi/ajax-package': latest
+    "@moluoxixi/css-module-global-root-plugin": latest
+    '@moluoxixi/eslint-config': latest
+    '@moluoxixi/vite-config': latest
     '@vue-macros/volar': ^3.0.0-beta.15
     commitizen: ^4.3.1
     compressing: ^1.10.1

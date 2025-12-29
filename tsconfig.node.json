@@ -3,8 +3,9 @@
   "compilerOptions": {
     "module": "NodeNext",
     "moduleResolution": "nodenext",
-    "noEmit": true,
+    "noEmit": false,
     "allowImportingTsExtensions": true,
+    "rewriteRelativeImportExtensions": true,
     "composite": true
   },
   "include": [

@@ -1,5 +1,9 @@
-import eslintConfig from '@moluoxixi/eslintconfig'
+import eslintConfig from '@moluoxixi/eslint-config'
 
 export default eslintConfig({
   ignores: [],
+  rules: {
+    'perfectionist/sort-imports': 'off',
+    'jsonc/sort-keys': 'off',
+  },
 })

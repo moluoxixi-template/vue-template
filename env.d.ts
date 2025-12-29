@@ -15,7 +15,7 @@ declare interface ViteEnv {
   VITE_PROXY_URL: string
 }
 
-declare const __SYSTEM_CODE__ = string
+declare const __SYSTEM_CODE__: string
 
 declare global {
 
